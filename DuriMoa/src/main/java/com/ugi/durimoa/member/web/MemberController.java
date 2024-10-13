@@ -1,23 +1,13 @@
 package com.ugi.durimoa.member.web;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.IOException;
 import java.util.UUID;
-
-import javax.servlet.ServletContext;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.remoting.soap.SoapFaultException;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,37 +24,38 @@ public class MemberController {
 	
 	@Value("${file.upload.path}")
     private String uploadPath;
-
-	@Autowired
-	private ServletContext servletContext;
 	
+	@Value("${file.download.path}")
+    private String downloadPath;
+	
+	// 지금 경로가 안먹음(직접 작성해야 됨)
 	@RequestMapping("/registDo")
 	@ResponseBody
-	public String registDo(@ModelAttribute MemberVO vo, @RequestParam("profileImage") MultipartFile file) {
+	public String registDo(@ModelAttribute MemberVO vo, @RequestParam("profileImage") MultipartFile file) throws Exception {
 	    try {
 	        if (!file.isEmpty()) {
-	            String realPath = servletContext.getRealPath("/resources/assets/uploads/");
 	            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-	            String filePath = realPath + fileName;
+	            String filePath = "C:\\DuriMoa_profile" + File.separator + fileName; // 업로드 경로
 
+	            System.out.println(filePath);
+	            
 	            File dest = new File(filePath);
-
+	         
 	            // 파일 저장
 	            file.transferTo(dest);
-	            
-	            // DB에 저장할 경로 설정 (웹에서 접근 가능한 경로로 설정)
-	            vo.setMemImg("/resources/assets/profiles/" + fileName);
+	            System.out.println("File saved at: " + filePath);
+
+	            // DB에 경로 저장 (전체 경로 형식)
+	            vo.setMemImg("/download?imageFileName=" + fileName);  // URL 형식으로 저장
 	        }
 
 	        memberService.registMember(vo);
-
-	    } catch (Exception e) {
+	    } catch (IOException e) {
 	        e.printStackTrace();
-	        return "error";
+	        return "File saving error: " + e.getMessage();
 	    }
 	    return "success";
 	}
-
 
 	@RequestMapping("/loginDo")
 	public String loginDo(MemberVO vo) throws Exception {
