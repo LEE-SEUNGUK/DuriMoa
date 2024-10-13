@@ -1,0 +1,292 @@
+a {
+	text-decoration: none;
+	color: black;
+}
+
+ul, p, li {
+	margin: 0 !important;
+	/* 모든 마진 제거 */
+	padding: 0 !important;
+	/* 모든 패딩 제거 */
+}
+
+input::-ms-clear, input::-ms-reveal {
+	display: none;
+	width: 0;
+	height: 0;
+}
+
+input::-webkit-search-decoration, input::-webkit-search-cancel-button,
+	input::-webkit-search-results-button, input::-webkit-search-results-decoration
+	{
+	display: none;
+}
+
+li {
+	list-style-type: none;
+}
+
+#couple_name {
+	font-family: 'LeeSeoyun';
+	font-size: 20px;
+}
+
+#marker_search {
+	width: 300px;
+	height: 45px;
+	line-height: 45px;
+	/* height와 동일하게 설정 */
+}
+
+#marker_search:hover {
+	border: 1px solid #d89393;
+}
+
+#marker_search:focus {
+	box-shadow: none;
+	width: 330px;
+	transition: all 0.3s;
+	border: 1px solid #d89393;
+	box-shadow: 0 0 0 1px rgba(216, 147, 147, 0.5);
+}
+
+#marker_search:focus ~.search_btn {
+	visibility: visible;
+	opacity: 1;
+}
+
+.search_btn {
+	position: absolute;
+	visibility: hidden;
+	background: url(/resources/assets/img/search.png) no-repeat center;
+	top: 50%;
+	right: 5%;
+	transform: translateY(-50%);
+	width: 30px;
+	height: 30px;
+	background-size: 24px 24px;
+	opacity: 0;
+	border: none;
+	transition: 0.3s;
+}
+
+nav #menu_bar {
+	margin-left: 140px !important;
+	display: flex;
+	align-items: center
+}
+
+.menu_option:hover .nav_text {
+	visibility: visible;
+	opacity: 1;
+	transition: 0.5s;
+}
+
+.nav_text {
+	visibility: hidden;
+	opacity: 0;
+}
+
+.menu_option>div {
+	padding-top: 18px;
+}
+
+.menu_option:hover>div {
+	transform: translateY(-10px);
+	transition: 0.5s;
+}
+
+.menu_option:not (:hover )>div {
+	transform: translateY(0);
+	transition: 0.5s;
+}
+
+.menu_option:not (:hover ) .nav_text {
+	visibility: hidden;
+	opacity: 0;
+	transition: 0.5s;
+}
+
+.modal-content {
+	border-radius: 10px;
+	overflow: hidden;
+	/* 기본 모달의 라운드 설정 */
+}
+
+.modal-dialog {
+	max-height: 400px;
+}
+
+.modal-body, .modal-footer {
+	margin: 0 !important;
+	padding: 0 !important;
+	overflow: hidden;
+	/* 내용이 넘어갈 경우 숨기기 */
+}
+
+.container-fluid {
+	padding: 0;
+	/* 패딩을 없애서 내부 여백을 제거 */
+}
+
+.login-left {
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+.login-right {
+	position: relative;
+	margin: 0 !important;
+	padding: 0 !important;
+}
+
+.userId {
+	padding-left: 38px;
+	height: 45px;
+	background: url(/resources/assets/img/user.png) no-repeat left center;
+	background-size: 22px;
+	background-position: 10px;
+	font-size: 14px;
+	border: none;
+	outline: 1px solid #8989896c;
+	box-shadow: none !important;
+}
+
+.userPw {
+	padding-left: 38px;
+	height: 45px;
+	background: url(/resources/assets/img/pw.png) no-repeat left center;
+	background-size: 16px;
+	background-position: 14px;
+	font-size: 14px;
+	border: none;
+	outline: 1px solid #8989896c;
+	box-shadow: none !important;
+}
+
+.userNm, .userPn {
+	padding-left: 20px;
+	height: 45px;
+	font-size: 14px;
+	border: none;
+	outline: 1px solid #8989896c;
+	box-shadow: none !important;
+}
+
+.userId:hover, .userPw:hover, .userNm:hover, .userPn:hover {
+	outline: 1px solid #0000009e;
+	transition: outline 0.5s;
+}
+
+.userId:focus, .userPw:focus, .userNm:focus, .userPn:focus {
+	transition: all 0.01s;
+	outline: 2px solid #0000009e !important;
+}
+
+a {
+	text-decoration: none;
+	color: rgb(37, 37, 37);
+}
+
+.row {
+	margin: 0 !important;
+}
+
+.login-image {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.hr-sect {
+	display: flex;
+	flex-basis: 100%;
+	align-items: center;
+	color: rgba(0, 0, 0, 0.35);
+	font-size: 16px;
+}
+
+.hr-sect::before, .hr-sect::after {
+	content: "";
+	flex-grow: 1;
+	background: rgba(0, 0, 0, 0.35);
+	height: 1px;
+	font-size: 0px;
+	margin: 0px 16px;
+}
+
+#kakao_login {
+	background: url(/resources/assets/img/kakao-talk.png) no-repeat left
+		center;
+	background-size: 42px;
+	background-position: 60px;
+	background-color: #FFEB3B;
+	color: black;
+	height: 45px;
+	border: none;
+	opacity: 0.9;
+}
+
+#kakao_login:hover {
+	opacity: 1;
+	transition: 0.5s ease;
+}
+
+#login, #signUp {
+	background-color: #c4ddc0;
+	color: black;
+	border: none !important;
+	opacity: 0.8;
+}
+
+#login:hover, #signUp:hover {
+	opacity: 1;
+	transition: 0.5s ease;
+}
+
+#auto_login {
+	display: none;
+}
+
+#auto_login ~label:before {
+	/* display: inline-block; */
+	content: "✔";
+	display: inline-block;
+	vertical-align: middle;
+	text-align: center;
+	width: 18px;
+	height: 18px;
+	line-height: 18px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	color: transparent;
+	transition: 0.2s;
+	font-size: 10px;
+	margin-right: 8px;
+	margin-bottom: 2px;
+}
+
+#auto_login:checked+label::before {
+	background-color: #c4ddc0;
+	color: #000000;
+	outline: none;
+	border-color: transparent;
+}
+
+label:hover::before, #auto_login:hover+label::before {
+	border-color: #0000006c;
+	transition: all 0.3s;
+}
+
+#profileImage {
+	width: 90px;
+	height: 90px;
+	border-radius: 50%;
+	overflow: hidden;
+	object-fit: cover;
+}
+
+h3>span {
+	color: #6cae62;
+}

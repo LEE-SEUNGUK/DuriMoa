@@ -1,0 +1,77 @@
+.my-page-item {
+    margin-bottom: 5px;
+    /* 항목 사이의 여백 추가 */
+}
+
+ul hr{
+    margin: 10px 0px;
+}
+
+.mypage_hr {
+    height: 1px;
+    border: 0;
+}
+
+.userUpdate input {
+    width: 300px;
+    height: 45px;
+    border: none;
+    outline: 1px solid #8989896c;
+    box-shadow: none !important;
+}
+
+.userUpdate input:hover {
+    outline: 1px solid #0000009e;
+    transition: outline 0.5s;
+}
+
+.userUpdate input:focus {
+    transition: all 0.01s;
+    outline: 2px solid #0000009e !important;
+}
+
+input[name='userId']:hover {
+    border: none;
+    outline: 1px solid #8989896c;
+    box-shadow: none !important;
+}
+
+.email_check {
+    background-color: white;
+    border: none;
+    color: black;
+    outline: 1px solid #c4ddc0;
+    box-shadow: 0px 0px 2px #6cba60;
+    height: 43px;
+}
+
+.email_check:hover {
+    background-color: white;
+    color: black;
+    outline: 1px solid #c4ddc0;
+    box-shadow: 0px 0px 5px #6cba60;
+}
+
+.email_check:active,
+.email_check:focus {
+    background-color: white !important;
+    color: black !important;
+}
+
+#update_user {
+    opacity: 0.8;
+}
+
+#update_user:hover {
+    opacity: 1;
+    transition: 0.5s;
+}
+
+.mypage_side a:hover{
+    padding-left: 30px;
+    transition: 0.5s;
+}
+
+.mypage_side a:not(:hover){
+    transition: 0.5s;
+} 
