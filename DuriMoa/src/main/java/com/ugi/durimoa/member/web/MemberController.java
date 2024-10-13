@@ -1,9 +1,12 @@
 package com.ugi.durimoa.member.web;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -28,46 +31,50 @@ public class MemberController {
 
 	@Autowired
 	MemberService memberService;
+	
+	@Value("${file.upload.path}")
+    private String uploadPath;
 
-//	@RequestMapping("/registView") // 요청 url
-//	public String registView() {
-//
-//		return "member/registView";
-//	}
-
+	@Autowired
+	private ServletContext servletContext;
+	
 	@RequestMapping("/registDo")
 	@ResponseBody
-	public String registDo(MemberVO vo) {
+	public String registDo(@ModelAttribute MemberVO vo, @RequestParam("profileImage") MultipartFile file) {
+	    try {
+	        if (!file.isEmpty()) {
+	            String realPath = servletContext.getRealPath("/resources/assets/uploads/");
+	            String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+	            String filePath = realPath + fileName;
 
-		System.out.println(vo);
+	            File dest = new File(filePath);
 
-		try {
-			memberService.registMember(vo);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		return "success";
+	            // 파일 저장
+	            file.transferTo(dest);
+	            
+	            // DB에 저장할 경로 설정 (웹에서 접근 가능한 경로로 설정)
+	            vo.setMemImg("/resources/assets/profiles/" + fileName);
+	        }
+
+	        memberService.registMember(vo);
+
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        return "error";
+	    }
+	    return "success";
 	}
 
-//	@RequestMapping("/loginView") // 요청 url
-//	public String loginView() {
-//
-//		return "member/loginView";
-//	}
 
 	@RequestMapping("/loginDo")
-	public String loginDo(MemberVO vo)
-			throws Exception {
-		System.out.println("do는 타니?");
+	public String loginDo(MemberVO vo) throws Exception {
 		System.out.println(vo);
-		
+
 		MemberVO login = memberService.loginMember(vo);
 
 		System.out.println(login);
 		// 입력한 비밀번호와 db의 암호화된 비번을 비교해서 일치하면 true, 그렇지 않으면 false 반환
-		if (login == null ) {
+		if (login == null) {
 			System.out.println("로그인 실패");
 		}
 

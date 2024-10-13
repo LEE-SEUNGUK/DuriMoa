@@ -11,8 +11,8 @@
 	</select>
 	
 	<insert id="registMember" parameterType="MemberVO">
-	INSERT INTO member(mem_id, mem_pw, mem_nm, mem_pn) 
-	VALUES (#{memId}, #{memPw}, #{memNm}, #{memPn})
+	INSERT INTO member(mem_id, mem_pw, mem_nm, mem_pn, mem_img) 
+	VALUES (#{memId}, #{memPw}, #{memNm}, #{memPn}, #{memImg})
 	</insert>
 	
 </mapper>

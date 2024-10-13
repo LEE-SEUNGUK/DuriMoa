@@ -118,7 +118,7 @@
 								</h3>
 							</div>
 							<div class=" mt-3 d-flex justify-content-center">
-								<form id="signUpForm"
+								<form id="signUpForm" enctype="multipart/form-data"
 									class="d-flex flex-column justify-content-center align-items-center w-75"
 									method="post">
 									<p>프로필 이미지</p>
@@ -128,7 +128,7 @@
 											style="cursor: pointer; border-radius: 50%;"> <img
 											src="resources/assets/img/camera.png" id="camera" alt=""
 											style="width: 30px; position: absolute; top: 26%; right: 38%; cursor: pointer;">
-										<input type="file" id="imageUpload" style="display: none;"
+										<input type="file" id="imageUpload" name="profileImage" style="display: none;"
 											accept="image/*">
 									</div>
 									<div class="mb-1 w-100 d-flex justify-content-start">
@@ -171,29 +171,43 @@
 			$('#imageUpload').click();
 		});
 
+		// 이미지 미리보기
+		$('#imageUpload').change(function() {
+			const file = this.files[0];
+			if (file) {
+				const reader = new FileReader();
+				reader.onload = function(e) {
+					console.log("안옴?");
+					$('#profileImage').attr('src', e.target.result); // 선택된 이미지로 변경
+				};
+				reader.readAsDataURL(file);
+			}
+		});
+
 		$('#signUpForm').submit(function(e) {
-			e.preventDefault(); // 폼의 기본 제출 동작을 막음
+			e.preventDefault();
 
-			var formData = $(this).serialize(); // 폼 데이터를 직렬화하여 서버로 전송
+            var formData = new FormData(this); // 이미지 파일 포함된 폼 데이터 생성
 
-			$.ajax({
-				type : 'POST',
-				url : '/registDo', // 회원가입 처리 URL
-				data : formData,
-				success : function(response) {
-					if (response === "success") {
-						// 회원가입 성공 시 모달 전환
-						$('#signUpModal').modal('hide'); // 회원가입 모달 숨기기
-						$('#loginModal').modal('show'); // 로그인 모달 띄우기
-					} else {
-						alert('회원가입 처리 중 오류가 발생했습니다.');
-					}
-				},
-				error : function(xhr, status, error) {
-					console.log("회원가입 중 오류가 발생했습니다: " + error);
-					alert("회원가입에 실패했습니다. 다시 시도해주세요.");
-				}
-			});
+            $.ajax({
+                type: 'POST',
+                url: '/registDo',
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function(response) {
+                    if (response === "success") {
+                        $('#signUpModal').modal('hide');
+                        $('#loginModal').modal('show');
+                    } else {
+                        alert('회원가입 처리 중 오류가 발생했습니다.');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.log("회원가입 중 오류가 발생했습니다: " + error);
+                    alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+                }
+            });
 		});
 	});
 </script>
