@@ -1,15 +1,35 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <link href="/resources/assets/css/header.css" rel="stylesheet" />
-
+<link href="/resources/assets/css/mypage.css" rel="stylesheet" />
+<link
+	rel="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
+	rel="stylesheet"
+	integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
+	crossorigin="anonymous">
+<script
+	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+	crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <header>
 	<nav class="d-flex" style="height: 80px; background-color: #ffefef;">
 		<div class="d-flex align-items-center justify-content-center"
 			style="width: 33%;">
-			<img class="" src="resources/assets/img/logo.png" alt=""
-				style="width: 20%; margin-right: 20%;">
-			<div class="ms-5" id="couple_name" style="font-size: 24px;">
-				커플명 입력</div>
+			<div style="width: 80%; text-align: center;">
+				<img src="resources/assets/img/logo.png" alt="" style="width: 35%;">
+			</div>
+			<c:if test="${sessionScope.login == null}">
+				<div id="couple_name" style="width: 60%; font-size: 24px;">둘이
+					모아 나가는 커플 지도♥</div>
+			</c:if>
+			<c:if test="${sessionScope.login != null}">
+				<div id="couple_name" style="width: 60%; font-size: 24px;">
+					${sessionScope.login.memNm}님 환영합니다</div>
+			</c:if>
 		</div>
 		<div class="d-flex align-items-center justify-content-center"
 			style="width: 34%;">
@@ -40,12 +60,24 @@
 				</li>
 				<li class="menu_option h-100">
 					<div>
-						<a class="nav_page d-flex flex-column align-items-center" href="#"
-							id="mypage" data-bs-toggle="modal" data-bs-target="#loginModal">
-							<img src="resources/assets/img/user.png" alt=""
-							style="width: 42px;">
-							<p class="nav_text">마이 페이지</p>
-						</a>
+						<c:if test="${sessionScope.login == null}">
+							<a class="nav_page d-flex flex-column align-items-center"
+								href="#" id="mypage" data-bs-toggle="modal"
+								data-bs-target="#loginModal"> <img
+								src="resources/assets/img/user.png" alt="" style="width: 42px;">
+								<p class="nav_text">마이 페이지</p>
+							</a>
+						</c:if>
+						<c:if test="${sessionScope.login != null}">
+							<a class="nav_page d-flex flex-column align-items-center"
+								href="${pageContext.request.contextPath}/myPageView" id="mypage">
+								<img
+								src="${pageContext.request.contextPath}${sessionScope.login.memImg}"
+								alt=""
+								style="width: 41px; height: 41px; border-radius: 70%; object-fit: cover">
+								<p class="nav_text" style="padding-top: 3px !important" ]>마이페이지</p>
+							</a>
+						</c:if>
 					</div>
 				</li>
 			</ul>
@@ -57,7 +89,7 @@
 	aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="login modal-dialog modal-dialog-centered modal-lg">
 		<div class="modal-content">
-			<div class="container-fluid">
+			<div class="container-fluid" style="padding: 0 !important;">
 				<div class="row w-100">
 					<div class="col-6 login-left">
 						<div class="modal-body">
@@ -70,12 +102,17 @@
 									action="/loginDo" method="post">
 									<input class="form-control userId" type="text" name="memId"
 										placeholder="아이디" value="${cookie.rememberId.value}"
-										autocomplete="off"> <label for="memId"></label> <input
-										class="mt-1 form-control userPw" type="password" name="memPw"
-										placeholder="비밀번호" autocomplete="off"> <label
-										for="memPw"></label>
+										autocomplete="off"> 
+									<label for="memId"></label> 
+									<input class="mt-1 form-control userPw" type="password" name="memPw"
+										placeholder="비밀번호" autocomplete="off"> 
+									<label for="memPw"></label>
+									<div class="eyes">
+										<i class="fa fa-eye fa-lg"></i>
+									</div>
 									<div class="mt-4 d-flex w-100">
-										<input type="checkbox" id="auto_login"> <label
+										<input ${cookie.rememberId.value == null ? "" : "checked"}
+											type="checkbox" id="auto_login" name="remember"> <label
 											for="auto_login">자동 로그인</label> <a
 											style="margin-left: 140px; cursor: pointer;"
 											data-bs-target="#signUpModal" data-bs-toggle="modal">회원가입</a>
@@ -128,31 +165,28 @@
 											style="cursor: pointer; border-radius: 50%;"> <img
 											src="resources/assets/img/camera.png" id="camera" alt=""
 											style="width: 30px; position: absolute; top: 26%; right: 38%; cursor: pointer;">
-										<input type="file" id="imageUpload" name="profileImage" style="display: none;"
-											accept="image/*">
+										<input type="file" id="imageUpload" name="profileImage"
+											style="display: none;" accept="image/*">
 									</div>
 									<div class="mb-1 w-100 d-flex justify-content-start">
 										<label for="memId">아이디</label>
 									</div>
 									<input class="form-control userId" type="text" name="memId"
-										placeholder="8~12자리의 숫자 또는 영문"
-										style="background-image: none; padding-left: 20px;">
+										placeholder="8~12자리의 숫자 또는 영문" style="background-image: none;">
 									<div class="mt-3 mb-1 w-100 d-flex justify-content-start">
 										<label for="memPw">비밀번호</label>
 									</div>
 									<input class="form-control userPw" type="password"
-										name="memPw_ck" style="background-image: none; padding: 20px;"
+										name="memPw_ck" style="background-image: none;"
 										placeholder="비밀번호를 입력해주세요" autocomplete="off"> <input
 										class="mt-1 form-control userPw" type="password" name="memPw"
-										style="background-image: none; padding: 20px"
-										placeholder="비밀번호를 다시 입력해주세요" autocomplete="off">
+										style="background-image: none;" placeholder="비밀번호를 다시 입력해주세요"
+										autocomplete="off">
 									<div class="mt-3 mb-1 w-100 d-flex justify-content-start">
 										<label for="userId">개인정보</label>
 									</div>
 									<input class="form-control userNm" type="text" name="memNm"
-										placeholder="이름을 입력해주세요" autocomplete="off"> <input
-										class="mt-1 form-control userNm" type="text" name="memPn"
-										placeholder="전화번호를 입력해주세요" autocomplete="off">
+										placeholder="이름을 입력해주세요" autocomplete="off">
 									<button type="submit" id="signUp"
 										class="my-4 btn btn-primary rounded-pill w-50">완료</button>
 								</form>
@@ -187,27 +221,27 @@
 		$('#signUpForm').submit(function(e) {
 			e.preventDefault();
 
-            var formData = new FormData(this); // 이미지 파일 포함된 폼 데이터 생성
+			var formData = new FormData(this); // 이미지 파일 포함된 폼 데이터 생성
 
-            $.ajax({
-                type: 'POST',
-                url: '/registDo',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function(response) {
-                    if (response === "success") {
-                        $('#signUpModal').modal('hide');
-                        $('#loginModal').modal('show');
-                    } else {
-                        alert('회원가입 처리 중 오류가 발생했습니다.');
-                    }
-                },
-                error: function(xhr, status, error) {
-                    console.log("회원가입 중 오류가 발생했습니다: " + error);
-                    alert("회원가입에 실패했습니다. 다시 시도해주세요.");
-                }
-            });
+			$.ajax({
+				type : 'POST',
+				url : '/registDo',
+				data : formData,
+				processData : false,
+				contentType : false,
+				success : function(response) {
+					if (response === "success") {
+						$('#signUpModal').modal('hide');
+						$('#loginModal').modal('show');
+					} else {
+						alert('회원가입 처리 중 오류가 발생했습니다.');
+					}
+				},
+				error : function(xhr, status, error) {
+					console.log("회원가입 중 오류가 발생했습니다: " + error);
+					alert("회원가입에 실패했습니다. 다시 시도해주세요.");
+				}
+			});
 		});
 	});
 </script>

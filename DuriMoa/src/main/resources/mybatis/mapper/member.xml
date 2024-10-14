@@ -3,16 +3,15 @@
 <mapper namespace="com.ugi.durimoa.member.dao.IMemberDAO">
 
 	<select id="loginMember" parameterType="MemberVO" resultType="MemberVO">
-		SELECT mem_id,
-	       	   mem_pw
+		SELECT mem_id, mem_pw, mem_nm, mem_img
 	    FROM member
 	    WHERE mem_id = #{memId}
 	    AND mem_pw = #{memPw}
 	</select>
 	
 	<insert id="registMember" parameterType="MemberVO">
-	INSERT INTO member(mem_id, mem_pw, mem_nm, mem_pn, mem_img) 
-	VALUES (#{memId}, #{memPw}, #{memNm}, #{memPn}, #{memImg})
+	INSERT INTO member(mem_id, mem_pw, mem_nm, mem_img) 
+	VALUES (#{memId}, #{memPw}, #{memNm}, #{memImg})
 	</insert>
 	
 </mapper>

@@ -1,13 +1,46 @@
-a {
-	text-decoration: none;
-	color: black;
+* {
+	box-sizing: border-box !important;
+	font-family: 'Pretendard-Regular';
 }
 
-ul, p, li {
+@font-face {
+	font-family: 'Pretendard-Regular';
+	src:
+		url('https://fastly.jsdelivr.net/gh/Project-Noonnu/noonfonts_2107@1.1/Pretendard-Regular.woff')
+		format('woff');
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'LeeSeoyun';
+	src:
+		url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2202-2@1.0/LeeSeoyun.woff')
+		format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
+
+a {
+	text-decoration: none !important;
+	color: black !important;
+}
+
+p, ul, li {
 	margin: 0 !important;
 	/* 모든 마진 제거 */
 	padding: 0 !important;
 	/* 모든 패딩 제거 */
+}
+
+li {
+	list-style-type: none;
+}
+
+input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus,
+	input:-webkit-autofill:active {
+	transition: background-color 5000s;
+	-webkit-text-fill-color: #fff !important;
 }
 
 input::-ms-clear, input::-ms-reveal {
@@ -20,10 +53,6 @@ input::-webkit-search-decoration, input::-webkit-search-cancel-button,
 	input::-webkit-search-results-button, input::-webkit-search-results-decoration
 	{
 	display: none;
-}
-
-li {
-	list-style-type: none;
 }
 
 #couple_name {
@@ -140,8 +169,8 @@ nav #menu_bar {
 	padding: 0 !important;
 }
 
-.userId {
-	padding-left: 38px;
+#loginModal .userId{
+	padding-left: 38px !important;
 	height: 45px;
 	background: url(/resources/assets/img/user.png) no-repeat left center;
 	background-size: 22px;
@@ -152,8 +181,8 @@ nav #menu_bar {
 	box-shadow: none !important;
 }
 
-.userPw {
-	padding-left: 38px;
+#loginModal .userPw{
+	padding-left: 38px !important;
 	height: 45px;
 	background: url(/resources/assets/img/pw.png) no-repeat left center;
 	background-size: 16px;
@@ -162,31 +191,47 @@ nav #menu_bar {
 	border: none;
 	outline: 1px solid #8989896c;
 	box-shadow: none !important;
+	
 }
 
-.userNm, .userPn {
-	padding-left: 20px;
+#loginModal input:hover {
+    outline: 1px solid #0000009e;
+    transition: outline 0.5s;
+}
+
+#loginModal input:focus {
+    transition: all 0.01s;
+    outline: 2px solid #0000009e !important;
+}
+
+#signUpModal input:hover {
+    outline: 1px solid #0000009e;
+    transition: outline 0.5s;
+}
+
+#signUpModal input:focus {
+    transition: all 0.01s;
+    outline: 2px solid #0000009e !important;
+}
+
+
+#signUpModal .userId, .userPw, .userNm, .userPn {
 	height: 45px;
-	font-size: 14px;
-	border: none;
-	outline: 1px solid #8989896c;
+	border: none !important;
 	box-shadow: none !important;
+	outline: 1px solid #8989896c;
 }
 
-.userId:hover, .userPw:hover, .userNm:hover, .userPn:hover {
-	outline: 1px solid #0000009e;
-	transition: outline 0.5s;
-}
+/* .userId:hover, .userPw:hover, .userNm:hover, .userPn:hover { */
+/* 	outline: 1px solid #0000009e; */
+/* 	transition: outline 0.5s; */
+/* } */
 
-.userId:focus, .userPw:focus, .userNm:focus, .userPn:focus {
-	transition: all 0.01s;
-	outline: 2px solid #0000009e !important;
-}
-
-a {
-	text-decoration: none;
-	color: rgb(37, 37, 37);
-}
+/* .userId:focus, .userPw:focus, .userNm:focus, .userPn:focus { */
+/* 	border: none; */
+/* 	transition: all 0.01s; */
+/* 	outline: 2px solid #0000009e !important; */
+/* } */
 
 .row {
 	margin: 0 !important;

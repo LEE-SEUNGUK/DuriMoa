@@ -3,7 +3,7 @@
     /* 항목 사이의 여백 추가 */
 }
 
-ul hr{
+ul hr {
     margin: 10px 0px;
 }
 
@@ -67,11 +67,80 @@ input[name='userId']:hover {
     transition: 0.5s;
 }
 
-.mypage_side a:hover{
+.mypage_side a:hover {
     padding-left: 30px;
     transition: 0.5s;
 }
 
-.mypage_side a:not(:hover){
+.mypage_side a:not(:hover) {
     transition: 0.5s;
-} 
+}
+
+#couple_profile,
+#my_profile {
+    width: 150px;
+    height: 150px;
+    border-radius: 15%;
+    background-color: #eeeeee;
+    overflow: hidden;
+    object-fit: cover;
+}
+
+#couple_info {
+    cursor: pointer;
+}
+
+.couple-input:hover {
+    outline: 1px solid #0000009e !important;
+    transition: outline 0.5s;
+}
+
+.couple-input:focus {
+    transition: all 0.01s;
+    outline: 2px solid #0000009e !important;
+}
+
+#couple_dday:focus {
+    outline: 1px solid #0000009e !important;
+}
+
+.speech-bubble {
+    position: absolute;
+    visibility: hidden;
+    top: 29%;
+    left: 77%;
+    opacity: 0;
+    width: 240px;
+    background: #c4ddc0;
+    border-radius: .4em;
+    padding: 10px;
+    transition: 0.5s
+}
+
+.speech-bubble:after {
+    visibility: hidden;
+    opacity: 0;
+    content: '';
+    position: absolute;
+    top: 1%;
+    left: 10%;
+    width: 0;
+    height: 0;
+    border: 20px solid transparent;
+    border-bottom-color: #c4ddc0;
+    border-top: 0;
+    border-left: 0;
+    margin-left: -10px;
+    margin-top: -20px;
+    transition: 0.4s
+}
+
+.speech-bubble.show {
+    visibility: visible;
+    opacity: 1;
+}
+
+.speech-bubble.show:after {
+    visibility: visible;
+    opacity: 1;
+}
