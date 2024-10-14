@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -16,6 +17,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -99,6 +102,14 @@ public class MemberController {
 
 		return "redirect:/";
 	}
+	
+	@RequestMapping("/logoutDo")
+	public String logout(HttpSession session) throws Exception {
+
+		session.invalidate();
+
+		return "redirect:/";
+	}
 
 	@RequestMapping("/download")
 	public void download(String imageFileName, HttpServletResponse response) throws IOException {
@@ -129,6 +140,19 @@ public class MemberController {
 		} finally {
 			out.close();
 		}
+	}
+	
+	@ResponseBody
+	@PostMapping("/updateDo")
+	public MemberVO updateMember(@RequestBody MemberVO vo, HttpServletRequest request) {
+		System.out.println(vo);
+		
+		memberService.updateMember(vo);
+		
+		HttpSession session = request.getSession();
+	    session.setAttribute("login", vo); // vo를 통해 새로운 세션 정보로 업데이트
+
+		return vo;
 	}
 	
 	@RequestMapping("/myPageView")

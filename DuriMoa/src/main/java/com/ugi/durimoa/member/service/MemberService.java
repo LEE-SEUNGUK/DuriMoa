@@ -153,4 +153,8 @@ public class MemberService {
 		}
 		return userInfo;
 	}
+
+	public void updateMember(MemberVO vo) {
+		dao.updateMember(vo);
+	}
 }

@@ -14,4 +14,11 @@
 	VALUES (#{memId}, #{memPw}, #{memNm}, #{memImg})
 	</insert>
 	
+	<update id="updateMember" parameterType="MemberVO">
+	UPDATE member
+	SET mem_pw = #{memPw},
+	    mem_nm = #{memNm}
+	WHERE mem_id = #{memId}
+	</update>
+	
 </mapper>

@@ -20,6 +20,9 @@
 					<li class="my-page-item" data-target="couple"><a href="#">커플
 							설정</a></li>
 					<hr>
+					<li class="my-page-item" data-target="#"><a
+						href="${pageContext.request.contextPath}/logoutDo"> 로그아웃</a></li>
+					<hr>
 					<li class="my-page-item" data-target="exit"><a href="#">회원
 							탈퇴</a></li>
 					<hr>
@@ -35,32 +38,36 @@
 								<div
 									class="mt-5 mb-4 d-flex justify-content-between align-items-xl-center">
 									<label for="">아이디</label> <input class="form-control"
-										name="userId" type="text" value="${sessionScope.login.memId}" disabled>
+										name="userId" type="text" value="${sessionScope.login.memId}"
+										disabled>
 								</div>
 								<div
-									class="mb-4 d-flex justify-content-between align-items-center">
-									<label for="">비밀번호</label> <input class="form-control"
-										type="password" value="${sessionScope.login.memPw}">
+									class="mb-4 d-flex justify-content-between align-items-center position-relative">
+									<label for="">비밀번호</label> <input class="form-control userPw"
+										name="userPw" type="password"
+										value="${sessionScope.login.memPw}" disabled> <i
+										class="ms-3 fa fa-eye-slash"></i>
 								</div>
 								<div
-									class="my-4 d-flex justify-content-between align-items-center">
-									<label for="">새 비밀번호</label> <input class="form-control"
-										name="userPw" type="text">
+									class="my-4 d-flex justify-content-between align-items-center position-relative">
+									<label for="">새 비밀번호</label> <input class="form-control userPw"
+										id="userNpw" type="password">
 								</div>
 								<div
-									class="mb-4 d-flex justify-content-between align-items-center">
-									<label for="">새 비밀번호 확인</label> <input class="form-control"
-										type="password">
+									class="mb-4 d-flex justify-content-between align-items-center position-relative">
+									<label for="">새 비밀번호 확인</label> <input
+										class="form-control userPw" type="password">
 								</div>
-								<div
-									class="mb-4 d-flex justify-content-between align-items-center">
+								<div class="d-flex justify-content-between align-items-center"
+									style="margin-bottom: 48px;">
 									<label for="">이름</label> <input class="form-control"
-										name="userNm" type="text" value="${sessionScope.login.memNm}">
+										id="userNnm" name="userNm" type="text"
+										value="${sessionScope.login.memNm}">
 								</div>
 							</div>
 							<div class="w-75" style="margin: 0 auto; text-align: center;">
 								<hr class="bg-black">
-								<button type="submit" class="mt-4 btn btn-danger"
+								<button type="button" class="mt-4 btn btn-danger"  onclick="fn_write()"
 									id="update_user"
 									style="background-color: #c4ddc0; height: 45px; color: black; border: none;">회원정보
 									수정</button>
@@ -88,8 +95,9 @@
 											<span>커플정보</span>를 등록해주세요
 										</div>
 										<div class="mt-4 d-flex justify-content-center">
-											<img src="/image/Jjang.jpg" id="my_profile" alt=""> <img
-												class="ms-3" src="/image/couple_add.png" alt=""
+											<img src="resources/assets/img/Jjang.jpg" id="my_profile"
+												alt=""> <img class="ms-3"
+												src="resources/assets/img/couple_add.png" alt=""
 												id="couple_profile" data-bs-target="#couple_search"
 												data-bs-toggle="modal"
 												style="object-fit: cover; padding: 45px;">
@@ -125,8 +133,8 @@
 						</div>
 						<div class="col-2">
 							<div>
-								<img class="mb-3" src="image/question.png" alt="" width="40px"
-									id="couple_info">
+								<img class="mb-3" src="resources/assets/img/question.png" alt=""
+									width="40px" id="couple_info">
 								<div class="speech-bubble">
 									<h5>
 										커플은 왜 설정하나요?
@@ -146,7 +154,8 @@
 								<div
 									class="mt-5 mb-4 d-flex justify-content-between align-items-xl-center">
 									<label for="">아이디</label> <input class="form-control"
-										name="userId" type="text" value="${sessionScope.login.memId}" disabled>
+										name="userId" type="text" value="${sessionScope.login.memId}"
+										disabled>
 								</div>
 								<div
 									class="mb-5 d-flex justify-content-between align-items-center">
@@ -156,7 +165,7 @@
 							</div>
 							<div class="w-75" style="margin: 0 auto; text-align: center;">
 								<hr class="bg-black">
-								<button type="submit" class="mt-4 btn btn-danger"
+								<button type="button" class="mt-4 btn btn-danger"
 									id="update_user"
 									style="background-color: #c4ddc0; height: 45px; color: black; border: none;">회원
 									탈퇴</button>
@@ -167,21 +176,54 @@
 			</section>
 		</div>
 	</div>
-
 	<script>
-		$(".my-page-item").click(function() {
-			let target = $(this).data('target');
+	$(document).ready(function() {
+	$(".my-page-item").click(function() {
+		let target = $(this).data('target');
 
-			$('.content-section').hide();
+		$('.content-section').hide();
 
-			$('#' + target).show();
+		$('#' + target).show();
 
-			$('#couple_info').hover(function() {
-				$('.speech-bubble').addClass('show');
-			}, function() {
-				$('.speech-bubble').removeClass('show');
-			});
+		$('#couple_info').hover(function() {
+			$('.speech-bubble').addClass('show');
+		}, function() {
+			$('.speech-bubble').removeClass('show');
+		});
+	});
+	
+	
+});
+	function fn_write() {
+		console.log("ㄱㄱ");
+		let memId = '${sessionScope.login.memId}';
+		let newPw = $('#userNpw').val();
+		let newNm = $('#userNnm').val();
+		let memImg = '${sessionScope.login.memImg}';
+		
+		let sendData = JSON.stringify({
+			memId: memId,
+			memPw: newPw,
+			memNm: newNm,
+			memImg: memImg
 		})
-	</script>
+		
+		$.ajax({
+			url : '<c:url value = "/updateDo" />',
+			type : 'POST',
+			contentType : 'application/json',
+			dataType : 'json',
+			data : sendData,
+			success : function(res) {
+				console.log('응답');
+				console.log(res);
+
+			},
+			error : function(e) {
+				console.log(e);
+			}
+		});
+	};
+</script>
 </body>
 </html>

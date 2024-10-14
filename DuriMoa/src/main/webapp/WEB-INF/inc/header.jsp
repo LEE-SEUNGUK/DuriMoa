@@ -10,6 +10,7 @@
 	rel="stylesheet"
 	integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
 	crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
 	integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
@@ -100,15 +101,17 @@
 								<form
 									class="d-flex flex-column justify-content-center align-items-center w-75"
 									action="/loginDo" method="post">
-									<input class="form-control userId" type="text" name="memId"
+									<div class="w-100" style="height: 45px">
+									<input class="form-control h-100 userId" type="text" name="memId"
 										placeholder="아이디" value="${cookie.rememberId.value}"
 										autocomplete="off"> 
 									<label for="memId"></label> 
-									<input class="mt-1 form-control userPw" type="password" name="memPw"
+									</div>
+									<div class="mt-1 w-100 position-relative" style="height: 45px">
+									<input class="form-control h-100 userPw" type="password" name="memPw"
 										placeholder="비밀번호" autocomplete="off"> 
 									<label for="memPw"></label>
-									<div class="eyes">
-										<i class="fa fa-eye fa-lg"></i>
+									<i class="fa fa-eye-slash"></i>
 									</div>
 									<div class="mt-4 d-flex w-100">
 										<input ${cookie.rememberId.value == null ? "" : "checked"}
@@ -242,6 +245,21 @@
 					alert("회원가입에 실패했습니다. 다시 시도해주세요.");
 				}
 			});
+		});
+		
+		$('i.fa').on('click', function() {
+		    // 해당 비밀번호 input의 앞 요소를 찾아서 active 클래스를 토글
+		    const passwordInput = $(this).siblings('.userPw');
+		    passwordInput.toggleClass('active');
+
+		    // 비밀번호 input의 type을 토글
+		    if (passwordInput.attr('type') === 'password') {
+		        passwordInput.attr('type', 'text');
+		        $(this).removeClass('fa-eye-slash').addClass('fa-eye'); // 아이콘 변경
+		    } else {
+		        passwordInput.attr('type', 'password');
+		        $(this).removeClass('fa-eye').addClass('fa-eye-slash'); // 아이콘 변경
+		    }
 		});
 	});
 </script>

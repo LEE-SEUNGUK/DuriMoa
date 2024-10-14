@@ -169,9 +169,16 @@ nav #menu_bar {
 	padding: 0 !important;
 }
 
+i{
+    position: absolute;
+    left: 90%;
+    top: 50%;
+    color: black;
+    transform:translate(-50%,-50%);
+}
+
 #loginModal .userId{
 	padding-left: 38px !important;
-	height: 45px;
 	background: url(/resources/assets/img/user.png) no-repeat left center;
 	background-size: 22px;
 	background-position: 10px;
@@ -183,7 +190,6 @@ nav #menu_bar {
 
 #loginModal .userPw{
 	padding-left: 38px !important;
-	height: 45px;
 	background: url(/resources/assets/img/pw.png) no-repeat left center;
 	background-size: 16px;
 	background-position: 14px;

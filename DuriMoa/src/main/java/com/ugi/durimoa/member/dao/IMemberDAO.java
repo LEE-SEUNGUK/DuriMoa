@@ -15,4 +15,5 @@ public interface IMemberDAO {
 	// 일반 로그인
 	public MemberVO loginMember(MemberVO vo);
 	
+	public void updateMember(MemberVO vo);
 }
