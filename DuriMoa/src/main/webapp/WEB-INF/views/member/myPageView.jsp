@@ -36,32 +36,40 @@
 						<form action="" style="border: none;">
 							<div style="width: 46%; margin: 0 auto;">
 								<div
-									class="mt-5 mb-4 d-flex justify-content-between align-items-xl-center">
+									class="my-4 d-flex flex-column align-items-center">
+									<label class="mb-3" for="my_profile">프로필 이미지</label> 
+									<img src="${sessionScope.login.memImg}" id="my_profile" alt="">
+									<input type="file" id="imageUpload" name="profileImage"
+										style="display: none;" accept="image/*">
+								</div>
+								<div
+									class="mb-4 d-flex justify-content-between align-items-center">
 									<label for="">아이디</label> <input class="form-control"
-										name="userId" type="text" value="${sessionScope.login.memId}"
+										name="memId" type="text" value="${sessionScope.login.memId}"
 										disabled>
 								</div>
 								<div
 									class="mb-4 d-flex justify-content-between align-items-center position-relative">
-									<label for="">비밀번호</label> <input class="form-control userPw"
-										name="userPw" type="password"
+									<label for="">비밀번호</label> <input class="form-control memPw"
+										name="memPw" type="password"
 										value="${sessionScope.login.memPw}" disabled> <i
 										class="ms-3 fa fa-eye-slash"></i>
 								</div>
 								<div
 									class="my-4 d-flex justify-content-between align-items-center position-relative">
-									<label for="">새 비밀번호</label> <input class="form-control userPw"
-										id="userNpw" type="password">
+									<label for="">새 비밀번호</label> <input class="form-control memNpw"
+										id="memNpw" name="memPw" type="password">
 								</div>
 								<div
 									class="mb-4 d-flex justify-content-between align-items-center position-relative">
 									<label for="">새 비밀번호 확인</label> <input
-										class="form-control userPw" type="password">
+										class="form-control memPw_ck" type="password" 
+										id="memPw_ck" name="memPw_ck">
 								</div>
 								<div class="d-flex justify-content-between align-items-center"
-									style="margin-bottom: 48px;">
+									style="margin-bottom: 24px;">
 									<label for="">이름</label> <input class="form-control"
-										id="userNnm" name="userNm" type="text"
+										id="memNm" name="memNm" type="text"
 										value="${sessionScope.login.memNm}">
 								</div>
 							</div>
@@ -95,7 +103,7 @@
 											<span>커플정보</span>를 등록해주세요
 										</div>
 										<div class="mt-4 d-flex justify-content-center">
-											<img src="resources/assets/img/Jjang.jpg" id="my_profile"
+											<img src="${sessionScope.login.memImg}" id="my_profile"
 												alt=""> <img class="ms-3"
 												src="resources/assets/img/couple_add.png" alt=""
 												id="couple_profile" data-bs-target="#couple_search"
@@ -110,7 +118,7 @@
 														class="form-control couple-input" name="userId"
 														type="text" placeholder="커플 유저의 아이디를 입력하세요">
 												</div>
-												<button class="ms-2 btn email_check">검색</button>
+												<button type="submit" class="ms-2 btn email_check">검색</button>
 											</div>
 
 											<div
@@ -193,17 +201,24 @@
 	});
 	
 	
-});
+	});
 	function fn_write() {
 		console.log("ㄱㄱ");
 		let memId = '${sessionScope.login.memId}';
-		let newPw = $('#userNpw').val();
-		let newNm = $('#userNnm').val();
+		let newPw = $('#memNpw').val();
+		let newNm = $('#memNm').val();
 		let memImg = '${sessionScope.login.memImg}';
+		
+		let memPw;
+	    if (newPw === null || newPw === '') {
+	        memPw = '${sessionScope.login.memPw}';  // 기존 비밀번호를 유지
+	    } else {
+	        memPw = newPw;  // 새로운 비밀번호로 변경
+	    }
 		
 		let sendData = JSON.stringify({
 			memId: memId,
-			memPw: newPw,
+			memPw: memPw,
 			memNm: newNm,
 			memImg: memImg
 		})
@@ -217,7 +232,7 @@
 			success : function(res) {
 				console.log('응답');
 				console.log(res);
-
+				location.href="/myPageView"
 			},
 			error : function(e) {
 				console.log(e);

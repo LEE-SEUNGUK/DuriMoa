@@ -69,10 +69,21 @@ public class MemberController {
 		}
 		return "success";
 	}
+	
+	//아이디 중복체크
+	@PostMapping("/idCheck")
+	@ResponseBody
+	public int idCheck(@RequestParam("id") String id) {
+		
+		int cnt = memberService.idCheck(id);
+		return cnt;
+	}
 
 	@RequestMapping("/loginDo")
-	public String loginDo(MemberVO vo, boolean remember, HttpSession session, HttpServletResponse response)
+	@ResponseBody // 이 부분 추가해서 JSON 형식으로 응답하도록 함
+	public HashMap<String, String> loginDo(@RequestBody MemberVO vo, boolean remember, HttpSession session, HttpServletResponse response)
 			throws Exception {
+		HashMap<String, String> result = new HashMap<>();
 		System.out.println(vo);
 
 		MemberVO login = memberService.loginMember(vo);
@@ -80,7 +91,9 @@ public class MemberController {
 		System.out.println(login);
 		// 입력한 비밀번호와 db의 암호화된 비번을 비교해서 일치하면 true, 그렇지 않으면 false 반환
 		if (login == null) {
-			System.out.println("로그인 실패");
+			result.put("status", "fail");
+			result.put("message", "아이디 또는 비밀번호가 잘못되었습니다.");
+			return result;
 		}
 
 		System.out.println("로그인 성공");
@@ -100,9 +113,10 @@ public class MemberController {
 			response.addCookie(cookie);
 		}
 
-		return "redirect:/";
+		 result.put("status", "success");
+		 return result;
 	}
-	
+
 	@RequestMapping("/logoutDo")
 	public String logout(HttpSession session) throws Exception {
 
@@ -141,24 +155,23 @@ public class MemberController {
 			out.close();
 		}
 	}
-	
+
 	@ResponseBody
 	@PostMapping("/updateDo")
 	public MemberVO updateMember(@RequestBody MemberVO vo, HttpServletRequest request) {
 		System.out.println(vo);
-		
+
 		memberService.updateMember(vo);
-		
+
 		HttpSession session = request.getSession();
-	    session.setAttribute("login", vo); // vo를 통해 새로운 세션 정보로 업데이트
+		session.setAttribute("login", vo); // vo를 통해 새로운 세션 정보로 업데이트
 
 		return vo;
 	}
-	
+
 	@RequestMapping("/myPageView")
 	public String MyPageView() {
-		System.out.println("MyPageView");
-		
+
 		return "/member/myPageView";
 	}
 
@@ -169,7 +182,6 @@ public class MemberController {
 		// 위에서 만든 코드 아래에 코드 추가
 		String access_Token = memberService.getAccessToken(code);
 		System.out.println("###access_Token#### : " + access_Token);
-		
 
 		// 위에서 만든 코드 아래에 코드 추가
 		HashMap<String, Object> userInfo = memberService.getUserInfo(access_Token);
@@ -177,7 +189,7 @@ public class MemberController {
 		System.out.println("###nickname#### : " + userInfo.get("nickname"));
 		System.out.println("###email#### : " + userInfo.get("email"));
 		System.out.println("###email#### : " + userInfo.get("profileImg"));
-		
+
 		return "member/testPage";
 	}
 

@@ -34,9 +34,9 @@ public class MemberService {
 
 		MemberVO user = dao.loginMember(vo);
 		if (user == null) {
-			throw new Exception();
+			System.out.println("올바르지 않은 계정 정보");
+			return null;
 		}
-
 		return user;
 	}
 	
@@ -157,4 +157,10 @@ public class MemberService {
 	public void updateMember(MemberVO vo) {
 		dao.updateMember(vo);
 	}
+	
+	public int idCheck(String id) {
+		int cnt = dao.idCheck(id);
+		System.out.println("cnt: " + cnt);
+		return cnt;
+	};
 }

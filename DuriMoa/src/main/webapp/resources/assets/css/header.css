@@ -99,8 +99,8 @@ input::-webkit-search-decoration, input::-webkit-search-cancel-button,
 	transition: 0.3s;
 }
 
-nav #menu_bar {
-	margin-left: 140px !important;
+nav #header_menu {
+	margin-left: 20px !important;
 	display: flex;
 	align-items: center
 }
@@ -153,11 +153,6 @@ nav #menu_bar {
 	/* 내용이 넘어갈 경우 숨기기 */
 }
 
-.container-fluid {
-	padding: 0;
-	/* 패딩을 없애서 내부 여백을 제거 */
-}
-
 .login-left {
 	margin: 0 !important;
 	padding: 0 !important;
@@ -177,7 +172,7 @@ i{
     transform:translate(-50%,-50%);
 }
 
-#loginModal .userId{
+#loginModal .memId{
 	padding-left: 38px !important;
 	background: url(/resources/assets/img/user.png) no-repeat left center;
 	background-size: 22px;
@@ -188,7 +183,7 @@ i{
 	box-shadow: none !important;
 }
 
-#loginModal .userPw{
+#loginModal .memPw{
 	padding-left: 38px !important;
 	background: url(/resources/assets/img/pw.png) no-repeat left center;
 	background-size: 16px;
@@ -221,23 +216,12 @@ i{
 }
 
 
-#signUpModal .userId, .userPw, .userNm, .userPn {
+#signUpModal .memId, .memPw, .memNm{
 	height: 45px;
 	border: none !important;
 	box-shadow: none !important;
 	outline: 1px solid #8989896c;
 }
-
-/* .userId:hover, .userPw:hover, .userNm:hover, .userPn:hover { */
-/* 	outline: 1px solid #0000009e; */
-/* 	transition: outline 0.5s; */
-/* } */
-
-/* .userId:focus, .userPw:focus, .userNm:focus, .userPn:focus { */
-/* 	border: none; */
-/* 	transition: all 0.01s; */
-/* 	outline: 2px solid #0000009e !important; */
-/* } */
 
 .row {
 	margin: 0 !important;

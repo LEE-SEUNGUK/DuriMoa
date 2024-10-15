@@ -15,5 +15,9 @@ public interface IMemberDAO {
 	// 일반 로그인
 	public MemberVO loginMember(MemberVO vo);
 	
+	// 회원 정보 수정
 	public void updateMember(MemberVO vo);
+	
+	// 아이디 중복 체크
+	public int idCheck(String id);
 }
