@@ -6,8 +6,8 @@ public class MemberVO {
 	private String memPw;
 	private String memNm;
 	private String memDt;
-	private String memPn;	
-	private String memImg;
+	private String memImg;	
+	private int copId;
 	
 	public String getMemId() {
 		return memId;
@@ -33,22 +33,22 @@ public class MemberVO {
 	public void setMemDt(String memDt) {
 		this.memDt = memDt;
 	}
-	public String getMemPn() {
-		return memPn;
-	}
-	public void setMemPn(String memPn) {
-		this.memPn = memPn;
-	}
 	public String getMemImg() {
 		return memImg;
 	}
 	public void setMemImg(String memImg) {
 		this.memImg = memImg;
 	}
+	public int getCopId() {
+		return copId;
+	}
+	public void setCopId(int copId) {
+		this.copId = copId;
+	}
 	
 	@Override
 	public String toString() {
-		return "MemberVO [memId=" + memId + ", memPw=" + memPw + ", memNm=" + memNm + ", memDt=" + memDt + ", memPn="
-				+ memPn + ", memImg=" + memImg + "]";
+		return "MemberVO [memId=" + memId + ", memPw=" + memPw + ", memNm=" + memNm + ", memDt=" + memDt + ", memImg="
+				+ memImg + ", copId=" + copId + "]";
 	}
 }

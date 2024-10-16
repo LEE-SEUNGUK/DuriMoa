@@ -11,5 +11,6 @@
    </settings>
    <typeAliases>
       <typeAlias type="com.ugi.durimoa.member.vo.MemberVO" alias="MemberVO" />
+      <typeAlias type="com.ugi.durimoa.member.vo.CoupleVO" alias="CoupleVO" />
    </typeAliases>
 </configuration>

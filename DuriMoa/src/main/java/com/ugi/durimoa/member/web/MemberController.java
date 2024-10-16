@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ugi.durimoa.member.service.MemberService;
 import com.ugi.durimoa.member.vo.MemberVO;
+import com.ugi.durimoa.member.vo.CoupleVO;
 
 @Controller
 public class MemberController {
@@ -78,7 +79,7 @@ public class MemberController {
 		int cnt = memberService.idCheck(id);
 		return cnt;
 	}
-
+	
 	@RequestMapping("/loginDo")
 	@ResponseBody // 이 부분 추가해서 JSON 형식으로 응답하도록 함
 	public HashMap<String, String> loginDo(@RequestBody MemberVO vo, boolean remember, HttpSession session, HttpServletResponse response)
@@ -117,12 +118,51 @@ public class MemberController {
 		 return result;
 	}
 
+
+	@RequestMapping("/coupleAdd")
+	@ResponseBody // 이 부분 추가해서 JSON 형식으로 응답하도록 함
+	public String updateCop(@RequestBody CoupleVO vo, HttpSession session, HttpServletResponse response)
+			throws Exception {
+		// 세션에 있는 값을 가져올땐 객체에 담아서 메소드로 가져온다.
+		MemberVO login = (MemberVO) session.getAttribute("login");
+
+		memberService.coupleAdd(vo);
+		String memId = vo.getMemId();
+		int copId = memberService.coupleId(memId);
+		
+		String mem1Id = login.getMemId();
+		String mem2Id = vo.getMemId();
+		
+		MemberVO mem1 = new MemberVO();
+		MemberVO mem2 = new MemberVO();
+		
+		mem1.setCopId(copId);
+		mem2.setCopId(copId);
+		
+		mem1.setMemId(mem1Id);
+		mem2.setMemId(mem2Id);
+		
+		memberService.updateCop(mem1);
+		memberService.updateCop(mem2);
+
+		return "success";
+	}
+
 	@RequestMapping("/logoutDo")
 	public String logout(HttpSession session) throws Exception {
 
 		session.invalidate();
 
 		return "redirect:/";
+	}
+	
+	@RequestMapping("/coupleCk")
+	@ResponseBody
+	public MemberVO coupleCk(@RequestParam("id") String id) {
+		
+		MemberVO mem = memberService.coupleck(id);
+		
+		return mem;
 	}
 
 	@RequestMapping("/download")
@@ -158,15 +198,24 @@ public class MemberController {
 
 	@ResponseBody
 	@PostMapping("/updateDo")
-	public MemberVO updateMember(@RequestBody MemberVO vo, HttpServletRequest request) {
-		System.out.println(vo);
+	public MemberVO updateMember(@ModelAttribute MemberVO vo, 
+	                             @RequestParam(value = "profileImage", required = false) MultipartFile file,
+	                             HttpServletRequest request) throws IOException {
 
-		memberService.updateMember(vo);
+		 if (file != null && !file.isEmpty()) {
+		        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+		        String filePath = uploadPath + File.separator + fileName;
+		        File dest = new File(filePath);
+		        file.transferTo(dest);
+		        vo.setMemImg(downloadPath + fileName);
+		    }
 
-		HttpSession session = request.getSession();
-		session.setAttribute("login", vo); // vo를 통해 새로운 세션 정보로 업데이트
+		    memberService.updateMember(vo);
 
-		return vo;
+		    HttpSession session = request.getSession();
+		    session.setAttribute("login", vo);
+
+		    return vo;
 	}
 
 	@RequestMapping("/myPageView")
@@ -192,5 +241,4 @@ public class MemberController {
 
 		return "member/testPage";
 	}
-
 }

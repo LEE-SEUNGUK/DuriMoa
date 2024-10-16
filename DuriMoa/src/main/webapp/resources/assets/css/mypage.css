@@ -77,6 +77,7 @@ input[name='userId']:hover {
 }
 
 #couple_profile,
+#couple_profile_my,
 #my_profile {
     width: 150px;
     height: 150px;
@@ -102,6 +103,23 @@ input[name='userId']:hover {
 
 #couple_dday:focus {
     outline: 1px solid #0000009e !important;
+}
+
+#couple_result {
+	background: #f5f5f5;
+	border-radius: 15%;
+	width: 20%;
+}
+
+#couple_result:hover{
+	background-color: #eeeeee;
+	transition: all 0.5s;
+	cursor: pointer;
+}
+
+#couple_result:hover{
+	border: none;
+	outline: none !important;
 }
 
 .speech-bubble {

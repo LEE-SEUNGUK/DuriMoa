@@ -18,7 +18,7 @@
 	UPDATE member
 	SET mem_pw = #{memPw},
 	    mem_nm = #{memNm},
-	    mep_img = #{memImg}
+	    mem_img = #{memImg}
 	WHERE mem_id = #{memId}
 	</update>
 	
@@ -27,4 +27,24 @@
 	WHERE mem_id = #{memId}
 	</select>
 
+	<select id="coupleck" resultType="MemberVO" parameterType="String">
+	SELECT mem_id, mem_nm, mem_img FROM member WHERE mem_id = #{memId}
+	</select>
+
+	<insert id="coupleAdd" parameterType="CoupleVO">
+	INSERT INTO couple(cop_nm, cop_dt, mem_id)
+	VALUES(#{copNm}, #{copDt}, #{memId})
+	</insert>
+	
+	<update id="updateCop" parameterType="MemberVO">
+	UPDATE member
+	SET cop_id = #{copId}, cop_yn = 'Y'
+	WHERE mem_id= #{memId}
+	</update>
+
+	<select id="coupleId" resultType="int"  parameterType="String">
+	SELECT cop_id
+	FROM couple
+	WHERE mem_id = #{memId}
+	</select>
 </mapper>

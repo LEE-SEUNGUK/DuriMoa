@@ -33,14 +33,14 @@
 					<h4>개인정보 수정</h4>
 					<hr class="bg-dark mypage_hr">
 					<div class="container">
-						<form action="" style="border: none;">
+						<form action="" style="border: none;"
+							enctype="multipart/form-data">
 							<div style="width: 46%; margin: 0 auto;">
-								<div
-									class="my-4 d-flex flex-column align-items-center">
-									<label class="mb-3" for="my_profile">프로필 이미지</label> 
-									<img src="${sessionScope.login.memImg}" id="my_profile" alt="">
+								<div class="my-4 d-flex flex-column align-items-center">
+									<label class="mb-3" for="my_profile">프로필 이미지</label> <img
+										src="${sessionScope.login.memImg}" id="my_profile" alt="">
 									<input type="file" id="imageUpload" name="profileImage"
-										style="display: none;" accept="image/*">
+										accept="image/*" style="display: none;">
 								</div>
 								<div
 									class="mb-4 d-flex justify-content-between align-items-center">
@@ -63,20 +63,19 @@
 								<div
 									class="mb-4 d-flex justify-content-between align-items-center position-relative">
 									<label for="">새 비밀번호 확인</label> <input
-										class="form-control memPw_ck" type="password" 
-										id="memPw_ck" name="memPw_ck">
+										class="form-control memPw_ck" type="password" id="memPw_ck"
+										name="memPw_ck">
 								</div>
 								<div class="d-flex justify-content-between align-items-center"
 									style="margin-bottom: 24px;">
-									<label for="">이름</label> <input class="form-control"
-										id="memNm" name="memNm" type="text"
-										value="${sessionScope.login.memNm}">
+									<label for="">이름</label> <input class="form-control" id="memNm"
+										name="memNm" type="text" value="${sessionScope.login.memNm}">
 								</div>
 							</div>
 							<div class="w-75" style="margin: 0 auto; text-align: center;">
 								<hr class="bg-black">
-								<button type="button" class="mt-4 btn btn-danger"  onclick="fn_write()"
-									id="update_user"
+								<button type="button" class="mt-4 btn btn-danger"
+									onclick="fn_write()" id="update_user"
 									style="background-color: #c4ddc0; height: 45px; color: black; border: none;">회원정보
 									수정</button>
 							</div>
@@ -94,7 +93,7 @@
 						<div class="col-2"></div>
 						<div class="col-8">
 							<div class="container">
-								<form action="">
+								<form id="coupleForm" action="">
 									<!-- margin: 0 auto는 자기 자신을 중앙정렬 -->
 									<div style="width: 100%; margin: 0 auto;">
 										<div
@@ -103,14 +102,14 @@
 											<span>커플정보</span>를 등록해주세요
 										</div>
 										<div class="mt-4 d-flex justify-content-center">
-											<img src="${sessionScope.login.memImg}" id="my_profile"
+											<img src="${sessionScope.login.memImg}" id="couple_profile_my"
 												alt=""> <img class="ms-3"
 												src="resources/assets/img/couple_add.png" alt=""
-												id="couple_profile" data-bs-target="#couple_search"
-												data-bs-toggle="modal"
+												id="couple_profile"
 												style="object-fit: cover; padding: 45px;">
 										</div>
-										<div class="mt-5" style="width: 92%; margin-left: 6%;">
+										<div class="mt-5" style="width: 92%; margin-left: 6%;"
+											id="couple_div">
 											<div class="d-flex align-items-center">
 												<div
 													class="ps-2 d-inline-flex justify-content-between align-items-center w-75">
@@ -118,22 +117,31 @@
 														class="form-control couple-input" name="userId"
 														type="text" placeholder="커플 유저의 아이디를 입력하세요">
 												</div>
-												<button type="submit" class="ms-2 btn email_check">검색</button>
+												<button type="button" class="ms-2 btn email_check"
+													onclick="coupleCk()">검색</button>
 											</div>
-
+											<div id="couple_search">
+												<input type='text' id='memId1' name='memId1'
+													value="${sessionScope.login.memId}" style='display: none;'>
+											</div>
 											<div
 												class="ps-2 d-flex justify-content-between align-items-center mt-4 w-75">
 												<label for="">커플 이름</label> <input
-													class="form-control couple-input" type="text"
-													placeholder="커플 닉네임을 설정해주세요">
+													class="form-control couple-input" type="text" id="copNm"
+													name="copNm" placeholder="커플 닉네임을 설정해주세요">
 											</div>
-
 											<div
-												class="ps-2 d-flex justify-content-between align-items-center mt-4 w-75">
+												class="ps-2 d-flex justify-content-between align-items-center mt-4 mb-5 w-75">
 												<label for="">디데이 설정</label> <input
-													class="form-control couple-input" type="date"
-													id="couple_dday">
+													class="form-control couple-input" type="date" id="copDt"
+													name="copNm">
 											</div>
+										</div>
+										<div class="w-100" style="margin: 0 auto; text-align: center;">
+											<hr class="bg-black">
+											<button type="submit" class="mt-4 btn btn-danger"
+												style="background-color: #c4ddc0; height: 45px; color: black; border: none;">커플
+												등록</button>
 										</div>
 									</div>
 								</form>
@@ -184,61 +192,124 @@
 			</section>
 		</div>
 	</div>
+
 	<script>
 	$(document).ready(function() {
-	$(".my-page-item").click(function() {
-		let target = $(this).data('target');
-
-		$('.content-section').hide();
-
-		$('#' + target).show();
-
-		$('#couple_info').hover(function() {
-			$('.speech-bubble').addClass('show');
-		}, function() {
-			$('.speech-bubble').removeClass('show');
+		$(".my-page-item").click(function() {
+			let target = $(this).data('target');
+	
+			$('.content-section').hide();
+	
+			$('#' + target).show();
+	
+			$('#couple_info').hover(function() {
+				$('.speech-bubble').addClass('show');
+			}, function() {
+				$('.speech-bubble').removeClass('show');
+			});
 		});
-	});
+		
+		$('#coupleForm').submit(function(e) {
+		    e.preventDefault(); // 기본 폼 제출 방지
+		    
+		    // 입력 값 가져오기
+		    var coupleData = {
+		        memId: $('.couple-input[name="userId"]').val(),
+		        copNm: $('#copNm').val(),
+		        copDt: $('#copDt').val()
+		    };
+
+		    // JSON으로 변환하여 AJAX 요청
+		    $.ajax({
+		        type: 'POST',
+		        url: '/coupleAdd',
+		        contentType: 'application/json', // JSON 형식으로 데이터 전송
+		        data: JSON.stringify(coupleData), // JSON 문자열로 변환
+		        success: function(response) {
+		            console.log("응답:", response);
+		            if (response === "success") {
+		                alert("커플이 성공적으로 추가되었습니다.");
+		                // 추가 작업 (예: 페이지 리로드 등)
+		            } else {
+		                alert("커플 추가 오류");
+		            }
+		        },
+		        error: function(xhr, status, error) {
+		            alert("서버 오류: " + error);
+		        }
+		    });
+		});
+
+ 	});
 	
-	
-	});
 	function fn_write() {
-		console.log("ㄱㄱ");
-		let memId = '${sessionScope.login.memId}';
-		let newPw = $('#memNpw').val();
-		let newNm = $('#memNm').val();
-		let memImg = '${sessionScope.login.memImg}';
-		
-		let memPw;
-	    if (newPw === null || newPw === '') {
-	        memPw = '${sessionScope.login.memPw}';  // 기존 비밀번호를 유지
+	    let formData = new FormData();
+	    formData.append('memId', '${sessionScope.login.memId}');
+	    
+	    let newPw = $('#memNpw').val();
+	    formData.append('memPw', newPw === '' ? '${sessionScope.login.memPw}' : newPw);
+	    
+	    formData.append('memNm', $('#memNm').val());
+	    
+	    let imageFile = $('#imageUpload')[0].files[0];
+	    if (imageFile) {
+	        formData.append('profileImage', imageFile);
 	    } else {
-	        memPw = newPw;  // 새로운 비밀번호로 변경
+	        formData.append('memImg', '${sessionScope.login.memImg}');
 	    }
-		
-		let sendData = JSON.stringify({
-			memId: memId,
-			memPw: memPw,
-			memNm: newNm,
-			memImg: memImg
-		})
+	    
+	    $.ajax({
+	        url: '<c:url value="/updateDo" />',
+	        type: 'POST',
+	        data: formData,
+	        processData: false,
+	        contentType: false,
+	        success: function(res) {
+	            console.log('응답');
+	            console.log(res);
+	            location.href="/myPageView"
+	        },
+	        error: function(e) {
+	            console.log(e);
+	        }
+	    });
+	}
+	
+	function coupleCk(){
+		let id = $('.couple-input').val();
 		
 		$.ajax({
-			url : '<c:url value = "/updateDo" />',
-			type : 'POST',
-			contentType : 'application/json',
-			dataType : 'json',
-			data : sendData,
-			success : function(res) {
-				console.log('응답');
+			url: '/coupleCk',
+			type: 'post',
+			data: {id: id},
+			success: function(res) {
+				console.log("정상 응답");
 				console.log(res);
-				location.href="/myPageView"
+				coupleInfo = res;
+				
+				let str = "";
+				str += "<div id='couple_result' class='mt-3 d-flex couple-input align-items-center' style='height: 50px; width: 55%; margin: 0 auto; margin-right: 136px; border-radius: 10px;'>";
+				str += "<img class='ms-4' src='" + res.memImg + "' style='width: 41px; height: 41px; border-radius: 20%;'>";
+                str += "<a style='margin-left: 70px;'>" + res.memNm + "님" + "</a></div>";
+                str += "<input type='text' id='memId2' name='memId2' value='" + res.memId + "' style='display: none;'>";
+                $('#couple_search').append(str);
+                console.log("왜 안돼");
+                
+                $(document).on('click', '#couple_result', function() {
+                    if (coupleInfo.memImg) {
+                        $("#couple_profile").attr("src", res.memImg); // img 태그 src 변경
+                        $("#couple_profile").css("padding", '0px'); // img 태그 src 변경
+             
+                    } else {
+                        console.log("커플 프로필");
+                    }
+                });
 			},
-			error : function(e) {
-				console.log(e);
+			error: function() {
+				console.log("서버 오류");
 			}
 		});
-	};
+	}
 </script>
 </body>
 </html>

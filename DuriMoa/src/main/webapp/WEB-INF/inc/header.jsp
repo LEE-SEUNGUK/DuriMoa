@@ -1,8 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<link href="/resources/assets/css/header.css" rel="stylesheet" />
-<link href="/resources/assets/css/mypage.css" rel="stylesheet" />
+<link href="/resources/assets/css/header.css?after" rel="stylesheet" />
+<link href="/resources/assets/css/mypage.css?after" rel="stylesheet" />
 <link
 	rel="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
 <link
@@ -72,7 +72,7 @@
 								href="${pageContext.request.contextPath}/myPageView" id="mypage">
 								<img
 								src="${pageContext.request.contextPath}${sessionScope.login.memImg}"
-								style="width: 41px; height: 41px; object-fit: cover; border-radius: 50%;">
+								style="width: 41px; height: 41px; object-fit: cover; border-radius: 20%;">
 								<p class="nav_text" style="padding-top: 3px !important">마이페이지</p>
 							</a>
 						</c:if>
