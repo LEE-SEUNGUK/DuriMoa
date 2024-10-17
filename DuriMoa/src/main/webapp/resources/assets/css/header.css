@@ -55,9 +55,9 @@ input::-webkit-search-decoration, input::-webkit-search-cancel-button,
 	display: none;
 }
 
-#couple_name {
+#couple_name, #headNm {
 	font-family: 'LeeSeoyun';
-	font-size: 20px;
+	font-size: 24px !important; 
 }
 
 #marker_search {

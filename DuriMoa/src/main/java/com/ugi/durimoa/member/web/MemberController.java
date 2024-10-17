@@ -91,21 +91,21 @@ public class MemberController {
 		System.out.println(vo);
 
 		MemberVO login = memberService.loginMember(vo);
-		
+
 		System.out.println(login.getCopYn());
-		if("Y".equals(login.getCopYn())) {
+		if ("Y".equals(login.getCopYn())) {
 			CoupleInfoVO couple = memberService.copSession(login);
 			System.out.println("커플 세션 등록");
 			session.setAttribute("couple", couple);
 		}
-		
+
 		System.out.println(login);
 		// 입력한 비밀번호와 db의 암호화된 비번을 비교해서 일치하면 true, 그렇지 않으면 false 반환
 
 		System.out.println("로그인 성공");
 
 		session.setAttribute("login", login);
-		
+
 		System.out.println(login);
 		if (remember) {
 			// 쿠키 생성
@@ -144,40 +144,39 @@ public class MemberController {
 
 		mem1.setMemId(login_memId);
 		mem2.setMemId(cop_memId);
-		
+
 		memberService.updateCop(mem1);
 		memberService.updateCop(mem2);
-		
+
 		CoupleInfoVO couple = memberService.copSession(login);
 		session.setAttribute("couple", couple);
-		
+
 		System.out.println(couple);
-		
+
 		return "success";
 	}
-	
+
 	@RequestMapping("/coupleUpdate")
 	@ResponseBody
 	public CoupleInfoVO copUpdate(@RequestBody CoupleVO vo, HttpSession session) {
-		
+
 		System.out.println("커플 업데이트 컨트롤");
 		System.out.println("수정 값: " + vo);
-		
+
 		memberService.copUpdate(vo);
-		
+
 		CoupleInfoVO cop = (CoupleInfoVO) session.getAttribute("couple");
 		System.out.println("현재 커플세션: " + cop);
-		
+
 		cop.setCopNm(vo.getCopNm());
 		cop.setCopDt(vo.getCopDt());
-		
+
 		System.out.println("수정된 커플세션: " + cop);
 		session.setAttribute("couple", cop);
-		
+
 		return cop;
 	}
 
-	
 	@RequestMapping("/logoutDo")
 	public String logout(HttpSession session) throws Exception {
 
@@ -229,8 +228,8 @@ public class MemberController {
 	@ResponseBody
 	@PostMapping("/updateDo")
 	public MemberVO updateMember(@ModelAttribute MemberVO vo,
-			@RequestParam(value = "profileImage", required = false) MultipartFile file, HttpServletRequest request)
-			throws IOException {
+			@RequestParam(value = "profileImage", required = false) MultipartFile file, HttpServletRequest request,
+			HttpSession session) throws IOException {
 
 		if (file != null && !file.isEmpty()) {
 			String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
@@ -239,10 +238,19 @@ public class MemberController {
 			file.transferTo(dest);
 			vo.setMemImg(downloadPath + fileName);
 		}
+		
+		MemberVO mem = (MemberVO) session.getAttribute("login");
+		
+		System.out.println(vo);
+
+		
+		if("Y".equals(mem.getCopYn())) {
+			vo.setCopId(mem.getCopId());
+			vo.setCopYn("Y");
+		};
 
 		memberService.updateMember(vo);
-
-		HttpSession session = request.getSession();
+		
 		session.setAttribute("login", vo);
 
 		return vo;

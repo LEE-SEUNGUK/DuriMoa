@@ -51,7 +51,7 @@
 								<div
 									class="mb-4 d-flex justify-content-between align-items-center position-relative">
 									<label for="">비밀번호</label> <input class="form-control memPw"
-										name="memPw" type="password"
+										name="memPw" type="password" id="memPw_up"
 										value="${sessionScope.login.memPw}" disabled> <i
 										class="ms-3 fa fa-eye-slash"></i>
 								</div>
@@ -239,12 +239,10 @@
 		var now = new Date();
 		// '-'를 '/'로 변경
 		var copDt = new Date("${sessionScope.couple.copDt}".replace(/-/g, '/'));
-		console.log(copDt);
-
 		var timeDiff = now.getTime() - copDt.getTime();
 		var day = Math.floor(timeDiff / (1000 * 60 * 60 * 24) + 1);
-		
-		$('#dayText').text(day);  // '0' 부분만 변경
+		// '0' 부분만 변경
+		$('#dayText').text(day);  
 		
 		$(".my-page-item").click(function() {
 			let target = $(this).data('target');
@@ -328,10 +326,16 @@
 	    let formData = new FormData();
 	    formData.append('memId', '${sessionScope.login.memId}');
 	    
+	    if('${sessionScope.couple}' != null){
+	    	formData.append('copId', '${sessionScope.couple.copId}')
+	    	formData.append('copYn', "Y")
+	    }
+	    
 	    let newPw = $('#memNpw').val();
 	    let newNm = $('#memNm').val();
 	    formData.append('memPw', newPw === '' ? '${sessionScope.login.memPw}' : newPw);
 	    formData.append('memNm', newNm === '' ? '${sessionScope.login.memNm}' : newNm);
+	    let copId=0, copYn=null
 	    
 	    let imageFile = $('#imageUpload')[0].files[0];
 	    if (imageFile) {
@@ -349,7 +353,12 @@
 	        success: function(res) {
 	            console.log('응답');
 	            console.log(res);
-	    	location.href="/myPageView"
+	            $('#memPw_up').val(res.memPw);
+	            $('#memNpw').val("");
+	            $('#memPw_ck').val("");
+	            $('#memNm').val(res.memNm);
+	            $('#headNm').text(res.memNm);
+	            $('#headImg').attr('src',res.memImg);
 	        },
 	        error: function(e) {
 	            console.log(e);
