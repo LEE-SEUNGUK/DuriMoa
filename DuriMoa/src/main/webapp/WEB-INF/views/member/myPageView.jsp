@@ -93,6 +93,7 @@
 						<div class="col-2"></div>
 						<div class="col-8">
 							<div class="container">
+								<c:if test="${sessionScope.couple == null}">
 								<form id="coupleForm" action="">
 									<!-- margin: 0 auto는 자기 자신을 중앙정렬 -->
 									<div style="width: 100%; margin: 0 auto;">
@@ -145,59 +146,45 @@
 										</div>
 									</div>
 								</form>
-								
-<!-- 								<form id="coupleForm" action=""> -->
-<!-- 									margin: 0 auto는 자기 자신을 중앙정렬 -->
-<!-- 									<div style="width: 100%; margin: 0 auto;"> -->
-<!-- 										<div -->
-<!-- 											class="mt-3 d-inline-flex justify-content-center align-items-center" -->
-<!-- 											style="font-size: 20px; width: 100%;"> -->
-<!-- 											<span>너 커플이자나</span>를 등록해주세요 -->
-<!-- 										</div> -->
-<!-- 										<div class="mt-4 d-flex justify-content-center"> -->
-<%-- 											<img src="${sessionScope.login.memImg}" id="couple_profile_my" --%>
-<!-- 												alt=""> <img class="ms-3" -->
-<!-- 												src="resources/assets/img/couple_add.png" alt="" -->
-<!-- 												id="couple_profile" -->
-<!-- 												style="object-fit: cover; padding: 45px;"> -->
-<!-- 										</div> -->
-<!-- 										<div class="mt-5" style="width: 92%; margin-left: 6%;" -->
-<!-- 											id="couple_div"> -->
-<!-- 											<div class="d-flex align-items-center"> -->
-<!-- 												<div -->
-<!-- 													class="ps-2 d-inline-flex justify-content-between align-items-center w-75"> -->
-<!-- 													<label for="">커플 아이디</label> <input -->
-<!-- 														class="form-control couple-input" name="userId" -->
-<!-- 														type="text" placeholder="커플 유저의 아이디를 입력하세요"> -->
-<!-- 												</div> -->
-<!-- 												<button type="button" class="ms-2 btn email_check" -->
-<!-- 													onclick="coupleCk()">검색</button> -->
-<!-- 											</div> -->
-<!-- 											<div id="couple_search"> -->
-<!-- 												<input type='text' id='memId1' name='memId1' -->
-<%-- 													value="${sessionScope.login.memId}" style='display: none;'> --%>
-<!-- 											</div> -->
-<!-- 											<div -->
-<!-- 												class="ps-2 d-flex justify-content-between align-items-center mt-4 w-75"> -->
-<!-- 												<label for="">커플 이름</label> <input -->
-<!-- 													class="form-control couple-input" type="text" id="copNm" -->
-<!-- 													name="copNm" placeholder="커플 닉네임을 설정해주세요"> -->
-<!-- 											</div> -->
-<!-- 											<div -->
-<!-- 												class="ps-2 d-flex justify-content-between align-items-center mt-4 mb-5 w-75"> -->
-<!-- 												<label for="">디데이 설정</label> <input -->
-<!-- 													class="form-control couple-input" type="date" id="copDt" -->
-<!-- 													name="copNm"> -->
-<!-- 											</div> -->
-<!-- 										</div> -->
-<!-- 										<div class="w-100" style="margin: 0 auto; text-align: center;"> -->
-<!-- 											<hr class="bg-black"> -->
-<!-- 											<button type="submit" class="mt-4 btn btn-danger" -->
-<!-- 												style="background-color: #c4ddc0; height: 45px; color: black; border: none;">커플 -->
-<!-- 												등록</button> -->
-<!-- 										</div> -->
-<!-- 									</div> -->
-<!-- 								</form> -->
+								</c:if>
+								<c:if test="${sessionScope.couple != null}">
+								<form id="coupleUpdate" action="">
+									<div style="width: 100%; margin: 0 auto;">
+										<div
+											class="mt-3 d-inline-flex justify-content-center align-items-center"
+											style="font-size: 20px; width: 100%;">
+											<h3 id="dDay"><span>${sessionScope.couple.copNm}</span> D+<span id="dayText">0</span><span style="color: #dc143c;">♥</span></h3>
+										</div>
+										<div class="mt-4 d-flex justify-content-center">
+											<img src="${sessionScope.login.memImg}" id="couple_profile_my"
+												alt=""> <img class="ms-3"
+												src="${sessionScope.couple.memImg}" alt=""
+												id="couple_profile"
+												style="object-fit: cover;">
+										</div>
+										<div class="mt-5" style="width: 92%; margin-left: 6%;"
+											id="couple_div">
+											<div
+												class="ps-2 d-flex justify-content-between align-items-center mt-4 w-75">
+												<label for="">커플 이름</label> <input
+													class="form-control couple-input" type="text" id="copNm"
+													name="copNm" placeholder="수정할 닉네임을 입력하세요">
+											</div>
+											<div
+												class="ps-2 d-flex justify-content-between align-items-center mt-4 mb-5 w-75">
+												<label for="">디데이 수정</label> <input
+													class="form-control couple-input" type="date" id="copDt"
+													name="copNm">
+											</div>
+										</div>
+										<div class="w-100" style="margin: 0 auto; text-align: center;">
+											<hr class="bg-black">
+											<button type="submit" class="mt-4 btn btn-danger"
+												style="background-color: #c4ddc0; height: 45px; color: black; border: none;">커플정보 수정</button>
+										</div>
+									</div>
+								</form>
+								</c:if>
 							</div>
 						</div>
 						<div class="col-2">
@@ -248,6 +235,16 @@
 
 	<script>
 	$(document).ready(function() {
+		var now = new Date();
+		// '-'를 '/'로 변경
+		var copDt = new Date("${sessionScope.couple.copDt}".replace(/-/g, '/'));
+		console.log(copDt);
+
+		var timeDiff = now.getTime() - copDt.getTime();
+		var day = Math.floor(timeDiff / (1000 * 60 * 60 * 24) + 1);
+		
+		$('#dayText').text(day);  // '0' 부분만 변경
+		
 		$(".my-page-item").click(function() {
 			let target = $(this).data('target');
 	
@@ -267,22 +264,22 @@
 		    
 		    // 입력 값 가져오기
 		    var coupleData = {
-		        memId: $('.couple-input[name="userId"]').val(),
 		        copNm: $('#copNm').val(),
 		        copDt: $('#copDt').val()
 		    };
+		    
+		    var memId = $('.couple-input[name="userId"]').val();
 
 		    // JSON으로 변환하여 AJAX 요청
 		    $.ajax({
 		        type: 'POST',
-		        url: '/coupleAdd',
+		        url: '/coupleAdd?memId=' + encodeURIComponent(memId),
 		        contentType: 'application/json', // JSON 형식으로 데이터 전송
 		        data: JSON.stringify(coupleData), // JSON 문자열로 변환
 		        success: function(response) {
 		            console.log("응답:", response);
 		            if (response === "success") {
 		                alert("커플이 성공적으로 추가되었습니다.");
-		                // 추가 작업 (예: 페이지 리로드 등)
 		            } else {
 		                alert("커플 추가 오류");
 		            }
@@ -350,8 +347,8 @@
                 
                 $(document).on('click', '#couple_result', function() {
                     if (coupleInfo.memImg) {
-                        $("#couple_profile").attr("src", res.memImg); // img 태그 src 변경
-                        $("#couple_profile").css("padding", '0px'); // img 태그 src 변경
+                        $("#couple_profile").attr("src", res.memImg);
+                        $("#couple_profile").css("padding", '0px');
              
                     } else {
                         console.log("커플 프로필");

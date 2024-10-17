@@ -10,41 +10,48 @@
 	</select>
 	
 	<insert id="registMember" parameterType="MemberVO">
-	INSERT INTO member(mem_id, mem_pw, mem_nm, mem_img) 
-	VALUES (#{memId}, #{memPw}, #{memNm}, #{memImg})
+		INSERT INTO member(mem_id, mem_pw, mem_nm, mem_img) 
+		VALUES (#{memId}, #{memPw}, #{memNm}, #{memImg})
 	</insert>
 	
 	<update id="updateMember" parameterType="MemberVO">
-	UPDATE member
-	SET mem_pw = #{memPw},
-	    mem_nm = #{memNm},
-	    mem_img = #{memImg}
-	WHERE mem_id = #{memId}
+		UPDATE member
+		SET mem_pw = #{memPw},
+		    mem_nm = #{memNm},
+		    mem_img = #{memImg}
+		WHERE mem_id = #{memId}
 	</update>
 	
 	<select id="idCheck" resultType="int" parameterType="String">
-	SELECT COUNT(*) FROM member
-	WHERE mem_id = #{memId}
+		SELECT COUNT(*) FROM member
+		WHERE mem_id = #{memId}
 	</select>
 
 	<select id="coupleck" resultType="MemberVO" parameterType="String">
-	SELECT mem_id, mem_nm, mem_img FROM member WHERE mem_id = #{memId}
+		SELECT mem_id, mem_nm, mem_img FROM member WHERE mem_id = #{memId}
 	</select>
 
 	<insert id="coupleAdd" parameterType="CoupleVO">
-	INSERT INTO couple(cop_nm, cop_dt, mem_id)
-	VALUES(#{copNm}, #{copDt}, #{memId})
+		INSERT INTO couple(cop_id, cop_nm, cop_dt)
+		VALUES(sq_cop_id.NEXTVAL, #{copNm}, #{copDt})
+		<selectKey keyProperty="copId" resultType="int" order="AFTER">
+			SELECT sq_cop_id.CURRVAL FROM dual
+		</selectKey>
 	</insert>
 	
 	<update id="updateCop" parameterType="MemberVO">
-	UPDATE member
-	SET cop_id = #{copId}, cop_yn = 'Y'
-	WHERE mem_id= #{memId}
+		UPDATE member
+		SET cop_id = #{copId}, cop_yn = 'Y'
+		WHERE mem_id= #{memId}
 	</update>
-
-	<select id="coupleId" resultType="int"  parameterType="String">
-	SELECT cop_id
-	FROM couple
-	WHERE mem_id = #{memId}
+	
+	<select id="copSession" resultType="CoupleInfoVO" parameterType="MemberVO">
+		SELECT a.mem_id, a.mem_nm, a.mem_img, b.cop_nm, b.cop_dt
+		FROM member a, couple b
+		WHERE a.cop_id = b.cop_id
+		AND a.mem_id NOT IN (SELECT mem_id
+		                     FROM member
+		                     WHERE mem_id = #{memId})
 	</select>
+
 </mapper>

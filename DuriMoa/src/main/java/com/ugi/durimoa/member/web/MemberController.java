@@ -27,10 +27,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ugi.durimoa.member.service.MemberService;
 import com.ugi.durimoa.member.vo.MemberVO;
+import com.ugi.durimoa.member.vo.CoupleInfoVO;
 import com.ugi.durimoa.member.vo.CoupleVO;
 
 @Controller
 public class MemberController {
+
+	int cop_id = 1;
 
 	@Autowired
 	MemberService memberService;
@@ -70,25 +73,26 @@ public class MemberController {
 		}
 		return "success";
 	}
-	
-	//아이디 중복체크
+
+	// 아이디 중복체크
 	@PostMapping("/idCheck")
 	@ResponseBody
 	public int idCheck(@RequestParam("id") String id) {
-		
+
 		int cnt = memberService.idCheck(id);
 		return cnt;
 	}
-	
+
 	@RequestMapping("/loginDo")
 	@ResponseBody // 이 부분 추가해서 JSON 형식으로 응답하도록 함
-	public HashMap<String, String> loginDo(@RequestBody MemberVO vo, boolean remember, HttpSession session, HttpServletResponse response)
-			throws Exception {
+	public HashMap<String, String> loginDo(@RequestBody MemberVO vo, boolean remember, HttpSession session,
+			HttpServletResponse response) throws Exception {
 		HashMap<String, String> result = new HashMap<>();
 		System.out.println(vo);
 
 		MemberVO login = memberService.loginMember(vo);
-
+		CoupleInfoVO couple = memberService.copSession(login);
+		
 		System.out.println(login);
 		// 입력한 비밀번호와 db의 암호화된 비번을 비교해서 일치하면 true, 그렇지 않으면 false 반환
 		if (login == null) {
@@ -100,7 +104,17 @@ public class MemberController {
 		System.out.println("로그인 성공");
 
 		session.setAttribute("login", login);
+		
+		if(couple == null) {
+			System.out.println("커플이 아닙니다.");
+		}
+		else {
+			System.out.println("커플 세션 등록");
+			session.setAttribute("couple", couple);
+		}
+		
 		System.out.println(login);
+		System.out.println(couple);
 		if (remember) {
 			// 쿠키 생성
 			Cookie cookie = new Cookie("rememberId", login.getMemId());
@@ -114,39 +128,39 @@ public class MemberController {
 			response.addCookie(cookie);
 		}
 
-		 System.out.println(login);
-		
-		 result.put("status", "success");
-		 return result;
+		System.out.println(login);
+
+		result.put("status", "success");
+		return result;
 	}
 
-
 	@RequestMapping("/coupleAdd")
-	@ResponseBody // 이 부분 추가해서 JSON 형식으로 응답하도록 함
-	public String updateCop(@RequestBody CoupleVO vo, HttpSession session, HttpServletResponse response)
-			throws Exception {
+	public String updateCop(@RequestBody CoupleVO vo, HttpSession session, @RequestParam("memId") String cop_memId,
+			HttpServletResponse response) throws Exception {
 		// 세션에 있는 값을 가져올땐 객체에 담아서 메소드로 가져온다.
 		MemberVO login = (MemberVO) session.getAttribute("login");
+		String login_memId = login.getMemId();
 
-		memberService.coupleAdd(vo);
-		String memId = vo.getMemId();
-		int copId = memberService.coupleId(memId);
-		
-		String mem1Id = login.getMemId();
-		String mem2Id = vo.getMemId();
-		
+		int copId = memberService.coupleAdd(vo); // 자동 생성된 copId 반환
+		System.out.println("커플 ID: " + copId);
+
 		MemberVO mem1 = new MemberVO();
 		MemberVO mem2 = new MemberVO();
-		
+
 		mem1.setCopId(copId);
 		mem2.setCopId(copId);
-		
-		mem1.setMemId(mem1Id);
-		mem2.setMemId(mem2Id);
+
+		mem1.setMemId(login_memId);
+		mem2.setMemId(cop_memId);
 		
 		memberService.updateCop(mem1);
 		memberService.updateCop(mem2);
-
+		
+		CoupleInfoVO couple = memberService.copSession(login);
+		session.setAttribute("couple", couple);
+		
+		System.out.println(couple);
+		
 		return "success";
 	}
 
@@ -157,13 +171,13 @@ public class MemberController {
 
 		return "redirect:/";
 	}
-	
+
 	@RequestMapping("/coupleCk")
 	@ResponseBody
 	public MemberVO coupleCk(@RequestParam("id") String id) {
-		
+
 		MemberVO mem = memberService.coupleck(id);
-		
+
 		return mem;
 	}
 
@@ -200,24 +214,24 @@ public class MemberController {
 
 	@ResponseBody
 	@PostMapping("/updateDo")
-	public MemberVO updateMember(@ModelAttribute MemberVO vo, 
-	                             @RequestParam(value = "profileImage", required = false) MultipartFile file,
-	                             HttpServletRequest request) throws IOException {
+	public MemberVO updateMember(@ModelAttribute MemberVO vo,
+			@RequestParam(value = "profileImage", required = false) MultipartFile file, HttpServletRequest request)
+			throws IOException {
 
-		 if (file != null && !file.isEmpty()) {
-		        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-		        String filePath = uploadPath + File.separator + fileName;
-		        File dest = new File(filePath);
-		        file.transferTo(dest);
-		        vo.setMemImg(downloadPath + fileName);
-		    }
+		if (file != null && !file.isEmpty()) {
+			String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+			String filePath = uploadPath + File.separator + fileName;
+			File dest = new File(filePath);
+			file.transferTo(dest);
+			vo.setMemImg(downloadPath + fileName);
+		}
 
-		    memberService.updateMember(vo);
+		memberService.updateMember(vo);
 
-		    HttpSession session = request.getSession();
-		    session.setAttribute("login", vo);
+		HttpSession session = request.getSession();
+		session.setAttribute("login", vo);
 
-		    return vo;
+		return vo;
 	}
 
 	@RequestMapping("/myPageView")

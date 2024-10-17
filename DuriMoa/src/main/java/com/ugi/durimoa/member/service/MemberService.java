@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ugi.durimoa.member.dao.IMemberDAO;
+import com.ugi.durimoa.member.vo.CoupleInfoVO;
 import com.ugi.durimoa.member.vo.CoupleVO;
 import com.ugi.durimoa.member.vo.MemberVO;
 
@@ -171,13 +172,8 @@ public class MemberService {
 		return user;
 	}
 
-	public void coupleAdd(CoupleVO vo) throws Exception {
-		int result = dao.coupleAdd(vo);
-
-		if (result == 0) {
-			System.out.println("커플 추가 서비스 오류");
-			throw new Exception();
-		}
+	public int coupleAdd(CoupleVO vo) throws Exception {	
+		return dao.coupleAdd(vo);
 	}
 
 	public void updateCop(MemberVO vo) throws Exception {
@@ -186,13 +182,11 @@ public class MemberService {
 		dao.updateCop(vo);
 	}
 	
-	public int coupleId(String id) {
-		System.out.println("커플 ID 가져오기");
+	public CoupleInfoVO copSession(MemberVO vo) {
+		System.out.println("커플 세션 추가 서비스");
 		
-		int copId;
-		copId = dao.coupleId(id);
-		System.out.println("커플 아이디: " + copId);
+		CoupleInfoVO cop_s = dao.copSession(vo);
 		
-		return copId;
-	}
+		return cop_s;
+	};
 }
