@@ -145,6 +145,59 @@
 										</div>
 									</div>
 								</form>
+								
+<!-- 								<form id="coupleForm" action=""> -->
+<!-- 									margin: 0 auto는 자기 자신을 중앙정렬 -->
+<!-- 									<div style="width: 100%; margin: 0 auto;"> -->
+<!-- 										<div -->
+<!-- 											class="mt-3 d-inline-flex justify-content-center align-items-center" -->
+<!-- 											style="font-size: 20px; width: 100%;"> -->
+<!-- 											<span>너 커플이자나</span>를 등록해주세요 -->
+<!-- 										</div> -->
+<!-- 										<div class="mt-4 d-flex justify-content-center"> -->
+<%-- 											<img src="${sessionScope.login.memImg}" id="couple_profile_my" --%>
+<!-- 												alt=""> <img class="ms-3" -->
+<!-- 												src="resources/assets/img/couple_add.png" alt="" -->
+<!-- 												id="couple_profile" -->
+<!-- 												style="object-fit: cover; padding: 45px;"> -->
+<!-- 										</div> -->
+<!-- 										<div class="mt-5" style="width: 92%; margin-left: 6%;" -->
+<!-- 											id="couple_div"> -->
+<!-- 											<div class="d-flex align-items-center"> -->
+<!-- 												<div -->
+<!-- 													class="ps-2 d-inline-flex justify-content-between align-items-center w-75"> -->
+<!-- 													<label for="">커플 아이디</label> <input -->
+<!-- 														class="form-control couple-input" name="userId" -->
+<!-- 														type="text" placeholder="커플 유저의 아이디를 입력하세요"> -->
+<!-- 												</div> -->
+<!-- 												<button type="button" class="ms-2 btn email_check" -->
+<!-- 													onclick="coupleCk()">검색</button> -->
+<!-- 											</div> -->
+<!-- 											<div id="couple_search"> -->
+<!-- 												<input type='text' id='memId1' name='memId1' -->
+<%-- 													value="${sessionScope.login.memId}" style='display: none;'> --%>
+<!-- 											</div> -->
+<!-- 											<div -->
+<!-- 												class="ps-2 d-flex justify-content-between align-items-center mt-4 w-75"> -->
+<!-- 												<label for="">커플 이름</label> <input -->
+<!-- 													class="form-control couple-input" type="text" id="copNm" -->
+<!-- 													name="copNm" placeholder="커플 닉네임을 설정해주세요"> -->
+<!-- 											</div> -->
+<!-- 											<div -->
+<!-- 												class="ps-2 d-flex justify-content-between align-items-center mt-4 mb-5 w-75"> -->
+<!-- 												<label for="">디데이 설정</label> <input -->
+<!-- 													class="form-control couple-input" type="date" id="copDt" -->
+<!-- 													name="copNm"> -->
+<!-- 											</div> -->
+<!-- 										</div> -->
+<!-- 										<div class="w-100" style="margin: 0 auto; text-align: center;"> -->
+<!-- 											<hr class="bg-black"> -->
+<!-- 											<button type="submit" class="mt-4 btn btn-danger" -->
+<!-- 												style="background-color: #c4ddc0; height: 45px; color: black; border: none;">커플 -->
+<!-- 												등록</button> -->
+<!-- 										</div> -->
+<!-- 									</div> -->
+<!-- 								</form> -->
 							</div>
 						</div>
 						<div class="col-2">

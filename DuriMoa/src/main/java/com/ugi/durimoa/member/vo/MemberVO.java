@@ -8,6 +8,7 @@ public class MemberVO {
 	private String memDt;
 	private String memImg;	
 	private int copId;
+	private String copYn;
 	
 	public String getMemId() {
 		return memId;
@@ -46,9 +47,17 @@ public class MemberVO {
 		this.copId = copId;
 	}
 	
+	public String getCopYn() {
+		return copYn;
+	}
+	public void setCopYn(String copYn) {
+		this.copYn = copYn;
+	}
+	
 	@Override
 	public String toString() {
 		return "MemberVO [memId=" + memId + ", memPw=" + memPw + ", memNm=" + memNm + ", memDt=" + memDt + ", memImg="
-				+ memImg + ", copId=" + copId + "]";
+				+ memImg + ", copId=" + copId + ", copYn=" + copYn + "]";
 	}
+	
 }

@@ -114,6 +114,8 @@ public class MemberController {
 			response.addCookie(cookie);
 		}
 
+		 System.out.println(login);
+		
 		 result.put("status", "success");
 		 return result;
 	}
