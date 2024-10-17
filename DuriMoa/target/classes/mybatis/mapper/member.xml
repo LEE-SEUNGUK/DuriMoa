@@ -46,12 +46,23 @@
 	</update>
 	
 	<select id="copSession" resultType="CoupleInfoVO" parameterType="MemberVO">
-		SELECT a.mem_id, a.mem_nm, a.mem_img, b.cop_nm, b.cop_dt
-		FROM member a, couple b
-		WHERE a.cop_id = b.cop_id
-		AND a.mem_id NOT IN (SELECT mem_id
-		                     FROM member
-		                     WHERE mem_id = #{memId})
+		SELECT 
+		    b.mem_id,
+		    b.mem_nm,
+		    b.mem_img,
+		    c.cop_id,
+		    c.cop_nm,
+		    c.cop_dt
+		FROM MEMBER a, MEMBER b, COUPLE c
+		WHERE 
+		    a.cop_id = b.cop_id
+		    AND a.mem_id != b.mem_id
+		    AND a.mem_id = #{memId}
+		    AND a.cop_id = c.cop_id
 	</select>
 
+	<update id="copUpdate" parameterType="CoupleVO">
+		UPDATE couple SET cop_nm = #{copNm}, cop_dt = #{copDt}
+		WHERE cop_id = #{copId}
+	</update>
 </mapper>

@@ -91,30 +91,22 @@ public class MemberController {
 		System.out.println(vo);
 
 		MemberVO login = memberService.loginMember(vo);
-		CoupleInfoVO couple = memberService.copSession(login);
 		
-		System.out.println(login);
-		// 입력한 비밀번호와 db의 암호화된 비번을 비교해서 일치하면 true, 그렇지 않으면 false 반환
-		if (login == null) {
-			result.put("status", "fail");
-			result.put("message", "아이디 또는 비밀번호가 잘못되었습니다.");
-			return result;
-		}
-
-		System.out.println("로그인 성공");
-
-		session.setAttribute("login", login);
-		
-		if(couple == null) {
-			System.out.println("커플이 아닙니다.");
-		}
-		else {
+		System.out.println(login.getCopYn());
+		if("Y".equals(login.getCopYn())) {
+			CoupleInfoVO couple = memberService.copSession(login);
 			System.out.println("커플 세션 등록");
 			session.setAttribute("couple", couple);
 		}
 		
 		System.out.println(login);
-		System.out.println(couple);
+		// 입력한 비밀번호와 db의 암호화된 비번을 비교해서 일치하면 true, 그렇지 않으면 false 반환
+
+		System.out.println("로그인 성공");
+
+		session.setAttribute("login", login);
+		
+		System.out.println(login);
 		if (remember) {
 			// 쿠키 생성
 			Cookie cookie = new Cookie("rememberId", login.getMemId());
@@ -163,7 +155,29 @@ public class MemberController {
 		
 		return "success";
 	}
+	
+	@RequestMapping("/coupleUpdate")
+	@ResponseBody
+	public CoupleInfoVO copUpdate(@RequestBody CoupleVO vo, HttpSession session) {
+		
+		System.out.println("커플 업데이트 컨트롤");
+		System.out.println("수정 값: " + vo);
+		
+		memberService.copUpdate(vo);
+		
+		CoupleInfoVO cop = (CoupleInfoVO) session.getAttribute("couple");
+		System.out.println("현재 커플세션: " + cop);
+		
+		cop.setCopNm(vo.getCopNm());
+		cop.setCopDt(vo.getCopDt());
+		
+		System.out.println("수정된 커플세션: " + cop);
+		session.setAttribute("couple", cop);
+		
+		return cop;
+	}
 
+	
 	@RequestMapping("/logoutDo")
 	public String logout(HttpSession session) throws Exception {
 

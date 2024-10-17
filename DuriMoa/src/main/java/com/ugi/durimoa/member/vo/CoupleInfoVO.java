@@ -8,8 +8,17 @@ public class CoupleInfoVO {
 	private String memId;
 	private String memNm;
 	private String memImg;
+	private int copId;
 	private String copNm;
 	private String copDt;
+
+	public int getCopId() {
+		return copId;
+	}
+
+	public void setCopId(int copId) {
+		this.copId = copId;
+	}
 
 	public String getMemId() {
 		return memId;
@@ -51,27 +60,9 @@ public class CoupleInfoVO {
 		this.copDt = copDt;
 	}
 
-	// D-day 계산 메서드
-    public long calculateDDay() {
-        LocalDate coupleDate = LocalDate.parse(copDt);  // copDt를 LocalDate로 변환
-        LocalDate currentDate = LocalDate.now();  // 현재 날짜
-        
-        return ChronoUnit.DAYS.between(coupleDate, currentDate);  // D-day 계산
-    }
-    
-    // D-day 형식으로 반환
-    public String getFormattedDDay() {
-        long dDay = calculateDDay();
-        if (dDay >= 0) {
-            return "D+" + dDay;
-        } else {
-            return "D" + dDay;
-        }
-    }
-	
 	@Override
 	public String toString() {
-		return "CoupleInfoVO [memId=" + memId + ", memNm=" + memNm + ", memImg=" + memImg + ", copNm=" + copNm
-				+ ", copDt=" + copDt + "]";
+		return "CoupleInfoVO [memId=" + memId + ", memNm=" + memNm + ", memImg=" + memImg + ", copId=" + copId
+				+ ", copNm=" + copNm + ", copDt=" + copDt + "]";
 	}
 }

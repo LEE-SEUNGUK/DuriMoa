@@ -153,7 +153,7 @@
 										<div
 											class="mt-3 d-inline-flex justify-content-center align-items-center"
 											style="font-size: 20px; width: 100%;">
-											<h3 id="dDay"><span>${sessionScope.couple.copNm}</span> D+<span id="dayText">0</span><span style="color: #dc143c;">♥</span></h3>
+											<h3 id="dDay"><span id="copNmInfo">${sessionScope.couple.copNm}</span> D+<span id="dayText">0</span><span style="color: #dc143c;">♥</span></h3>
 										</div>
 										<div class="mt-4 d-flex justify-content-center">
 											<img src="${sessionScope.login.memImg}" id="couple_profile_my"
@@ -167,8 +167,8 @@
 											<div
 												class="ps-2 d-flex justify-content-between align-items-center mt-4 w-75">
 												<label for="">커플 이름</label> <input
-													class="form-control couple-input" type="text" id="copNm"
-													name="copNm" placeholder="수정할 닉네임을 입력하세요">
+													class="form-control couple-input" type="text" id="copNnm"
+													name="copNm" placeholder="수정할 커플 닉네임을 입력하세요">
 											</div>
 											<div
 												class="ps-2 d-flex justify-content-between align-items-center mt-4 mb-5 w-75">
@@ -179,8 +179,9 @@
 										</div>
 										<div class="w-100" style="margin: 0 auto; text-align: center;">
 											<hr class="bg-black">
-											<button type="submit" class="mt-4 btn btn-danger"
-												style="background-color: #c4ddc0; height: 45px; color: black; border: none;">커플정보 수정</button>
+											<button type="button" class="mt-4 btn btn-danger" onclick="fn_copUpdate()"
+												style="background-color: #c4ddc0; height: 45px; color: black; border: none;">커플정보
+												수정</button>
 										</div>
 									</div>
 								</form>
@@ -292,14 +293,45 @@
 
  	});
 	
+	function fn_copUpdate(){
+		var coupleData = {
+		        copNm: $('#copNnm').val(),
+		        copDt: $('#copDt').val(),
+		       	copId: '${sessionScope.couple.copId}'
+		    };
+		 $.ajax({
+			 type: 'POST',
+			 url: '/coupleUpdate',
+			 contentType: 'application/json', // JSON 형식으로 데이터 전송
+			 data: JSON.stringify(coupleData), // JSON 문자열로 변환
+			 success: function(res) {
+		            console.log("응답:", res);
+		            console.log("현재 커플 세션 이름: ", '${sessionScope.couple.copNm}')
+		            var now = new Date();
+					// '-'를 '/'로 변경
+					var copDt = new Date((res.copDt).replace(/-/g, '/'));
+					console.log(copDt);
+					var timeDiff = now.getTime() - copDt.getTime();
+					var day = Math.floor(timeDiff / (1000 * 60 * 60 * 24) + 1);
+		            $('#dayText').text(day);
+		            $('#copNmInfo').text(res.copNm);
+		            
+		        },
+		        error: function(xhr, status, error) {
+		            alert("서버 오류: " + error);
+		        }
+		 })
+	} 
+	
+	
 	function fn_write() {
 	    let formData = new FormData();
 	    formData.append('memId', '${sessionScope.login.memId}');
 	    
 	    let newPw = $('#memNpw').val();
+	    let newNm = $('#memNm').val();
 	    formData.append('memPw', newPw === '' ? '${sessionScope.login.memPw}' : newPw);
-	    
-	    formData.append('memNm', $('#memNm').val());
+	    formData.append('memNm', newNm === '' ? '${sessionScope.login.memNm}' : newNm);
 	    
 	    let imageFile = $('#imageUpload')[0].files[0];
 	    if (imageFile) {
@@ -317,7 +349,7 @@
 	        success: function(res) {
 	            console.log('응답');
 	            console.log(res);
-	            location.href="/myPageView"
+	    	location.href="/myPageView"
 	        },
 	        error: function(e) {
 	            console.log(e);
@@ -325,6 +357,7 @@
 	    });
 	}
 	
+
 	function coupleCk(){
 		let id = $('.couple-input').val();
 		

@@ -189,4 +189,10 @@ public class MemberService {
 		
 		return cop_s;
 	};
+	
+	public void copUpdate(CoupleVO vo) {
+		System.out.println("커플 변경 서비스");
+		
+		dao.copUpdate(vo);
+	};
 }

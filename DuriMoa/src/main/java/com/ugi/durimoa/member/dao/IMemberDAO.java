@@ -34,4 +34,7 @@ public interface IMemberDAO {
 	
 	// 커플 정보 세션에 등록
 	public CoupleInfoVO copSession(MemberVO vo);
+	
+	// 커플 정보 업데이트	
+	public void copUpdate(CoupleVO vo);
 }
