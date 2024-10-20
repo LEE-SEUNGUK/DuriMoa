@@ -1,8 +1,5 @@
 package com.ugi.durimoa.member.vo;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
-
 public class CoupleInfoVO {
 	
 	private String memId;

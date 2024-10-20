@@ -78,7 +78,9 @@ input[name='userId']:hover {
 
 #couple_profile,
 #couple_profile_my,
-#my_profile {
+#my_profile,
+#couple_profile_insert
+ {
     width: 150px;
     height: 150px;
     border-radius: 15%;
@@ -86,6 +88,7 @@ input[name='userId']:hover {
     overflow: hidden;
     object-fit: cover;
 }
+
 
 #couple_info {
     cursor: pointer;

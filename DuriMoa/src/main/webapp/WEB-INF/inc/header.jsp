@@ -4,27 +4,28 @@
 <link href="/resources/assets/css/header.css?after" rel="stylesheet" />
 <link href="/resources/assets/css/mypage.css?after" rel="stylesheet" />
 <link
-	rel="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
-<link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
 	rel="stylesheet"
 	integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
 	crossorigin="anonymous">
-<link rel="stylesheet"
-	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
-	integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
-	crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script
 	src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
 	integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
 	crossorigin="anonymous"></script>
+	
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=9d407e93fbddd6bd9146ab8e8274441c&libraries=services"></script>	
+	
 <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <header>
 	<nav class="d-flex" style="height: 80px; background-color: #ffefef;">
 		<div class="d-flex align-items-center justify-content-center"
 			style="width: 33%;">
 			<div style="width: 80%; text-align: center;">
+			<a href="${pageContext.request.contextPath}/"> 
 				<img src="resources/assets/img/logo.png" style="width: 35%;">
+			</a>
 			</div>
 			<c:if test="${sessionScope.login == null}">
 				<div id="couple_name" style="width: 60%; font-size: 24px;">
@@ -32,7 +33,12 @@
 			</c:if>
 			<c:if test="${sessionScope.login != null}">
 				<div id="couple_name" style="width: 60%; font-size: 24px;">
-					<span id="headNm">${sessionScope.login.memNm}</span>님의 여행지도♥
+					<c:if test="${sessionScope.couple == null}">
+						<span id="headNm">${sessionScope.login.memNm}</span>님의 여행지도♥
+					</c:if>
+					<c:if test="${sessionScope.couple != null}">
+						<span id="headNm">${sessionScope.couple.copNm}</span>의 여행지도♥
+					</c:if>
 				</div>
 			</c:if>
 		</div>
@@ -58,7 +64,8 @@
 				</li>
 				<li class="menu_option h-100">
 					<div class="ms-3">
-						<a class="nav_page d-flex flex-column align-items-center" href="#"><img
+						<a class="nav_page d-flex flex-column align-items-center" 
+							href="${pageContext.request.contextPath}/travelView"><img
 							src="resources/assets/img/diary.png" alt=""
 							style="width: 36px; padding-top: 2px;">
 							<p class="pt-1 nav_text">우리의 추억</p> </a>

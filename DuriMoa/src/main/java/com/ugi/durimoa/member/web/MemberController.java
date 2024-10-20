@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ugi.durimoa.member.service.MemberService;
 import com.ugi.durimoa.member.vo.MemberVO;
+import com.ugi.durimoa.member.vo.RequestVO;
 import com.ugi.durimoa.member.vo.CoupleInfoVO;
 import com.ugi.durimoa.member.vo.CoupleVO;
 
@@ -92,6 +94,22 @@ public class MemberController {
 
 		MemberVO login = memberService.loginMember(vo);
 
+		int req_cnt = memberService.ReqWait(login.getMemId());
+		
+		if(req_cnt == 1) {
+			System.out.println("커플 요청 대기 세션");
+			RequestVO req = memberService.reqInfo(login.getMemId());
+			session.setAttribute("req", req);
+		}
+		
+		int res_cnt = memberService.ResWait(login.getMemId());
+		if(res_cnt == 1) {
+			System.out.println("커플 요청 응답 세션");
+			RequestVO res = memberService.reqInfo(login.getMemId());
+			session.setAttribute("res", res);
+			System.out.println("요청응답 있음");
+		}
+		
 		System.out.println(login.getCopYn());
 		if ("Y".equals(login.getCopYn())) {
 			CoupleInfoVO couple = memberService.copSession(login);
@@ -126,35 +144,62 @@ public class MemberController {
 		return result;
 	}
 
+	@ResponseBody
 	@RequestMapping("/coupleAdd")
-	public String updateCop(@RequestBody CoupleVO vo, HttpSession session, @RequestParam("memId") String cop_memId,
+	public RequestVO updateCop(@RequestBody CoupleVO vo, HttpSession session, @RequestParam("memId") String cop_memId,
 			HttpServletResponse response) throws Exception {
 		// 세션에 있는 값을 가져올땐 객체에 담아서 메소드로 가져온다.
 		MemberVO login = (MemberVO) session.getAttribute("login");
 		String login_memId = login.getMemId();
 
-		int copId = memberService.coupleAdd(vo); // 자동 생성된 copId 반환
-		System.out.println("커플 ID: " + copId);
+		memberService.coupleAdd(vo); // 자동 생성된 copId 반환
+		System.out.println("커플 ID: " + vo.getCopId());
+		
+		RequestVO req_send = new RequestVO();
+		req_send.setReqCid(vo.getCopId());
+		req_send.setReqMid(login_memId);
+		req_send.setResMid(cop_memId);
+		
+		// 요청 보내기! 잘 가는지 확인
+		memberService.coupleReq(req_send);
+		
+		RequestVO req = memberService.reqInfo(login.getMemId());
+		session.setAttribute("req", req);
 
-		MemberVO mem1 = new MemberVO();
-		MemberVO mem2 = new MemberVO();
-
-		mem1.setCopId(copId);
-		mem2.setCopId(copId);
-
-		mem1.setMemId(login_memId);
-		mem2.setMemId(cop_memId);
-
-		memberService.updateCop(mem1);
-		memberService.updateCop(mem2);
-
-		CoupleInfoVO couple = memberService.copSession(login);
-		session.setAttribute("couple", couple);
-
-		System.out.println(couple);
-
-		return "success";
+		return req;
 	}
+	
+	@RequestMapping("/allowReq")
+	public String allowReq(HttpSession session) {
+		MemberVO login = (MemberVO) session.getAttribute("login");
+		String login_memId = login.getMemId();
+		memberService.allowReq(login_memId);
+		
+		System.out.println("요청 수락 컨트롤러");
+		
+		memberService.allowCouple(login_memId);
+		memberService.memCouple(login_memId);
+		CoupleInfoVO couple = memberService.copSession(login);
+		System.out.println("커플 세션 등록");
+		session.setAttribute("couple", couple);
+		session.removeAttribute("res");
+		
+		return "/member/myPageView";
+	}
+	
+	@RequestMapping("/opposeReq")
+	public String opposeReq(HttpSession session) {
+		MemberVO login = (MemberVO) session.getAttribute("login");
+		String login_memId = login.getMemId();
+		memberService.opposeReq(login_memId);
+		
+		System.out.println("요청 거절 컨트롤러");
+		
+		session.removeAttribute("res");
+		
+		return "/member/myPageView";
+	};
+
 
 	@RequestMapping("/coupleUpdate")
 	@ResponseBody
@@ -176,12 +221,59 @@ public class MemberController {
 
 		return cop;
 	}
+	
+	@RequestMapping("/coupleDelete")
+	public String copDelete(HttpSession session) {
+		System.out.println("커플 삭제 컨트롤러");
+			
+		CoupleInfoVO cop = (CoupleInfoVO) session.getAttribute("couple");
+		int copId = cop.getCopId();
+		
+		memberService.removeReq(copId);
+		memberService.memCoupleDel(copId);
+		memberService.delCouple(copId);
+		
+		session.removeAttribute("couple");
+		return "/member/myPageView";
+	}
+	
+	@RequestMapping("/delReqCop")
+	public String delReqCop(HttpSession session) {
+		
+		MemberVO vo = (MemberVO) session.getAttribute("login");
+		
+		memberService.delReqCop(vo.getMemId());
+		session.removeAttribute("req");
+		
+		return "/member/myPageView";
+	}
 
 	@RequestMapping("/logoutDo")
 	public String logout(HttpSession session) throws Exception {
 
 		session.invalidate();
 
+		return "redirect:/";
+	}
+	
+	@RequestMapping("/exit")
+	public String exit(HttpSession session) {
+		
+		CoupleInfoVO cop = (CoupleInfoVO) session.getAttribute("couple");
+		
+		if(cop != null) {
+			session.removeAttribute("couple");
+			int copId = cop.getCopId();
+			memberService.removeReq(copId);
+			memberService.memCoupleDel(copId);
+			memberService.delCouple(copId);
+		}
+		
+		MemberVO vo = (MemberVO) session.getAttribute("login");
+		
+		memberService.exit(vo.getMemId());
+		session.removeAttribute("login");
+	
 		return "redirect:/";
 	}
 
@@ -261,22 +353,5 @@ public class MemberController {
 
 		return "/member/myPageView";
 	}
-
-	@RequestMapping(value = "/kakao", method = RequestMethod.GET)
-	public String kakaoLogin(@RequestParam(value = "code", required = false) String code) throws Exception {
-		System.out.println("#########" + code);
-
-		// 위에서 만든 코드 아래에 코드 추가
-		String access_Token = memberService.getAccessToken(code);
-		System.out.println("###access_Token#### : " + access_Token);
-
-		// 위에서 만든 코드 아래에 코드 추가
-		HashMap<String, Object> userInfo = memberService.getUserInfo(access_Token);
-		System.out.println("###access_Token#### : " + access_Token);
-		System.out.println("###nickname#### : " + userInfo.get("nickname"));
-		System.out.println("###email#### : " + userInfo.get("email"));
-		System.out.println("###email#### : " + userInfo.get("profileImg"));
-
-		return "member/testPage";
-	}
+	
 }

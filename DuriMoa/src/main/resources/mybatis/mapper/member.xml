@@ -7,6 +7,25 @@
 	    FROM member
 	    WHERE mem_id = #{memId}
 	    AND mem_pw = #{memPw}
+	    AND mem_yse = 'Y'
+	</select>
+	
+	<select id="reqInfo" resultType="RequestVO" parameterType="String">
+		SELECT 
+		    (CASE 
+		        WHEN r.req_mid = #{memId} THEN m2.mem_nm
+		        WHEN r.res_mid = #{memId} THEN m1.mem_nm
+		    END) AS reqNm,
+		    (CASE 
+		        WHEN r.req_mid = #{memId} THEN m2.mem_img
+		        WHEN r.res_mid = #{memId} THEN m1.mem_img
+		    END) AS reqImg
+		FROM MEMBER m1, MEMBER m2, request r
+		WHERE 
+		    r.req_mid = m1.mem_id
+		    AND r.res_mid = m2.mem_id
+		    AND (r.req_mid = #{memId} OR r.res_mid = #{memId})
+		    AND r.req_ok = 'N'
 	</select>
 	
 	<insert id="registMember" parameterType="MemberVO">
@@ -31,18 +50,84 @@
 		SELECT mem_id, mem_nm, mem_img FROM member WHERE mem_id = #{memId}
 	</select>
 
-	<insert id="coupleAdd" parameterType="CoupleVO">
-		INSERT INTO couple(cop_id, cop_nm, cop_dt)
-		VALUES(sq_cop_id.NEXTVAL, #{copNm}, #{copDt})
-		<selectKey keyProperty="copId" resultType="int" order="AFTER">
-			SELECT sq_cop_id.CURRVAL FROM dual
-		</selectKey>
+	<insert id="coupleAdd" parameterType="CoupleVO" useGeneratedKeys="true" keyProperty="copId" keyColumn="cop_id">
+	    INSERT INTO couple(cop_nm, cop_dt)
+	    VALUES(#{copNm}, #{copDt})
 	</insert>
+	
+<!-- 	커플 요청 -->
+	<insert id="coupleReq" parameterType="RequestVO">
+	INSERT INTO request(req_cid, req_mid, res_mid) VALUES(#{reqCid}, #{reqMid}, #{resMid})
+	</insert>
+	
+	<select id="ReqWait" resultType="int" parameterType="String">
+	SELECT COUNT(*)
+	FROM member a, request b
+	WHERE a.mem_id = b.req_mid
+	AND a.mem_id = #{memId}
+	AND req_yn = 'Y'
+	</select>
+	
+	<select id="ResWait" resultType="int" parameterType="String">
+	SELECT COUNT(*)
+	FROM member a, request b
+	WHERE a.mem_id = b.res_mid
+	AND a.mem_id = #{memId}
+	AND req_yn = 'Y'
+	</select>
+	
+	<update id="allowReq" parameterType="String">
+	UPDATE request set req_yn ='N', req_ok ='Y'
+	WHERE res_mid = #{memId}
+	</update>
+	
+	<update id="opposeReq" parameterType="String">
+	UPDATE request set req_yn ='N', req_ok ='N'
+	WHERE res_mid = #{memId}
+	</update>
+	
 	
 	<update id="updateCop" parameterType="MemberVO">
 		UPDATE member
 		SET cop_id = #{copId}, cop_yn = 'Y'
 		WHERE mem_id= #{memId}
+	</update>
+	
+	<update id="allowCouple" parameterType="String">
+	UPDATE couple
+	SET cop_yse = 'Y'
+	WHERE cop_id = (
+	        SELECT a.cop_id
+	        FROM couple a, request b
+	        WHERE a.cop_id = b.req_cid
+	        AND b.req_ok = 'Y'
+	        AND a.cop_yse = 'N'
+	        AND b.res_mid = #{memId}
+	)	
+	</update>
+		
+	<!--멤버에 커플 ID 넣기 -->
+	<update id="memCouple" parameterType="String">
+	UPDATE MEMBER
+	SET cop_yn = 'Y', cop_id = (
+	    SELECT req_cid
+	    FROM request
+	    WHERE res_mid = #{memId}
+	    AND req_ok = 'Y'
+	)
+	WHERE mem_id IN (
+	    SELECT res_mid
+	    FROM request
+	    WHERE res_mid = #{memId}
+	    AND req_ok = 'Y'
+	    
+	    UNION ALL
+	    
+	    SELECT req_mid
+	    FROM request
+	    WHERE res_mid = #{memId}
+	    AND req_ok = 'Y'
+	)
 	</update>
 	
 	<select id="copSession" resultType="CoupleInfoVO" parameterType="MemberVO">
@@ -62,7 +147,36 @@
 	</select>
 
 	<update id="copUpdate" parameterType="CoupleVO">
-		UPDATE couple SET cop_nm = #{copNm}, cop_dt = #{copDt}
+		UPDATE couple SET cop_nm = #{copNm}, cop_dt = NVL(#{copDt}, cop_dt)
 		WHERE cop_id = #{copId}
+	</update>
+	
+<!-- request 테이블에서 해당 커플의 요청 정보 삭제 -->
+	<delete id="removeReq" parameterType="int">
+	DELETE FROM request
+	WHERE req_cid = #{copId}
+	</delete>
+	
+<!-- member 테이블 외래키 해제	 -->
+	<update id="memCoupleDel" parameterType="int">
+	UPDATE MEMBER
+	SET cop_yn = 'N', cop_id = NULL
+	WHERE cop_id = #{copId}
+	</update>
+
+<!-- 해당 커플 삭제  -->
+	<delete id="delCouple" parameterType="int">
+	DELETE FROM couple
+	WHERE cop_id = #{copId}
+	</delete>	
+	
+	<delete id="delReqCop" parameterType="String">
+	DELETE FROM request
+	WHERE req_mid = #{memId}
+	</delete>
+	
+	<update id="exit" parameterType="String">
+	UPDATE member SET mem_yse = 'N'
+	WHERE mem_id = #{memId}
 	</update>
 </mapper>

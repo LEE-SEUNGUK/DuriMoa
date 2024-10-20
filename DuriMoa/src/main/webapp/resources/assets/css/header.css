@@ -164,7 +164,7 @@ nav #header_menu {
 	padding: 0 !important;
 }
 
-i{
+input > i{
     position: absolute;
     left: 90%;
     top: 50%;
