@@ -35,8 +35,6 @@ import com.ugi.durimoa.member.vo.CoupleVO;
 @Controller
 public class MemberController {
 
-	int cop_id = 1;
-
 	@Autowired
 	MemberService memberService;
 

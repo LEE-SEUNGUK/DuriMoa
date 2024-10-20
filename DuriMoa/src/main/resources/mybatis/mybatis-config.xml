@@ -14,5 +14,6 @@
       <typeAlias type="com.ugi.durimoa.member.vo.CoupleVO" alias="CoupleVO" />
       <typeAlias type="com.ugi.durimoa.member.vo.CoupleInfoVO" alias="CoupleInfoVO" />
       <typeAlias type="com.ugi.durimoa.member.vo.RequestVO" alias="RequestVO" />
+      <typeAlias type="com.ugi.durimoa.travel.vo.TravelVO" alias="TravelVO" />
    </typeAliases>
 </configuration>

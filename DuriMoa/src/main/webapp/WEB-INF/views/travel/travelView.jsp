@@ -35,154 +35,14 @@ td {
 	cursor: default;
 }
 
-.accordion-button
-
-
-
-
-
-
-
-
-.no-toggle
-
-
-
-
-
-
-
-
-:not
-
-
-
-
- 
-
-
-
-
-(
-.collapsed
-
-
-
-
- 
-
-
-
-
-){
-color
-
-
-
-
-
-
-
-
-:
-
-
-
-
- 
-
-
-
-
-var
-
-
-
-
-
-
-
-
-(-
--bs-accordion-btn-color
-
-
-
-
-
-
-
-
-);
-background-color
-
-
-
-
-
-
-
-
-:
-
-
-
-
- 
-
-
-
-
-var
-
-
-
-
-
-
-
-
-(-
--bs-accordion-btn-bg
-
-
-
-
-
-
-
-
-);
-box-shadow
-
-
-
-
-
-
-
-
-:
-
-
-
-
- 
-
-
-
-
-none
-
-
-
-
-
-
-
-
-;
+.accordion-button.no-toggle:not (.collapsed ){
+	color: var(- 
+-bs-accordion-btn-color);
+	background-color: var(- 
+-bs-accordion-btn-bg);
+	box-shadow: none;
 }
+
 .writing-button {
 	position: fixed;
 	bottom: 15%;
@@ -214,72 +74,13 @@ none
 	display: none;
 }
 
-.photo-preview {
-	display: flex;
-	gap: 10px;
-	margin-top: 20px;
-}
-
-.img-wrap {
-	position: relative;
-	width: 120px;
-	height: 150px;
-	border-radius: 10px;
-	overflow: hidden;
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-	transition: all 0.3s ease;
-	cursor: pointer;
-}
-
-.img-wrap img {
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-}
-
-.img-wrap .overlay {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background-color: rgba(0, 0, 0, 0.5);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	opacity: 1;
-	transition: opacity 0.3s ease;
-}
-
-.img-wrap.selected .overlay {
-	opacity: 0;
-}
-
-.img-wrap:hover {
-	transform: translateY(-5px);
-	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-}
-
 #map {
-	width: 300px;
-	height: 300px;
+	width: 250px;
+	height: 250px;
 	display: none;
 }
 
-#hashtags {
-	display: flex;
-	flex-wrap: wrap;
-}
-
-#hashtags .badge {
-	font-size: 0.9em;
-}
-
-#hashtags .btn-close {
-	font-size: 0.5em;
-}
-
-#writeMode {
+#writeMode {	
 	display: none;
 }
 
@@ -291,6 +92,11 @@ none
 	height: 100%;
 	padding-left: 3px;
 	padding-bottom: 3px;
+}
+
+#travelAddForm {
+    max-height: 1200px; /* Adjust this value as needed */
+    margin: 0 auto;
 }
 </style>
 </head>
@@ -423,47 +229,46 @@ none
 			</section>
 			<section id="writeMode" class="col-9 ms-5" style="display: none; margin-top: 5%">
 				<div class="row">
-					<form class="d-flex">
-						<section class="col-7">
-							<div class="travel-form p-0">
-
-								<div class="mb-3">
-									<label for="travelTitle" class="form-label">여행 제목</label> <input type="text" class="form-control" id="travelTitle" placeholder="여행 제목을 입력하세요">
-								</div>
-								<div class="mb-3">
-									<label for="travelDestination" class="form-label">여행지</label>
-									<div class="input-group">
-										<input type="text" class="form-control" id="travelDestination" placeholder="여행지를 검색하세요" readonly>
-										<button class="btn btn-outline-secondary" type="button" id="searchAddress">검색</button>
+					<form class="d-flex" id="travelAddForm" action="/travelAdd" method="post" enctype="multipart/form-data">
+						<section class="col-7 mt-3">
+							<div class="travel-form p-0" style="height: 600px">
+								<div class="pt-3" style="width: 90%; margin: 0 auto;">
+									<div class="mb-3">
+										<label for="travelTitle" class="form-label">여행 제목</label> <input type="text" name="trvTt" class="form-control" id="travelTitle" placeholder="여행 제목을 입력하세요">
+									</div>
+									<div class="mb-3">
+										<label for="travelDestination" class="form-label">여행지</label>
+										<div class="input-group">
+											<input type="text" name="trvPc" class="form-control" id="travelDestination" placeholder="여행지를 검색하세요" readonly>
+											<button class="btn btn-outline-secondary" type="button" id="searchAddress">검색</button>
+										</div>
+									</div>
+									<input type="hidden" id="coordinateX" name="trvX"> <input type="hidden" id="coordinateY" name="trvY">
+									<div class="mb-3">
+										<label for="travelDate" class="form-label">여행 날짜</label> <input type="date" name="trvDt" class="form-control" id="travelDate" placeholder="여행 날짜를 선택하세요">
+									</div>
+									<div class="mb-3">
+										<label for="travelContent" class="form-label">내용</label>
+										<textarea class="form-control" name="trvCt" id="travelContent" rows="6" placeholder="여행 내용을 입력하세요"></textarea>
+									</div>
+									<div class="mb-3 form-check d-flex justify-content-between">
+										<div>
+											<input type="checkbox" name="trvOp" class="form-check-input" id="trvOp" checked> <label class="form-check-label" for="isPublic">공개 설정</label>
+										</div>
+										<button type="submit" class="btn btn-primary">저장하기</button>
 									</div>
 								</div>
-								<input type="hidden" id="coordinateX"> <input type="hidden" id="coordinateY">
-								<div class="mb-3">
-									<label for="travelDate" class="form-label">여행 날짜</label> <input type="date" class="form-control" id="travelDate" placeholder="여행 날짜를 선택하세요">
-								</div>
-								<div class="mb-3">
-									<label for="travelContent" class="form-label">내용</label>
-									<textarea class="form-control" id="travelContent" rows="5" placeholder="여행 내용을 입력하세요"></textarea>
-								</div>
-								<div class="mb-3">
-									<label for="hashtagInput" class="form-label">해시태그</label>
-									<div class="input-group">
-										<input type="text" class="form-control" id="hashtagInput" placeholder="해시태그 입력">
-										<button class="btn btn-outline-secondary" type="button" id="addHashtag">추가</button>
-									</div>
-									<div id="hashtags" class="mt-2"></div>
-								</div>
-								<div class="mb-3 form-check">
-									<input type="checkbox" class="form-check-input" id="isPublic" checked> <label class="form-check-label" for="isPublic">공개 설정</label>
-								</div>
-								<button type="submit" class="btn btn-primary">저장하기</button>
-
 							</div>
 						</section>
-						<section class="col-5 d-flex flex-column align-items-center">
+						<section class="col-5 ms-4 d-flex flex-column align-items-center">
 							<div class="mt-5" id="map"></div>
 							<div class="mt-3" id="photoDiv">
-								<label for="travelPhotos" class="form-label">사진 (최대 3장)</label> <input type="file" class="form-control" id="travelPhotos" multiple accept="image/*">
+								<label for="travelPhotos" class="form-label">사진</label> 
+								<input type="file" id="trvImgUpload" name="trvThumbnail" class="form-control" id="travelPhotos" multiple accept="image/*">
+								<div>
+									<img id="trvThumbnail" src="" style="width: 120px; height: 150px">
+									</div>
+								<%-- <input type="hidden" id="memId" name="memId" value="${sessionScope.loing.memId}"> --%>
 								<div id="photoPreview" class="photo-preview justify-content-between"></div>
 							</div>
 						</section>
@@ -477,40 +282,6 @@ none
 	</div>
 
 	<script>
-		$(document).on('click', '#hashtags .btn-close', function() {
-			$(this).parent().remove();
-		});
-
-		$(document).on('change', 'input[name="thumbnail"]', function() {
-			$('.img-wrap').removeClass('selected');
-			$(this).closest('.img-wrap').addClass('selected');
-			console.log('Selected thumbnail index:', $(this).data('index'));
-		});
-
-		$(document).on('click', '.img-wrap', function() {
-			$('.img-wrap').removeClass('selected');
-			$(this).addClass('selected');
-			var selectedIndex = $(this).data('index');
-			console.log('Selected thumbnail index:', selectedIndex);
-		});
-
-		function addHashtag() {
-			var hashtag = $('#hashtagInput').val().trim();
-			if (hashtag) {
-				var tagHtml = '<span class="badge bg-primary me-2 mb-2">#'
-						+ hashtag
-						+ '<button type="button" class="btn-close btn-close-white ms-2" aria-label="Close"></button></span>';
-				$('#hashtags').append(tagHtml);
-				$('#hashtagInput').val('');
-			}
-		}
-
-		function getHashtags() {
-			return $('#hashtags .badge').map(function() {
-				return $(this).text().slice(1); // Remove the # symbol
-			}).get();
-		}
-
 		function sample5_execDaumPostcode() {
 			new daum.Postcode({
 				oncomplete : function(data) {
@@ -561,8 +332,17 @@ none
 					$('#writeButton').html('<i class="fa-regular fa-pen-to-square"></i>');
 				}
 			};
-			
-			// 폼 변수 지정
+		
+			$('#trvImgUpload').change(function(){
+				const file = this.files[0];
+				if (file) {
+					const reader = new FileReader();
+					reader.onload = function(e) {
+						$('#trvThumbnail').attr('src', e.target.result); // 선택된 이미지로 변경
+					};
+					reader.readAsDataURL(file);
+				}
+			})
 			
 
 			var mapContainer = document.getElementById('map');
@@ -592,40 +372,40 @@ none
 				return false;
 			});
 
-			$('#travelPhotos').on('change', function (event) {
-				var files = event.target.files;
-				var photoPreview = $('#photoPreview');
-				photoPreview.empty();
+// 			$('#travelPhotos').on('change', function (event) {
+// 				var files = event.target.files;
+// 				var photoPreview = $('#photoPreview');
+// 				photoPreview.empty();
 
-				if (files.length > 3) {
-					alert('최대 3장의 사진만 업로드할 수 있습니다.');
-					$(this).val('');
-					return;
-				}
+// 				if (files.length > 3) {
+// 					alert('최대 3장의 사진만 업로드할 수 있습니다.');
+// 					$(this).val('');
+// 					return;
+// 				}
 
-				for (var i = 0; i < files.length; i++) {
-					var file = files[i];
-					var reader = new FileReader();
+// 				for (var i = 0; i < files.length; i++) {
+// 					var file = files[i];
+// 					var reader = new FileReader();
 
-					reader.onload = (function (theFile, index) {
-						return function (e) {
-							var imgWrap = $('<div class="img-wrap" data-index="' + index + '"></div>');
-							var img = $('<img>').attr('src', e.target.result);
-							var overlay = $('<div class="overlay"></div>');
+// 					reader.onload = (function (theFile, index) {
+// 						return function (e) {
+// 							var imgWrap = $('<div class="img-wrap" data-index="' + index + '"></div>');
+// 							var img = $('<img>').attr('src', e.target.result);
+// 							var overlay = $('<div class="overlay"></div>');
 
-							imgWrap.append(img).append(overlay);
-							photoPreview.append(imgWrap);
+// 							imgWrap.append(img).append(overlay);
+// 							photoPreview.append(imgWrap);
 
-							if (index === 0) {
-								imgWrap.addClass('selected');
-								console.log('Initial thumbnail index:', index);
-							}
-						};
-					})(file, i);
+// 							if (index === 0) {
+// 								imgWrap.addClass('selected');
+// 								console.log('Initial thumbnail index:', index);
+// 							}
+// 						};
+// 					})(file, i);
 
-					reader.readAsDataURL(file);
-				}
-			});
+// 					reader.readAsDataURL(file);
+// 				}
+// 			});
 
 			$('#searchAddress').click(function () {
 				new daum.Postcode({
@@ -655,61 +435,31 @@ none
 				}).open();
 			});
 
-			$('form').submit(function (e) {
+			$('#travelAddForm').submit(function (e) {
 				e.preventDefault();
-				console.log('Form submitted');
-				console.log('Destination:', $('#travelDestination').val());
-				console.log('Coordinates:', $('#coordinateX').val(), $('#coordinateY').val());
-				console.log('Hashtags:', getHashtags());
-				console.log('Is Public:', $('#isPublic').is(':checked'));
-				console.log('Thumbnail Index:', $('input[name="thumbnail"]:checked').val());
+				
+			    var formData = new FormData(this);
+	 
+			    $.ajax({
+			    	url : '/travelAdd',
+		            type: 'POST',
+		            data: formData,
+		            processData: false,
+		            contentType: false,
+		            success: function(response) {
+		                console.log('Success:', response);
+		                alert('여행 기록이 성공적으로 저장되었습니다!');
+		                // Redirect to the travel list page or handle the response as needed
+		                // window.location.href = '/travelList';
+		            },
+		            error: function(xhr, status, error) {
+		                console.error('Error:', error);
+		                alert('여행 기록 저장 중 오류가 발생했습니다.');
+		            }
+		        });
 			});
 
-			$('#addHashtag').click(function () {
-				addHashtag();
-			});
-
-			$('#hashtagInput').keypress(function (e) {
-				if (e.which == 13) {
-					e.preventDefault();
-					addHashtag();
-				}
-			});
-
 		});
-
-		$(document).on('click', '#hashtags .btn-close', function () {
-			$(this).parent().remove();
-		});
-
-		$(document).on('change', 'input[name="thumbnail"]', function () {
-			$('.img-wrap').removeClass('selected');
-			$(this).closest('.img-wrap').addClass('selected');
-			console.log('Selected thumbnail index:', $(this).data('index'));
-		});
-
-		$(document).on('click', '.img-wrap', function () {
-			$('.img-wrap').removeClass('selected');
-			$(this).addClass('selected');
-			var selectedIndex = $(this).data('index');
-			console.log('Selected thumbnail index:', selectedIndex);
-		});
-
-		function addHashtag() {
-			var hashtag = $('#hashtagInput').val().trim();
-			if (hashtag) {
-				var tagHtml = '<span class="badge bg-primary me-2 mb-2">#' + hashtag +
-					'<button type="button" class="btn-close btn-close-white ms-2" aria-label="Close"></button></span>';
-				$('#hashtags').append(tagHtml);
-				$('#hashtagInput').val('');
-			}
-		}
-
-		function getHashtags() {
-			return $('#hashtags .badge').map(function () {
-				return $(this).text().slice(1); // Remove the # symbol
-			}).get();
-		}
 
 		function sample5_execDaumPostcode() {
 			new daum.Postcode({
@@ -741,7 +491,6 @@ none
 				}
 			}).open();
 		}
-	</script>
 	</script>
 </body>
 </html>
