@@ -164,13 +164,22 @@ nav #header_menu {
 	padding: 0 !important;
 }
 
-input > i{
+.fa-eye-slash{
     position: absolute;
     left: 90%;
     top: 50%;
     color: black;
     transform:translate(-50%,-50%);
 }
+
+.fa-eye, .fa-eye-slash::after{
+    position: absolute;
+    left: 90%;
+    top: 50%;
+    color: black;
+    transform:translate(-50%,-50%);
+}
+
 
 #loginModal .memId{
 	padding-left: 38px !important;

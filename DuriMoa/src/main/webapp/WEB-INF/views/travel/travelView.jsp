@@ -533,7 +533,7 @@ none
 														<h4 style="font-weight: bold; font-size: 30px; font-family: LeeSeoyun;">
 															<span style="font-size: 28px;">[${travel.trvPlc }]</span>${travel.trvTt }
 														</h4>
-														<div class="dropdown position-absolute" style="left: 75%;">
+														<div class="dropdown position-absolute" style="left: 72%;">
 															<button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 20px; appearance: none; -webkit-appearance: none;">&#8942;</button>
 															<ul class="dropdown-menu compact-menu">
 																<li><a class="dropdown-item edit-travel" href="#" data-trv-id="${travel.trvId}">수정</a></li>
