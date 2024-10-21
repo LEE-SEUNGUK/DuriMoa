@@ -16,4 +16,7 @@ public interface ITravelDAO {
 	
 	// 여행 전체 조회
 	public ArrayList<TravelInfoVO> getTravelList(MemberVO vo);
+	
+	// 수정할 여행 정보 조회
+	public TravelInfoVO getTravel(int trvId);
 }

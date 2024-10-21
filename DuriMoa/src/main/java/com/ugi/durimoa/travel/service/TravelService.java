@@ -52,4 +52,9 @@ public class TravelService {
 		return result;
 	};
 
+	public TravelInfoVO getTravel(int trvId) {
+		System.out.println("여행 정보 조회");
+		
+		return dao.getTravel(trvId);
+	};
 }

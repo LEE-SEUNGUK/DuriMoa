@@ -91,6 +91,12 @@ public class TravelController {
 		}
 	}
 	
+	@ResponseBody
+	@RequestMapping("/getTravel")
+	public TravelInfoVO getTravel(@RequestParam("trvId") int trvId) {
+		return travelService.getTravel(trvId);
+	}
+	
 	@RequestMapping("/travelView")
 	public String DiaryView(Model model, HttpSession session) throws Exception {
 		

@@ -7,18 +7,24 @@
 		VALUES (#{memId}, #{copId}, #{trvTt}, #{trvPc}, #{trvX}, #{trvY}, #{trvDt}, #{trvCt}, #{trvOp})
 	</insert>
 	
-	<insert id="imagesAdd" parameterType="java.util.List">
-	    INSERT INTO IMAGES (trvImg, trvIdx, trvId)
-	    VALUES
-	    <foreach collection="list" item="image" separator=",">
-	        (#{image.trvImg}, #{image.trvIdx}, #{image.trvId})
-	    </foreach>
-	</insert>
-	
-	<select id="getTravel" resultType="TravelVO" parameterType="int">
-		SELECT * FROM travel
-		WHERE trv_id = #{trvId}
-	</select>
+	<select id="getTravel" resultType="TravelInfoVO" parameterType="int">
+	SELECT 
+	    t.trv_id,
+	    t.trv_tt,
+	    t.trv_pc,
+	    t.trv_x,
+	    t.trv_y,
+	    t.trv_dt,
+	    DBMS_LOB.SUBSTR(t.trv_ct, 4000, 1) AS trv_ct,
+	    t.trv_op,
+	    MAX(CASE WHEN i.trv_idx = '1' THEN i.trv_img END) AS trv_img1,
+	    MAX(CASE WHEN i.trv_idx = '2' THEN i.trv_img END) AS trv_img2,
+	    MAX(CASE WHEN i.trv_idx = '3' THEN i.trv_img END) AS trv_img3
+	FROM travel t
+	LEFT JOIN images i ON t.trv_id = i.trv_id
+	WHERE t.trv_id = #{trvId}
+	GROUP BY t.trv_id, t.trv_tt, t.trv_pc, t.trv_x, t.trv_y, t.trv_dt, DBMS_LOB.SUBSTR(t.trv_ct, 4000, 1), t.trv_op    
+	</select>	
 
 	<select id="getTravelList" resultType="TravelInfoVO" parameterType="MemberVO">
 		SELECT 

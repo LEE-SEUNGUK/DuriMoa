@@ -523,7 +523,6 @@ none
 								<td>
 									<div class="d-flex">
 										<form action="">
-										<input type="hidden" name="trvId" value="${travel.trvId }">
 										<div style="height: 300px; width: 860px; border-radius: 20px; background-color: #fdf7f7;">
 											<div class="row d-flex w-100 h-100">
 												<div class="col-3" style="text-align: center;">
@@ -537,8 +536,8 @@ none
 														<div class="dropdown position-absolute" style="left: 75%;">
 															<button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 20px; appearance: none; -webkit-appearance: none;">&#8942;</button>
 															<ul class="dropdown-menu compact-menu">
-																<li><a class="dropdown-item" href="#">수정</a></li>
-																<li><a class="dropdown-item" href="#">삭제</a></li>
+																<li><a class="dropdown-item edit-travel" href="#" data-trv-id="${travel.trvId}">수정</a></li>
+                                                                <li><a class="dropdown-item" href="#">삭제</a></li>
 															</ul>
 														</div>
 														<div class="d-flex align-items-center" style="font-size: 18px;">
@@ -618,261 +617,220 @@ none
 	</div>
 
 	<script>
-		function sample5_execDaumPostcode() {
-			new daum.Postcode({
-				oncomplete : function(data) {
-					var addr = data.address; // 최종 주소 변수
 
-					// 주소 정보를 해당 필드에 넣는다.
-					document.getElementById("sample5_address").value = addr;
-					// 주소로 상세 정보를 검색
-					geocoder.addressSearch(data.address, function(results,
-							status) {
-						// 정상적으로 검색이 완료됐으면
-						if (status === daum.maps.services.Status.OK) {
 
-							var result = results[0]; //첫번째 결과의 값을 활용
+// Document ready function
+$(document).ready(function() {
+    initializeMap();
 
-							// 해당 주소에 대한 좌표를 받아서
-							var coords = new daum.maps.LatLng(result.y,
-									result.x);
-							// 지도를 보여준다.
-							mapContainer.style.display = "block";
+    $('#writeButton').click(toggleMode);
 
-							map.relayout();
+    $('.edit-travel').click(function(e) {
+        e.preventDefault();
+        var trvId = $(this).data('trv-id');
+        editTravel(trvId);
+    });
 
-							// 지도 중심을 변경한다.
-							map.setCenter(coords);
-							// 마커를 결과값으로 받은 위치로 옮긴다.
-							marker.setPosition(coords)
-						}
-					});
-				}
-			}).open();
+    $('.accordion-button.no-toggle').click(function(e) {
+        e.preventDefault();
+        return false;
+    });
 
-		}
+    $('#searchAddress').click(execDaumPostcode);
 
-		$(document)
-				.ready(
-						function() {
+    $('#trvImgUpload').on('change', function(event) {
+        var files = event.target.files;
+        var photoPreview = $('#photoPreview');
 
-							$('#writeButton').click(function() {
-								toggleMode();
-							});
+        if (files.length > 3) {
+            alert('최대 3장의 사진만 업로드할 수 있습니다.');
+            $(this).val('');
+            photoPreview.empty();
+            return;
+        }
 
-							function toggleMode() {
-								$('#viewMode').toggle();
-								$('#writeMode').toggle();
+        photoPreview.empty();
 
-								if ($('#writeMode').is(':visible')) {
-									$('#writeButton')
-											.html(
-													'<i class="fa-solid fa-xmark" style="padding: 0px;"></i>');
-								} else {
-									$('#writeButton')
-											.html(
-													'<i class="fa-regular fa-pen-to-square"></i>');
-								}
-							}
-							;
+        for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            var reader = new FileReader();
 
-							$('#trvImgUpload')
-									.on(
-											'change',
-											function(event) {
-												var files = event.target.files;
-												var photoPreview = $('#photoPreview');
+            reader.onload = (function(theFile) {
+                return function(e) {
+                    var imgWrap = $('<div class="img-wrap"></div>');
+                    var img = $('<img>').attr('src', e.target.result).addClass('img-thumbnail');
+                    imgWrap.append(img);
+                    photoPreview.append(imgWrap);
+                };
+            })(file);
 
-												if (files.length > 3) {
-													alert('최대 3장의 사진만 업로드할 수 있습니다.');
-													$(this).val('');
-													photoPreview.empty();
-													return;
-												}
+            reader.readAsDataURL(file);
+        }
+    });
 
-												photoPreview.empty();
+    $('#travelAddForm').submit(function(e) {
+        e.preventDefault();
+        var formData = new FormData(this);
 
-												for (var i = 0; i < files.length; i++) {
-													var file = files[i];
-													var reader = new FileReader();
+        $.ajax({
+            url: $(this).attr('action'),
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function(response) {
+                console.log('Success:', response);
+                alert('여행 기록이 성공적으로 저장되었습니다!');
+                location.href = 'travelView';
+            },
+            error: function(xhr, status, error) {
+                console.error('Error:', error);
+                alert('여행 기록 저장 중 오류가 발생했습니다.');
+            }
+        });
+    });
+});
 
-													reader.onload = (function(
-															theFile) {
-														return function(e) {
-															var imgWrap = $('<div class="img-wrap"></div>');
-															var img = $('<img>')
-																	.attr(
-																			'src',
-																			e.target.result)
-																	.addClass(
-																			'img-thumbnail');
-															imgWrap.append(img);
-															photoPreview
-																	.append(imgWrap);
-														};
-													})(file);
+//Global variables
+var map, marker, geocoder;
 
-													reader.readAsDataURL(file);
-												}
-											});
+// Initialize the map
+function initializeMap() {
+    var mapContainer = document.getElementById('map');
+    var mapOption = {
+        center: new kakao.maps.LatLng(37.537187, 127.005476),
+        level: 4
+    };
 
-							var mapContainer = document.getElementById('map');
-							var mapOption = {
-								center : new kakao.maps.LatLng(37.537187,
-										127.005476),
-								level : 4
-							};
+    map = new kakao.maps.Map(mapContainer, mapOption);
+    geocoder = new kakao.maps.services.Geocoder();
 
-							var imageSrc = 'resources/assets/img/marker.png', imageSize = new kakao.maps.Size(
-									66, 55), imageOption = {
-								offset : new kakao.maps.Point(33, 45)
-							};
+    var imageSrc = 'resources/assets/img/marker.png',
+        imageSize = new kakao.maps.Size(66, 55),
+        imageOption = { offset: new kakao.maps.Point(33, 45) };
 
-							// 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-							var markerImage = new kakao.maps.MarkerImage(
-									imageSrc, imageSize, imageOption), markerPosition = new kakao.maps.LatLng(
-									37.54699, 127.09598); // 마커가 표시될 위치입니다	
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
 
-							var map = new kakao.maps.Map(mapContainer,
-									mapOption);
-							var geocoder = new kakao.maps.services.Geocoder();
-							var marker = new kakao.maps.Marker({
-								position : new kakao.maps.LatLng(37.537187,
-										127.005476),
-								map : map,
-								image : markerImage
-							});
+    marker = new kakao.maps.Marker({
+        position: new kakao.maps.LatLng(37.537187, 127.005476),
+        map: map,
+        image: markerImage
+    });
+}
 
-							$('.accordion-button.no-toggle').click(function(e) {
-								e.preventDefault();
-								return false;
-							});
+// Toggle between view and write modes
+function toggleMode() {
+    $('#viewMode').toggle();
+    $('#writeMode').toggle();
 
-							$('#searchAddress')
-									.click(
-											function() {
-												new daum.Postcode(
-														{
-															oncomplete : function(
-																	data) {
-																var addr = data.address;
-																$(
-																		'#travelDestination')
-																		.val(
-																				addr);
+    if ($('#writeMode').is(':visible')) {
+        $('#writeButton').html('<i class="fa-solid fa-xmark" style="padding: 0px;"></i>');
+    } else {
+        $('#writeButton').html('<i class="fa-regular fa-pen-to-square"></i>');
+    }
+}
 
-																geocoder
-																		.addressSearch(
-																				data.address,
-																				function(
-																						results,
-																						status) {
-																					if (status === kakao.maps.services.Status.OK) {
-																						var result = results[0];
-																						var coords = new kakao.maps.LatLng(
-																								result.y,
-																								result.x);
+// Edit travel function
+function editTravel(trvId) {
+    $.ajax({
+        url: '/getTravel',
+        type: 'GET',
+        data: { trvId: trvId },
+        success: function(response) {
+            populateForm(response);
+            toggleMode();
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+            alert('여행 정보를 불러오는 중 오류가 발생했습니다.');
+        }
+    });
+}
 
-																						$(
-																								'#coordinateX')
-																								.val(
-																										result.x);
-																						$(
-																								'#coordinateY')
-																								.val(
-																										result.y);
+// Populate form with travel data
+function populateForm(data) {
+    $('#travelTitle').val(data.trvTt);
+    $('#travelDestination').val(data.trvPc);
+    $('#coordinateX').val(data.trvX);
+    $('#coordinateY').val(data.trvY);
+    
+    if (data.trvDt) {
+        var date = new Date(data.trvDt);
+        var formattedDate = date.getFullYear() + '-' + 
+                            String(date.getMonth() + 1).padStart(2, '0') + '-' + 
+                            String(date.getDate()).padStart(2, '0');
+        $('#travelDate').val(formattedDate);
+    }
+    
+    $('#travelContent').val(data.trvCt);
+    $('#trvOp').prop('checked', data.trvOp === 'Y');
 
-																						console
-																								.log(
-																										'Destination:',
-																										$(
-																												'#travelDestination')
-																												.val());
-																						console
-																								.log(
-																										'Coordinates:',
-																										$(
-																												'#coordinateX')
-																												.val(),
-																										$(
-																												'#coordinateY')
-																												.val());
+    if (data.trvY && data.trvX) {
+        var coords = new kakao.maps.LatLng(data.trvY, data.trvX);
+        $('#map').show();
+        
+        // Ensure map is properly initialized before updating
+        if (!map) {
+            initializeMap();
+        }
+        
+        // Use setTimeout to ensure the map container is visible before updating
+        setTimeout(function() {
+            map.relayout();
+            map.setCenter(coords);
+            marker.setPosition(coords);
+        }, 100);
+    }
+    // Display existing images
+    var photoPreview = $('#photoPreview');
+    photoPreview.empty();
+    if (data.trvImg1) addImagePreview(data.trvImg1, photoPreview);
+    if (data.trvImg2) addImagePreview(data.trvImg2, photoPreview);
+    if (data.trvImg3) addImagePreview(data.trvImg3, photoPreview);
+    $('#photoDiv').show();
 
-																						$(
-																								'#map')
-																								.show();
-																						$(
-																								'#photoDiv')
-																								.show();
-																						map
-																								.relayout();
-																						map
-																								.setCenter(coords);
-																						marker
-																								.setPosition(coords);
-																					}
-																				});
-															}
-														}).open();
-											});
+    // Change form action for update
+    $('#travelAddForm').attr('action', '/travelUpdate');
+    $('<input>').attr({
+        type: 'hidden',
+        name: 'trvId',
+        value: data.trvId
+    }).appendTo('#travelAddForm');
+}
 
-							$('#travelAddForm').submit(function(e) {
-								e.preventDefault();
+// Add image preview
+function addImagePreview(imgSrc, container) {
+    var imgWrap = $('<div class="img-wrap"></div>');
+    var img = $('<img>').attr('src', imgSrc).addClass('img-thumbnail');
+    imgWrap.append(img);
+    container.append(imgWrap);
+}
 
-								var formData = new FormData(this);
+// Execute Daum Postcode function
+function execDaumPostcode() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+            var addr = data.address;
+            $('#travelDestination').val(addr);
 
-								$.ajax({
-									url : '/travelAdd',
-									type : 'POST',
-									data : formData,
-									processData : false,
-									contentType : false,
-									success : function(response) {
-										console.log('Success:', response);
-										alert('여행 기록이 성공적으로 저장되었습니다!');
-										location.href = 'travelView';
-									},
-									error : function(xhr, status, error) {
-										console.error('Error:', error);
-										alert('여행 기록 저장 중 오류가 발생했습니다.');
-									}
-								});
-							});
+            geocoder.addressSearch(data.address, function(results, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                    var result = results[0];
+                    var coords = new kakao.maps.LatLng(result.y, result.x);
 
-						});
+                    $('#coordinateX').val(result.x);
+                    $('#coordinateY').val(result.y);
 
-		function sample5_execDaumPostcode() {
-			new daum.Postcode({
-				oncomplete : function(data) {
-					var addr = data.address; // 최종 주소 변수
-
-					// 주소 정보를 해당 필드에 넣는다.
-					document.getElementById("sample5_address").value = addr;
-					// 주소로 상세 정보를 검색
-					geocoder.addressSearch(data.address, function(results,
-							status) {
-						// 정상적으로 검색이 완료됐으면
-						if (status === daum.maps.services.Status.OK) {
-
-							var result = results[0]; //첫번째 결과의 값을 활용
-
-							// 해당 주소에 대한 좌표를 받아서
-							var coords = new daum.maps.LatLng(result.y,
-									result.x);
-							// 지도를 보여준다.
-							mapContainer.style.display = "block";
-
-							map.relayout();
-
-							// 지도 중심을 변경한다.
-							map.setCenter(coords);
-							// 마커를 결과값으로 받은 위치로 옮긴다.
-							marker.setPosition(coords)
-						}
-					});
-				}
-			}).open();
-		}
-	</script>
+                    $('#map').show();
+                    $('#photoDiv').show();
+                    map.relayout();
+                    map.setCenter(coords);
+                    marker.setPosition(coords);
+                }
+            });
+        }
+    }).open();
+}
+</script>
 </body>
 </html>
