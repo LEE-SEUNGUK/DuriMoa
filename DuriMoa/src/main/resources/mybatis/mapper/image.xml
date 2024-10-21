@@ -7,4 +7,11 @@
 	    VALUES(#{trvImg}, #{trvIdx}, #{trvId})
 	</insert>
 
+	<select id="getImagesByTrvId" parameterType="int" resultType="ImageVO">
+        SELECT * FROM IMAGES WHERE trv_id = #{trvId} ORDER BY trv_idx
+    </select>
+
+    <delete id="deleteImagesByTrvId" parameterType="int">
+        DELETE FROM IMAGES WHERE trv_id = #{trvId}
+    </delete>
 </mapper>

@@ -7,6 +7,25 @@
 		VALUES (#{memId}, #{copId}, #{trvTt}, #{trvPc}, #{trvX}, #{trvY}, #{trvDt}, #{trvCt}, #{trvOp})
 	</insert>
 	
+	<update id="travelUpdate" parameterType="TravelVO">
+        UPDATE TRAVEL
+        SET mem_id = #{memId},
+            cop_id = #{copId},
+            trv_tt = #{trvTt},
+            trv_pc = #{trvPc},
+            trv_x = #{trvX},
+            trv_y = #{trvY},
+            trv_dt = #{trvDt},
+            trv_ct = #{trvCt},
+            trv_op = #{trvOp}
+        WHERE trv_id = #{trvId}
+    </update>
+    
+    <delete id="deleteImagesByTrvId" parameterType="int">
+    	DELETE FROM images
+    	WHERE trv_id = #{trvId}
+    </delete>
+	
 	<select id="getTravel" resultType="TravelInfoVO" parameterType="int">
 	SELECT 
 	    t.trv_id,

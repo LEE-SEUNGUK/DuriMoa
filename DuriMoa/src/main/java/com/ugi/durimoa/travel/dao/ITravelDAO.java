@@ -19,4 +19,7 @@ public interface ITravelDAO {
 	
 	// 수정할 여행 정보 조회
 	public TravelInfoVO getTravel(int trvId);
+	
+	// 여행 정보 수정
+	public int travelUpdate(TravelVO vo);
 }

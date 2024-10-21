@@ -11,4 +11,6 @@ public interface IImageDAO {
 
 	// 여행 추가
 	public int imagesAdd(ImageVO image);
+
+	public int deleteImagesByTrvId(int trvId);
 }

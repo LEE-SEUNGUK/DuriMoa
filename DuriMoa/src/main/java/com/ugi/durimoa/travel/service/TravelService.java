@@ -57,4 +57,12 @@ public class TravelService {
 		
 		return dao.getTravel(trvId);
 	};
+	
+	// 여행 정보 수정
+	public void travelUpdate(TravelVO vo) {
+		System.out.println("여행 정보 수정");
+		
+		dao.travelUpdate(vo);
+	};
+	
 }

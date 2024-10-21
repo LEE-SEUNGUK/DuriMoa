@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,7 +33,7 @@ public class TravelController {
 
 	@Autowired
 	TravelService travelService;
-	
+
 	@Autowired
 	ImageService imageService;
 
@@ -91,21 +92,71 @@ public class TravelController {
 		}
 	}
 	
+	@RequestMapping("/travelUpdate")
+    @ResponseBody
+    public String travelUpdate(@ModelAttribute TravelVO vo, @RequestParam("trvImgs") List<MultipartFile> files) throws Exception {
+        try {
+            vo.setTrvOp(vo.getTrvOp() != null && vo.getTrvOp().equals("on") ? "Y" : "N");
+            System.out.println(vo);
+            
+            // Update travel information
+            travelService.travelUpdate(vo);
+            
+            // Delete existing images
+            imageService.deleteImagesByTrvId(vo.getTrvId());
+            
+            // Handle new image files
+            if (!files.isEmpty()) {
+                List<ImageVO> images = new ArrayList<>();
+                for (int i = 0; i < files.size(); i++) {
+                    MultipartFile file = files.get(i);
+                    if (!file.isEmpty()) {
+                        String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+                        String filePath = uploadPath + File.separator + fileName;
+
+                        File dest = new File(filePath);
+                        file.transferTo(dest);
+
+                        System.out.println("File saved at: " + filePath);
+
+                        ImageVO imageVO = new ImageVO();
+                        imageVO.setTrvId(vo.getTrvId());
+                        imageVO.setTrvImg(downloadPath + fileName);
+                        imageVO.setTrvIdx(String.valueOf(i + 1));
+                        images.add(imageVO);
+                    }
+                }
+
+                System.out.println(images);
+
+                if (!images.isEmpty()) {
+                    imageService.imagesAdd(images);
+                }
+            }
+            
+            return "success";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error: " + e.getMessage();
+        }
+    }
+
+
 	@ResponseBody
 	@RequestMapping("/getTravel")
 	public TravelInfoVO getTravel(@RequestParam("trvId") int trvId) {
 		return travelService.getTravel(trvId);
 	}
-	
+
 	@RequestMapping("/travelView")
 	public String DiaryView(Model model, HttpSession session) throws Exception {
-		
+
 		MemberVO login = (MemberVO) session.getAttribute("login");
-		
+
 		ArrayList<TravelInfoVO> travelList = travelService.getTravelList(login);
-		
+
 		model.addAttribute("travelList", travelList);
-		
+
 		return "/travel/travelView";
 	}
 
@@ -114,4 +165,5 @@ public class TravelController {
 
 		return "/travel/travelWrite";
 	}
+
 }
