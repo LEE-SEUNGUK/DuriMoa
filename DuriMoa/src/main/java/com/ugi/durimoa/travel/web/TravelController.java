@@ -7,9 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ugi.durimoa.member.vo.MemberVO;
 import com.ugi.durimoa.travel.service.ImageService;
 import com.ugi.durimoa.travel.service.TravelService;
 import com.ugi.durimoa.travel.vo.ImageVO;
+import com.ugi.durimoa.travel.vo.TravelInfoVO;
 import com.ugi.durimoa.travel.vo.TravelVO;
 
 @Controller
@@ -85,10 +90,16 @@ public class TravelController {
 			return "Error: " + e.getMessage();
 		}
 	}
-
+	
 	@RequestMapping("/travelView")
-	public String DiaryView() {
-
+	public String DiaryView(Model model, HttpSession session) throws Exception {
+		
+		MemberVO login = (MemberVO) session.getAttribute("login");
+		
+		ArrayList<TravelInfoVO> travelList = travelService.getTravelList(login);
+		
+		model.addAttribute("travelList", travelList);
+		
 		return "/travel/travelView";
 	}
 

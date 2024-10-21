@@ -14,5 +14,29 @@
 	        (#{image.trvImg}, #{image.trvIdx}, #{image.trvId})
 	    </foreach>
 	</insert>
+	
+	<select id="getTravel" resultType="TravelVO" parameterType="int">
+		SELECT * FROM travel
+		WHERE trv_id = #{trvId}
+	</select>
+
+	<select id="getTravelList" resultType="TravelInfoVO" parameterType="MemberVO">
+		SELECT 
+		    a.trv_id,
+		    a.trv_tt,
+		    a.trv_pc,
+		    SUBSTR(a.trv_pc, 0, 2) trv_plc,
+		    a.trv_dt,
+		    DBMS_LOB.SUBSTR(a.trv_Ct, 4000, 1) AS trv_ct,
+		    a.trv_op,
+		    MAX(CASE WHEN b.trv_idx = 1 THEN b.trv_img END) AS trv_img1,
+		    MAX(CASE WHEN b.trv_idx = 2 THEN b.trv_img END) AS trv_img2,
+		    MAX(CASE WHEN b.trv_idx = 3 THEN b.trv_img END) AS trv_img3
+		FROM travel a
+		LEFT JOIN images b ON a.trv_id = b.trv_id
+		WHERE a.mem_id = #{memId}
+		AND b.trv_idx IN (1, 2, 3)
+		GROUP BY a.trv_id, a.trv_Tt, a.trv_Pc, a.trv_Dt, DBMS_LOB.SUBSTR(a.trv_Ct, 4000, 1), a.trv_Op
+	</select>
 
 </mapper>

@@ -36,14 +36,244 @@ td {
 	cursor: default;
 }
 
-.accordion-button.no-toggle:not (.collapsed ){
-	color: var(- 
--bs-accordion-btn-color);
-	background-color: var(- 
--bs-accordion-btn-bg);
-	box-shadow: none;
-}
+.accordion-button
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+.no-toggle
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+:not
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+(
+.collapsed
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+){
+color
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+:
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+var
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(-
+-bs-accordion-btn-color
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+);
+background-color
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+:
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+var
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(-
+-bs-accordion-btn-bg
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+);
+box-shadow
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+:
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+none
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;
+}
 .writing-button {
 	position: fixed;
 	bottom: 15%;
@@ -76,12 +306,12 @@ td {
 }
 
 #map {
-	width: 250px;
-	height: 250px;
+	width: 300px;
+	height: 300px;
 	display: none;
 }
 
-#writeMode {	
+#writeMode {
 	display: none;
 }
 
@@ -96,8 +326,109 @@ td {
 }
 
 #travelAddForm {
-    max-height: 1200px; /* Adjust this value as needed */
-    margin: 0 auto;
+	max-height: 1200px; /* Adjust this value as needed */
+	margin: 0 auto;
+}
+
+/* Styles for the photo preview container */
+#photoPreview {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+}
+
+/* Base styles for all image wrappers */
+.img-wrap {
+	position: relative;
+	width: 120px;
+	height: 150px;
+	overflow: hidden;
+	border: 1px solid #ddd;
+	border-radius: 5px;
+}
+
+/* Styles for all images */
+.img-wrap img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* Styles specific to the thumbnail (first image) */
+.img-wrap:first-child {
+	width: 120px;
+	height: 150px;
+	border-color: #007bff;
+	box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Label for the thumbnail */
+.img-wrap:first-child::after {
+	content: '썸네일';
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	background-color: rgba(0, 123, 255, 0.7);
+	color: white;
+	padding: 2px 5px;
+	font-size: 12px;
+	border-radius: 3px;
+}
+
+.img-wrap:hover {
+	transform: scale(1.02);
+	transition: transform 0.3s ease;
+}
+
+#travelListView {
+	height: 300px;
+	width: 860px;
+	border-radius: 20px;
+	background-color: #fdf7f7;
+}
+
+#trvThum {
+	width: 240px;
+	height: 300px;
+	object-fit: cover;
+	border-radius: 20px;
+}
+
+#travelViewRight {
+	width: 55%;
+	height: 95%;
+	padding: 0;
+	margin-left: 80px;
+	margin-top: 30px;
+}
+
+.trvTitle {
+	font-weight: bold;
+	font-size: 30px;
+	font-family: LeeSeoyun;
+}
+
+.content {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	line-clamp: 2;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+
+.compact-menu {
+	min-width: 50px !important;
+	/* Adjust this value as needed */
+	width: auto;
+	white-space: nowrap;
+}
+
+.compact-menu .dropdown-item {
+	padding: 0.25rem 0.5rem;
+	/* Reduce padding */
+	font-size: 16px;
+	/* Reduce font size if needed */
 }
 </style>
 </head>
@@ -123,8 +454,20 @@ td {
 					</div>
 					<div class="accordion-item">
 						<h2 class="accordion-header">
-							<button class="accordion-button no-toggle" type="button">인천</button>
+							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChungcheong">광역시</button>
 						</h2>
+						<div id="collapseChungcheong" class="accordion-collapse collapse">
+							<div class="accordion-body">
+								<ul>
+									<li>부산</li>
+									<li>대구</li>
+									<li>인천</li>
+									<li>광주</li>
+									<li>대전</li>
+									<li>울산</li>
+								</ul>
+							</div>
+						</div>
 					</div>
 					<div class="accordion-item">
 						<h2 class="accordion-header">
@@ -172,59 +515,52 @@ td {
 					</div>
 				</div>
 			</section>
-			<section class="col-9 ms-5" style="margin-top: 4%" id="viewMode">
+			<section class="col-9" style="margin-top: 4%; margin-left: 100px" id="viewMode">
 				<table class="table" style="margin-top: 2% !important; margin: 0 auto; border-bottom: #ffffff;">
 					<tbody>
-						<tr>
-							<td>
-								<div class="d-flex">
-									<div class="d-flex align-items-center" style="height: 300px; border-radius: 20px; margin: 0 auto; background-color: rgb(248, 248, 248);">
-										<div class="row d-flex align-items-center">
-											<div class="col-3" style="text-align: center;">
-												<img src="resources/assets/img/login_slide/2.jpg" style="width: 216px; height: 270px; object-fit: cover; border-radius: 10px;" alt="">
-											</div>
-											<div class="col-8" style="width: 65%; height: 95%; padding: 0;">
-												<div class="d-flex justify-content-between align-items-center">
-													<h4 style="margin: 0px; font-weight: bold;">바닷바람 맞기 좋은곳♥</h4>
+						<c:forEach items="${travelList}" var="travel">
+							<tr>
+								<td>
+									<div class="d-flex">
+										<form action="">
+										<input type="hidden" name="trvId" value="${travel.trvId }">
+										<div style="height: 300px; width: 860px; border-radius: 20px; background-color: #fdf7f7;">
+											<div class="row d-flex w-100 h-100">
+												<div class="col-3" style="text-align: center;">
+													<img class="p-3" src=${travel.trvImg1 } style="width: 240px; height: 300px; object-fit: cover; border-radius: 25px;" alt="">
 												</div>
-												<div class="mt-1" style="color: rgb(107, 107, 107);"># 제주도 # 바다 # 커플룩</div>
-												<div class="d-flex mt-5 align-items-center">
-													<img src="resources/assets/img/board_map.png" width="3%" alt="">
-													<p class="ms-2">제주시 맛도리 라면집</p>
+												<div class="col-9" style="width: 55%; height: 95%; padding: 0; margin-left: 80px; margin-top: 30px;">
+													<div class="d-flex flex-column ">
+														<h4 style="font-weight: bold; font-size: 30px; font-family: LeeSeoyun;">
+															<span style="font-size: 28px;">[${travel.trvPlc }]</span>${travel.trvTt }
+														</h4>
+														<div class="dropdown position-absolute" style="left: 75%;">
+															<button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 20px; appearance: none; -webkit-appearance: none;">&#8942;</button>
+															<ul class="dropdown-menu compact-menu">
+																<li><a class="dropdown-item" href="#">수정</a></li>
+																<li><a class="dropdown-item" href="#">삭제</a></li>
+															</ul>
+														</div>
+														<div class="d-flex align-items-center" style="font-size: 18px;">
+															<img src="resources/assets/img/board_map.png" width="22px" alt="">
+															<p class="ms-2" style="color: #6a6a6a;">${travel.trvPc }</p>
+														</div>
+														<div class="d-flex align-items-center" style="font-size: 18px;">
+															<img src="resources/assets/img/date.png" width="23px" alt="">
+															<p class="ms-2" style="color: #6a6a6a;">${travel.trvDt }</p>
+														</div>
+													</div>
+													<div class="d-inline-block" style=" margin-top: 35px; height: 105px; width: 500px; border-radius: 10px;">
+														<div class="content mt-4" style="width: 90%; font-size: 18px; margin: 0 auto;">${travel.trvCt }</div>
+													</div>
 												</div>
-												<div class="mt-3" style="width: 90%;">그 앞에 맛있는게 있었는데 라면이 지렸다. 그리고 앞에가 바로 바다여서 너무 좋았어. 그래서 그냥 찍어봤느데 키키 개좋다 그 앞에 맛있는게 있었는데 라면이 지렸다. 그리고 앞에가 바로 바다여서 너무 좋았어. 그래서 그냥 찍어봤느데 키키 개좋다</div>
 											</div>
-											<div class="col-1" style="margin-bottom: 18%;"></div>
 										</div>
+									</form>
 									</div>
-								</div>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<div class="d-flex">
-									<div class="d-flex align-items-center" style="height: 300px; border-radius: 20px; margin: 0 auto; background-color: rgb(248, 248, 248);">
-										<div class="row d-flex align-items-center">
-											<div class="col-3" style="text-align: center;">
-												<img src="resources/assets/img/login_slide/2.jpg" style="width: 216px; height: 270px; object-fit: cover; border-radius: 10px;" alt="">
-											</div>
-											<div class="col-8" style="width: 65%; height: 95%; padding: 0;">
-												<div class="d-flex justify-content-between align-items-center">
-													<h4 style="margin: 0px; font-weight: bold;">바닷바람 맞기 좋은곳♥</h4>
-												</div>
-												<div class="mt-1" style="color: rgb(107, 107, 107);"># 제주도 # 바다 # 커플룩</div>
-												<div class="d-flex mt-5 align-items-center">
-													<img src="resources/assets/img/board_map.png" width="3%" alt="">
-													<p class="ms-2">제주시 맛도리 라면집</p>
-												</div>
-												<div class="mt-3" style="width: 90%;">그 앞에 맛있는게 있었는데 라면이 지렸다. 그리고 앞에가 바로 바다여서 너무 좋았어. 그래서 그냥 찍어봤느데 키키 개좋다 그 앞에 맛있는게 있었는데 라면이 지렸다. 그리고 앞에가 바로 바다여서 너무 좋았어. 그래서 그냥 찍어봤느데 키키 개좋다</div>
-											</div>
-											<div class="col-1" style="margin-bottom: 18%;"></div>
-										</div>
-									</div>
-								</div>
-							</td>
-						</tr>
+								</td>
+							</tr>
+						</c:forEach>
 					</tbody>
 				</table>
 			</section>
@@ -258,7 +594,7 @@ td {
 										</div>
 										<input type="hidden" name="memId" value="${sessionScope.login.memId}">
 										<c:if test="${sessionScope.couple != null}">
-											<input type="hidden" name="copId" value="${sessionScope.couple.copId}">	
+											<input type="hidden" name="copId" value="${sessionScope.couple.copId}">
 										</c:if>
 										<button type="submit" class="btn btn-primary">저장하기</button>
 									</div>
@@ -268,13 +604,8 @@ td {
 						<section class="col-5 ms-4 d-flex flex-column align-items-center">
 							<div class="mt-5" id="map"></div>
 							<div class="mt-3" id="photoDiv">
-								<label for="travelPhotos" class="form-label">사진</label> 
-								<input type="file" id="trvImgUpload" name="trvImgs" class="form-control" multiple accept="image/*">
-								<div>
-									<img id="trvImgs" src="" style="width: 120px; height: 150px">
-									</div>
-								<%-- <input type="hidden" id="memId" name="memId" value="${sessionScope.loing.memId}"> --%>
-								<div id="photoPreview" class="photo-preview justify-content-between"></div>
+								<label for="travelPhotos" class="form-label">사진(최대 3장)</label> <input type="file" id="trvImgUpload" name="trvImgs" class="form-control" multiple accept="image/*">
+								<div id="photoPreview" class="d-flex justify-content-start align-items-center mt-3"></div>
 							</div>
 						</section>
 					</form>
@@ -320,192 +651,214 @@ td {
 			}).open();
 
 		}
-		
-		$(document).ready(function () {
-			
-			$('#writeButton').click(function() {
-				toggleMode();
-			});
 
-			function toggleMode() {
-				$('#viewMode').toggle();
-				$('#writeMode').toggle();
+		$(document)
+				.ready(
+						function() {
 
-				if ($('#writeMode').is(':visible')) {
-					$('#writeButton').html('<i class="fa-solid fa-xmark" style="padding: 0px;"></i>');
-				} else {
-					$('#writeButton').html('<i class="fa-regular fa-pen-to-square"></i>');
-				}
-			};
-		
-			$('#trvImgUpload').on('change', function(event) {
-		        var files = event.target.files;
-		        var photoPreview = $('#photoPreview');
-		        
-		        if (files.length > 3) {
-		            alert('최대 3장의 사진만 업로드할 수 있습니다.');
-		            $(this).val('');
-		            photoPreview.empty();
-		            return;
-		        }
+							$('#writeButton').click(function() {
+								toggleMode();
+							});
 
-		        photoPreview.empty();
+							function toggleMode() {
+								$('#viewMode').toggle();
+								$('#writeMode').toggle();
 
-		        for (var i = 0; i < files.length; i++) {
-		            var file = files[i];
-		            var reader = new FileReader();
-
-		            reader.onload = (function(theFile) {
-		                return function(e) {
-		                    var imgWrap = $('<div class="img-wrap me-2 mb-2"></div>');
-		                    var img = $('<img>').attr({
-		                        src: e.target.result,
-		                        class: 'img-thumbnail',
-		                        style: 'width: 150px; height: 150px; object-fit: cover;'
-		                    });
-		                    imgWrap.append(img);
-		                    photoPreview.append(imgWrap);
-		                };
-		            })(file);
-
-		            reader.readAsDataURL(file);
-		        }
-		    });
-
-			
-
-			var mapContainer = document.getElementById('map');
-			var mapOption = {
-				center: new kakao.maps.LatLng(37.537187, 127.005476),
-				level: 4
-			};
-
-			var imageSrc = 'resources/assets/img/marker.png',
-				imageSize = new kakao.maps.Size(66, 55),
-				imageOption = { offset: new kakao.maps.Point(33, 45) };
-
-			// 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
-			var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption),
-				markerPosition = new kakao.maps.LatLng(37.54699, 127.09598); // 마커가 표시될 위치입니다	
-
-			var map = new kakao.maps.Map(mapContainer, mapOption);
-			var geocoder = new kakao.maps.services.Geocoder();
-			var marker = new kakao.maps.Marker({
-				position: new kakao.maps.LatLng(37.537187, 127.005476),
-				map: map,
-				image: markerImage
-			});
-
-			$('.accordion-button.no-toggle').click(function (e) {
-				e.preventDefault();
-				return false;
-			});
-
-// 			$('#travelPhotos').on('change', function (event) {
-// 				var files = event.target.files;
-// 				var photoPreview = $('#photoPreview');
-// 				photoPreview.empty();
-
-// 				if (files.length > 3) {
-// 					alert('최대 3장의 사진만 업로드할 수 있습니다.');
-// 					$(this).val('');
-// 					return;
-// 				}
-
-// 				for (var i = 0; i < files.length; i++) {
-// 					var file = files[i];
-// 					var reader = new FileReader();
-
-// 					reader.onload = (function (theFile, index) {
-// 						return function (e) {
-// 							var imgWrap = $('<div class="img-wrap" data-index="' + index + '"></div>');
-// 							var img = $('<img>').attr('src', e.target.result);
-// 							var overlay = $('<div class="overlay"></div>');
-
-// 							imgWrap.append(img).append(overlay);
-// 							photoPreview.append(imgWrap);
-
-// 							if (index === 0) {
-// 								imgWrap.addClass('selected');
-// 								console.log('Initial thumbnail index:', index);
-// 							}
-// 						};
-// 					})(file, i);
-
-// 					reader.readAsDataURL(file);
-// 				}
-// 			});
-
-			$('#searchAddress').click(function () {
-				new daum.Postcode({
-					oncomplete: function (data) {
-						var addr = data.address;
-						$('#travelDestination').val(addr);
-
-						geocoder.addressSearch(data.address, function (results, status) {
-							if (status === kakao.maps.services.Status.OK) {
-								var result = results[0];
-								var coords = new kakao.maps.LatLng(result.y, result.x);
-
-								$('#coordinateX').val(result.x);
-								$('#coordinateY').val(result.y);
-
-								console.log('Destination:', $('#travelDestination').val());
-								console.log('Coordinates:', $('#coordinateX').val(), $('#coordinateY').val());
-
-								$('#map').show();
-								$('#photoDiv').show();
-								map.relayout();
-								map.setCenter(coords);
-								marker.setPosition(coords);
+								if ($('#writeMode').is(':visible')) {
+									$('#writeButton')
+											.html(
+													'<i class="fa-solid fa-xmark" style="padding: 0px;"></i>');
+								} else {
+									$('#writeButton')
+											.html(
+													'<i class="fa-regular fa-pen-to-square"></i>');
+								}
 							}
+							;
+
+							$('#trvImgUpload')
+									.on(
+											'change',
+											function(event) {
+												var files = event.target.files;
+												var photoPreview = $('#photoPreview');
+
+												if (files.length > 3) {
+													alert('최대 3장의 사진만 업로드할 수 있습니다.');
+													$(this).val('');
+													photoPreview.empty();
+													return;
+												}
+
+												photoPreview.empty();
+
+												for (var i = 0; i < files.length; i++) {
+													var file = files[i];
+													var reader = new FileReader();
+
+													reader.onload = (function(
+															theFile) {
+														return function(e) {
+															var imgWrap = $('<div class="img-wrap"></div>');
+															var img = $('<img>')
+																	.attr(
+																			'src',
+																			e.target.result)
+																	.addClass(
+																			'img-thumbnail');
+															imgWrap.append(img);
+															photoPreview
+																	.append(imgWrap);
+														};
+													})(file);
+
+													reader.readAsDataURL(file);
+												}
+											});
+
+							var mapContainer = document.getElementById('map');
+							var mapOption = {
+								center : new kakao.maps.LatLng(37.537187,
+										127.005476),
+								level : 4
+							};
+
+							var imageSrc = 'resources/assets/img/marker.png', imageSize = new kakao.maps.Size(
+									66, 55), imageOption = {
+								offset : new kakao.maps.Point(33, 45)
+							};
+
+							// 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+							var markerImage = new kakao.maps.MarkerImage(
+									imageSrc, imageSize, imageOption), markerPosition = new kakao.maps.LatLng(
+									37.54699, 127.09598); // 마커가 표시될 위치입니다	
+
+							var map = new kakao.maps.Map(mapContainer,
+									mapOption);
+							var geocoder = new kakao.maps.services.Geocoder();
+							var marker = new kakao.maps.Marker({
+								position : new kakao.maps.LatLng(37.537187,
+										127.005476),
+								map : map,
+								image : markerImage
+							});
+
+							$('.accordion-button.no-toggle').click(function(e) {
+								e.preventDefault();
+								return false;
+							});
+
+							$('#searchAddress')
+									.click(
+											function() {
+												new daum.Postcode(
+														{
+															oncomplete : function(
+																	data) {
+																var addr = data.address;
+																$(
+																		'#travelDestination')
+																		.val(
+																				addr);
+
+																geocoder
+																		.addressSearch(
+																				data.address,
+																				function(
+																						results,
+																						status) {
+																					if (status === kakao.maps.services.Status.OK) {
+																						var result = results[0];
+																						var coords = new kakao.maps.LatLng(
+																								result.y,
+																								result.x);
+
+																						$(
+																								'#coordinateX')
+																								.val(
+																										result.x);
+																						$(
+																								'#coordinateY')
+																								.val(
+																										result.y);
+
+																						console
+																								.log(
+																										'Destination:',
+																										$(
+																												'#travelDestination')
+																												.val());
+																						console
+																								.log(
+																										'Coordinates:',
+																										$(
+																												'#coordinateX')
+																												.val(),
+																										$(
+																												'#coordinateY')
+																												.val());
+
+																						$(
+																								'#map')
+																								.show();
+																						$(
+																								'#photoDiv')
+																								.show();
+																						map
+																								.relayout();
+																						map
+																								.setCenter(coords);
+																						marker
+																								.setPosition(coords);
+																					}
+																				});
+															}
+														}).open();
+											});
+
+							$('#travelAddForm').submit(function(e) {
+								e.preventDefault();
+
+								var formData = new FormData(this);
+
+								$.ajax({
+									url : '/travelAdd',
+									type : 'POST',
+									data : formData,
+									processData : false,
+									contentType : false,
+									success : function(response) {
+										console.log('Success:', response);
+										alert('여행 기록이 성공적으로 저장되었습니다!');
+										location.href = 'travelView';
+									},
+									error : function(xhr, status, error) {
+										console.error('Error:', error);
+										alert('여행 기록 저장 중 오류가 발생했습니다.');
+									}
+								});
+							});
+
 						});
-					}
-				}).open();
-			});
-
-			$('#travelAddForm').submit(function (e) {
-				e.preventDefault();
-				
-			    var formData = new FormData(this);
-	 
-			    $.ajax({
-			    	url : '/travelAdd',
-		            type: 'POST',
-		            data: formData,
-		            processData: false,
-		            contentType: false,
-		            success: function(response) {
-		                console.log('Success:', response);
-		                alert('여행 기록이 성공적으로 저장되었습니다!');
-		                // Redirect to the travel list page or handle the response as needed
-		                // window.location.href = '/travelList';
-		            },
-		            error: function(xhr, status, error) {
-		                console.error('Error:', error);
-		                alert('여행 기록 저장 중 오류가 발생했습니다.');
-		            }
-		        });
-			});
-
-		});
 
 		function sample5_execDaumPostcode() {
 			new daum.Postcode({
-				oncomplete: function (data) {
+				oncomplete : function(data) {
 					var addr = data.address; // 최종 주소 변수
 
 					// 주소 정보를 해당 필드에 넣는다.
 					document.getElementById("sample5_address").value = addr;
 					// 주소로 상세 정보를 검색
-					geocoder.addressSearch(data.address, function (results, status) {
+					geocoder.addressSearch(data.address, function(results,
+							status) {
 						// 정상적으로 검색이 완료됐으면
 						if (status === daum.maps.services.Status.OK) {
 
 							var result = results[0]; //첫번째 결과의 값을 활용
 
 							// 해당 주소에 대한 좌표를 받아서
-							var coords = new daum.maps.LatLng(result.y, result.x);
+							var coords = new daum.maps.LatLng(result.y,
+									result.x);
 							// 지도를 보여준다.
 							mapContainer.style.display = "block";
 
