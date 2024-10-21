@@ -550,7 +550,7 @@ none
 														</div>
 													</div>
 													<div class="d-inline-block" style=" margin-top: 35px; height: 105px; width: 500px; border-radius: 10px;">
-														<div class="content mt-4" style="width: 90%; font-size: 18px; margin: 0 auto;">${travel.trvCt }</div>
+														<div class="content mt-4" style="width: 90%; font-size: 18px; margin: 0 auto; margin-left: 0px;">${travel.trvCt }</div>
 													</div>
 												</div>
 											</div>
@@ -623,7 +623,13 @@ none
 $(document).ready(function() {
     initializeMap();
 
-    $('#writeButton').click(toggleMode);
+    $('#writeButton').click(function() {
+        if (isEditMode) {
+            // If we're in edit mode, clicking the X should clear the form
+            clearForm();
+        }
+        toggleMode();
+    });
 
     $('.edit-travel').click(function(e) {
         e.preventDefault();
@@ -672,15 +678,17 @@ $(document).ready(function() {
         e.preventDefault();
         var formData = new FormData(this);
 
+        var url = isEditMode ? '/travelUpdate' : '/travelAdd';
+
         $.ajax({
-            url: $(this).attr('action'),
+            url: url,
             type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
             success: function(response) {
                 console.log('Success:', response);
-                alert('여행 기록이 성공적으로 저장되었습니다!');
+                alert(isEditMode ? '여행 기록이 성공적으로 수정되었습니다!' : '여행 기록이 성공적으로 저장되었습니다!');
                 location.href = 'travelView';
             },
             error: function(xhr, status, error) {
@@ -693,6 +701,21 @@ $(document).ready(function() {
 
 //Global variables
 var map, marker, geocoder;
+var isEditMode = false;
+var currentTrvId = null;
+
+function clearForm() {
+    $('#travelAddForm')[0].reset();
+    $('#coordinateX').val('');
+    $('#coordinateY').val('');
+    $('#photoPreview').empty();
+    $('#map').hide();
+    $('#photoDiv').hide();
+    $('#travelAddForm').attr('action', '/travelAdd');
+    $('input[name="trvId"]').remove();
+    isEditMode = false;
+    currentTrvId = null;
+}
 
 // Initialize the map
 function initializeMap() {
@@ -737,6 +760,8 @@ function editTravel(trvId) {
         type: 'GET',
         data: { trvId: trvId },
         success: function(response) {
+            isEditMode = true;
+            currentTrvId = trvId;
             populateForm(response);
             toggleMode();
         },
@@ -765,22 +790,27 @@ function populateForm(data) {
     $('#travelContent').val(data.trvCt);
     $('#trvOp').prop('checked', data.trvOp === 'Y');
 
-    if (data.trvY && data.trvX) {
-        var coords = new kakao.maps.LatLng(data.trvY, data.trvX);
-        $('#map').show();
-        
-        // Ensure map is properly initialized before updating
-        if (!map) {
-            initializeMap();
-        }
-        
-        // Use setTimeout to ensure the map container is visible before updating
-        setTimeout(function() {
-            map.relayout();
-            map.setCenter(coords);
-            marker.setPosition(coords);
-        }, 100);
+    // Display the map based on the address
+    if (data.trvPc) {
+        geocoder.addressSearch(data.trvPc, function(results, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                var result = results[0];
+                var coords = new kakao.maps.LatLng(result.y, result.x);
+
+                $('#coordinateX').val(result.x);
+                $('#coordinateY').val(result.y);
+
+                $('#map').show();
+                map.relayout();
+                map.setCenter(coords);
+                marker.setPosition(coords);
+            } else {
+                console.error('Geocoding failed:', status);
+                alert('주소를 지도에 표시하는 데 실패했습니다.');
+            }
+        });
     }
+
     // Display existing images
     var photoPreview = $('#photoPreview');
     photoPreview.empty();
@@ -789,12 +819,12 @@ function populateForm(data) {
     if (data.trvImg3) addImagePreview(data.trvImg3, photoPreview);
     $('#photoDiv').show();
 
-    // Change form action for update
     $('#travelAddForm').attr('action', '/travelUpdate');
+    $('input[name="trvId"]').remove(); // Remove any existing trvId input
     $('<input>').attr({
         type: 'hidden',
         name: 'trvId',
-        value: data.trvId
+        value: currentTrvId
     }).appendTo('#travelAddForm');
 }
 
