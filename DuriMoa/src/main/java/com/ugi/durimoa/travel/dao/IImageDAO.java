@@ -1,14 +1,14 @@
 package com.ugi.durimoa.travel.dao;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Mapper;
 
 import com.ugi.durimoa.travel.vo.ImageVO;
-import com.ugi.durimoa.travel.vo.TravelVO;
 
 @Mapper
-public interface ITravelDAO {
+public interface IImageDAO {
 
 	// 여행 추가
-	public int travelAdd(TravelVO vo);
-	
+	public int imagesAdd(ImageVO image);
 }

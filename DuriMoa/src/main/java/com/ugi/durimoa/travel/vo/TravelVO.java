@@ -7,12 +7,11 @@ public class TravelVO {
     private int copId;
     private String trvTt;
     private String trvPc;
-    private Double trvX;
-    private Double trvY;
+    private String trvX;
+    private String trvY;
     private String trvDt;
     private String trvCt;
     private String trvOp;
-    private String trvPt;
     
 	public int getTrvId() {
 		return trvId;
@@ -44,16 +43,16 @@ public class TravelVO {
 	public void setTrvPc(String trvPc) {
 		this.trvPc = trvPc;
 	}
-	public Double getTrvX() {
+	public String getTrvX() {
 		return trvX;
 	}
-	public void setTrvX(Double trvX) {
+	public void setTrvX(String trvX) {
 		this.trvX = trvX;
 	}
-	public Double getTrvY() {
+	public String getTrvY() {
 		return trvY;
 	}
-	public void setTrvY(Double trvY) {
+	public void setTrvY(String trvY) {
 		this.trvY = trvY;
 	}
 	public String getTrvDt() {
@@ -74,18 +73,13 @@ public class TravelVO {
 	public void setTrvOp(String trvOp) {
 		this.trvOp = trvOp;
 	}
-	public String getTrvPt() {
-		return trvPt;
-	}
-	public void setTrvPt(String trvPt) {
-		this.trvPt = trvPt;
-	}
+
 
 	@Override
 	public String toString() {
 		return "TravelVO [trvId=" + trvId + ", memId=" + memId + ", copId=" + copId + ", trvTt=" + trvTt + ", trvPc="
 				+ trvPc + ", trvX=" + trvX + ", trvY=" + trvY + ", trvDt=" + trvDt + ", trvCt=" + trvCt + ", trvOp="
-				+ trvOp + ", trvPt=" + trvPt + "]";
+				+ trvOp + "]";
 	}
 
 }

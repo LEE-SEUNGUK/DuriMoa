@@ -2,6 +2,7 @@ package com.ugi.durimoa.travel.web;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -16,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ugi.durimoa.travel.service.ImageService;
 import com.ugi.durimoa.travel.service.TravelService;
+import com.ugi.durimoa.travel.vo.ImageVO;
 import com.ugi.durimoa.travel.vo.TravelVO;
 
 @Controller
@@ -25,6 +28,9 @@ public class TravelController {
 	@Autowired
 	TravelService travelService;
 	
+	@Autowired
+	ImageService imageService;
+
 	@Value("#{util['file.upload.path']}")
 	private String uploadPath;
 
@@ -33,32 +39,51 @@ public class TravelController {
 
 	@RequestMapping("/travelAdd")
 	@ResponseBody
-	public String travelAdd(@ModelAttribute TravelVO vo, @RequestParam("trvThumbnail") MultipartFile file) {
+	public String travelAdd(@ModelAttribute TravelVO vo, @RequestParam("trvImgs") List<MultipartFile> files)
+			throws Exception {
+		System.out.println(vo);
 		try {
-			if (!file.isEmpty()) {
-				String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
-				String filePath = uploadPath + File.separator + fileName; // 업로드 경로
-				System.out.println(filePath);
+			// Handle TravelVO data
+			String trvOp = vo.getTrvOp();
+			vo.setTrvOp(trvOp != null && trvOp.equals("on") ? "Y" : "N");
 
-				File dest = new File(filePath);
+			// Save TravelVO
+			travelService.travelAdd(vo);
 
-				// 파일 저장
-				file.transferTo(dest);
-				System.out.println("File saved at: " + filePath);
+			// Handle image files
+			if (!files.isEmpty()) {
+				List<ImageVO> images = new ArrayList<>();
+				for (int i = 0; i < files.size(); i++) {
+					MultipartFile file = files.get(i);
+					if (!file.isEmpty()) {
+						String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+						String filePath = uploadPath + File.separator + fileName;
 
-				// DB에 경로 저장 (전체 경로 형식)
-				vo.setTrvPt(downloadPath + fileName); // URL 형식으로 저장
+						File dest = new File(filePath);
+						file.transferTo(dest);
+
+						System.out.println("File saved at: " + filePath);
+
+						ImageVO imageVO = new ImageVO();
+						imageVO.setTrvId(vo.getTrvId());
+						imageVO.setTrvImg(downloadPath + fileName);
+						imageVO.setTrvIdx(String.valueOf(i + 1));
+						images.add(imageVO);
+					}
+				}
+
+				System.out.println(images);
+
+				if (!images.isEmpty()) {
+					imageService.imagesAdd(images);
+				}
 			}
 
-			System.out.println(vo);
+			return "success";
 		} catch (IOException e) {
 			e.printStackTrace();
-			return "File saving error: " + e.getMessage();
+			return "Error: " + e.getMessage();
 		}
-
-		System.out.println(vo);
-
-		return "success";
 	}
 
 	@RequestMapping("/travelView")

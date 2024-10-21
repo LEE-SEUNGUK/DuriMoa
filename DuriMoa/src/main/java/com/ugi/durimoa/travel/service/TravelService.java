@@ -19,6 +19,7 @@ import com.ugi.durimoa.travel.vo.TravelVO;
 
 @Service
 public class TravelService {
+	
 	@Autowired // 의존성 주입
 	ITravelDAO dao;
 
@@ -28,5 +29,14 @@ public class TravelService {
 	@Value("#{util['file.download.path']}")
 	private  String downloadPath;
 
-
+	public void travelAdd(TravelVO vo) throws Exception {
+		System.out.println("travelAdd");
+		
+		int result = dao.travelAdd(vo);
+		
+		if (result == 0){
+			throw new Exception();
+		}
+	};
+	
 }

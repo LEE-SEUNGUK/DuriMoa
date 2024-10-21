@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -232,7 +233,7 @@ td {
 					<form class="d-flex" id="travelAddForm" action="/travelAdd" method="post" enctype="multipart/form-data">
 						<section class="col-7 mt-3">
 							<div class="travel-form p-0" style="height: 600px">
-								<div class="pt-3" style="width: 90%; margin: 0 auto;">
+								<div class="pt-5" style="width: 90%; margin: 0 auto;">
 									<div class="mb-3">
 										<label for="travelTitle" class="form-label">여행 제목</label> <input type="text" name="trvTt" class="form-control" id="travelTitle" placeholder="여행 제목을 입력하세요">
 									</div>
@@ -255,6 +256,10 @@ td {
 										<div>
 											<input type="checkbox" name="trvOp" class="form-check-input" id="trvOp" checked> <label class="form-check-label" for="isPublic">공개 설정</label>
 										</div>
+										<input type="hidden" name="memId" value="${sessionScope.login.memId}">
+										<c:if test="${sessionScope.couple != null}">
+											<input type="hidden" name="copId" value="${sessionScope.couple.copId}">	
+										</c:if>
 										<button type="submit" class="btn btn-primary">저장하기</button>
 									</div>
 								</div>
@@ -264,9 +269,9 @@ td {
 							<div class="mt-5" id="map"></div>
 							<div class="mt-3" id="photoDiv">
 								<label for="travelPhotos" class="form-label">사진</label> 
-								<input type="file" id="trvImgUpload" name="trvThumbnail" class="form-control" id="travelPhotos" multiple accept="image/*">
+								<input type="file" id="trvImgUpload" name="trvImgs" class="form-control" multiple accept="image/*">
 								<div>
-									<img id="trvThumbnail" src="" style="width: 120px; height: 150px">
+									<img id="trvImgs" src="" style="width: 120px; height: 150px">
 									</div>
 								<%-- <input type="hidden" id="memId" name="memId" value="${sessionScope.loing.memId}"> --%>
 								<div id="photoPreview" class="photo-preview justify-content-between"></div>
@@ -333,16 +338,40 @@ td {
 				}
 			};
 		
-			$('#trvImgUpload').change(function(){
-				const file = this.files[0];
-				if (file) {
-					const reader = new FileReader();
-					reader.onload = function(e) {
-						$('#trvThumbnail').attr('src', e.target.result); // 선택된 이미지로 변경
-					};
-					reader.readAsDataURL(file);
-				}
-			})
+			$('#trvImgUpload').on('change', function(event) {
+		        var files = event.target.files;
+		        var photoPreview = $('#photoPreview');
+		        
+		        if (files.length > 3) {
+		            alert('최대 3장의 사진만 업로드할 수 있습니다.');
+		            $(this).val('');
+		            photoPreview.empty();
+		            return;
+		        }
+
+		        photoPreview.empty();
+
+		        for (var i = 0; i < files.length; i++) {
+		            var file = files[i];
+		            var reader = new FileReader();
+
+		            reader.onload = (function(theFile) {
+		                return function(e) {
+		                    var imgWrap = $('<div class="img-wrap me-2 mb-2"></div>');
+		                    var img = $('<img>').attr({
+		                        src: e.target.result,
+		                        class: 'img-thumbnail',
+		                        style: 'width: 150px; height: 150px; object-fit: cover;'
+		                    });
+		                    imgWrap.append(img);
+		                    photoPreview.append(imgWrap);
+		                };
+		            })(file);
+
+		            reader.readAsDataURL(file);
+		        }
+		    });
+
 			
 
 			var mapContainer = document.getElementById('map');

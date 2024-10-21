@@ -3,8 +3,8 @@ package com.ugi.durimoa.travel.vo;
 public class ImageVO {
 	private int imgId;
 	private int trvId;
-	private String imgPath;
-	private boolean isThumbnail;
+	private String trvImg;
+	private String trvIdx;
 
 	public int getImgId() {
 		return imgId;
@@ -22,27 +22,25 @@ public class ImageVO {
 		this.trvId = trvId;
 	}
 
-	public String getImgPath() {
-		return imgPath;
+	public String getTrvImg() {
+		return trvImg;
 	}
 
-	public void setImgPath(String imgPath) {
-		this.imgPath = imgPath;
+	public void setTrvImg(String trvImg) {
+		this.trvImg = trvImg;
 	}
 
-	public boolean isThumbnail() {
-		return isThumbnail;
+	public String getTrvIdx() {
+		return trvIdx;
 	}
 
-	public void setThumbnail(boolean isThumbnail) {
-		this.isThumbnail = isThumbnail;
+	public void setTrvIdx(String trvIdx) {
+		this.trvIdx = trvIdx;
 	}
 
 	@Override
 	public String toString() {
-		return "ImageVO [imgId=" + imgId + ", trvId=" + trvId + ", imgPath=" + imgPath + ", isThumbnail=" + isThumbnail
-				+ ", getImgId()=" + getImgId() + ", getTrvId()=" + getTrvId() + ", getImgPath()=" + getImgPath()
-				+ ", isThumbnail()=" + isThumbnail() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
-				+ ", toString()=" + super.toString() + "]";
+		return "ImageVO [imgId=" + imgId + ", trvId=" + trvId + ", trvImg=" + trvImg + ", trvIdx=" + trvIdx + "]";
 	}
+
 }

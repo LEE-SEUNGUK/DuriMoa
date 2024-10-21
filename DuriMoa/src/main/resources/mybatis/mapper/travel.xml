@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ugi.durimoa.travel.dao.ITravelDAO">
+
+	<insert id="travelAdd" parameterType="TravelVO" useGeneratedKeys="true" keyProperty="trvId" keyColumn="trv_id">
+		INSERT INTO TRAVEL(mem_id, cop_id, trv_tt, trv_pc, trv_x, trv_y, trv_dt, trv_ct, trv_op) 
+		VALUES (#{memId}, #{copId}, #{trvTt}, #{trvPc}, #{trvX}, #{trvY}, #{trvDt}, #{trvCt}, #{trvOp})
+	</insert>
+	
+	<insert id="imagesAdd" parameterType="java.util.List">
+	    INSERT INTO IMAGES (trvImg, trvIdx, trvId)
+	    VALUES
+	    <foreach collection="list" item="image" separator=",">
+	        (#{image.trvImg}, #{image.trvIdx}, #{image.trvId})
+	    </foreach>
+	</insert>
+
+</mapper>
