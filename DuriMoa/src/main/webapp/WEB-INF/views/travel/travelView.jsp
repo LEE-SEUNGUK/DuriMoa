@@ -437,6 +437,26 @@ $(document).ready(function() {
 
         photoPreview.empty();
 
+        // Add clear button if it doesn't exist
+        if ($('#clearPhotosBtn').length === 0) {
+            var clearBtn = $('<button>')
+                .attr('id', 'clearPhotosBtn')
+                .addClass('btn btn-danger btn-sm mb-2')
+                .text('지우기')
+                
+            clearBtn.on('click', function(e) {
+                e.preventDefault();
+                $('#trvImgUpload').val('');
+                $('#photoPreview').empty();
+                $(this).remove();
+            });
+            
+            // Add button after the label in a div wrapper
+            var labelDiv = $('<div>').addClass('d-flex align-items-center gap-2');
+            $('#photoDiv label').wrap(labelDiv);
+            $('#photoDiv label').after(clearBtn);
+        }
+
         for (var i = 0; i < files.length; i++) {
             var file = files[i];
             var reader = new FileReader();
@@ -454,9 +474,26 @@ $(document).ready(function() {
         }
     });
 
+
     $('#travelAddForm').submit(function(e) {
         e.preventDefault();
         var formData = new FormData(this);
+        
+        // Ensure we're including the travel ID for updates
+        if (isEditMode && currentTrvId) {
+            formData.append('trvId', currentTrvId);
+        }
+        
+        // Ensure the file input is included in the form data
+        var fileInput = $('#trvImgUpload')[0];
+        if (fileInput.files.length > 0) {
+            // Remove existing files from formData
+            formData.delete('trvImgs');
+            // Add each file individually
+            for (var i = 0; i < fileInput.files.length; i++) {
+                formData.append('trvImgs', fileInput.files[i]);
+            }
+        }
 
         var url = isEditMode ? '/travelUpdate' : '/travelAdd';
 
@@ -479,6 +516,31 @@ $(document).ready(function() {
     });
 });
 
+$(document).on('click', '.remove-img', function() {
+    var imgWrap = $(this).closest('.img-wrap');
+    var isExisting = imgWrap.attr('data-existing') === 'true';
+    
+    if (isExisting) {
+        // If it's an existing image, add a hidden input to mark it for deletion
+        var trvId = currentTrvId;
+        var imgIndex = imgWrap.attr('data-index');
+        $('<input>').attr({
+            type: 'hidden',
+            name: 'deleteImages',
+            value: `${trvId}_${imgIndex}`
+        }).appendTo('#travelAddForm');
+    }
+    
+    imgWrap.remove();
+    
+    // Clear file input if all new images are removed
+    if ($('#photoPreview .img-wrap:not([data-existing="true"])').length === 0) {
+        $('#trvImgUpload').val('');
+        $('#trvImgUpload').removeData('orderedFiles');
+    }
+});
+
+
 //Global variables
 var map, marker, geocoder;
 var isEditMode = false;
@@ -491,10 +553,19 @@ function clearForm() {
     $('#photoPreview').empty();
     $('#map').hide();
     $('#photoDiv').hide();
-    $('#travelAddForm').attr('action', '/travelAdd');
-    $('input[name="trvId"]').remove();
+    
+    // Remove the clear button and unwrap the label
+    if ($('#clearPhotosBtn').length > 0) {
+        $('#clearPhotosBtn').remove();
+    }
+    if ($('#photoDiv label').parent().hasClass('d-flex')) {
+        $('#photoDiv label').unwrap();
+    }
+    
     isEditMode = false;
     currentTrvId = null;
+    $('input[name="trvId"]').remove();
+    $('#travelAddForm').attr('action', '/travelAdd');
 }
 
 // Initialize the map
@@ -530,6 +601,8 @@ function toggleMode() {
         $('#writeButton').html('<i class="fa-solid fa-xmark" style="padding: 0px;"></i>');
     } else {
         $('#writeButton').html('<i class="fa-regular fa-pen-to-square"></i>');
+        // Clear form when closing
+        clearForm();
     }
 }
 
@@ -542,6 +615,18 @@ function editTravel(trvId) {
         success: function(response) {
             isEditMode = true;
             currentTrvId = trvId;
+            
+            // Add hidden input for trvId if it doesn't exist
+            if ($('input[name="trvId"]').length === 0) {
+                $('<input>')
+                    .attr('type', 'hidden')
+                    .attr('name', 'trvId')
+                    .val(trvId)
+                    .appendTo('#travelAddForm');
+            } else {
+                $('input[name="trvId"]').val(trvId);
+            }
+            
             populateForm(response);
             toggleMode();
         },
@@ -597,13 +682,13 @@ function updateTravelList(travels) {
     tbody.empty();
     
     if (travels.length === 0) {
-        tbody.append(`
-            <tr>
-                <td class="text-center">
-                    <p class="my-5">검색 결과가 없습니다.</p>
-                </td>
-            </tr>
-        `);
+        tbody.append(
+            '<tr>' +
+                '<td class="text-center">' +
+                    '<p class="my-5">검색 결과가 없습니다.</p>' +
+                '</td>' +
+            '</tr>'
+        );
         return;
     }
     
@@ -700,23 +785,60 @@ function populateForm(data) {
                 map.relayout();
                 map.setCenter(coords);
                 marker.setPosition(coords);
-            } else {
-                console.error('Geocoding failed:', status);
-                alert('주소를 지도에 표시하는 데 실패했습니다.');
             }
         });
     }
 
-    // Display existing images
+    // Clear existing photos and preview
     var photoPreview = $('#photoPreview');
     photoPreview.empty();
-    if (data.trvImg1) addImagePreview(data.trvImg1, photoPreview);
-    if (data.trvImg2) addImagePreview(data.trvImg2, photoPreview);
-    if (data.trvImg3) addImagePreview(data.trvImg3, photoPreview);
-    $('#photoDiv').show();
 
+    // Add clear button if images exist
+     if (data.trvImg1 || data.trvImg2 || data.trvImg3) {
+        if ($('#clearPhotosBtn').length === 0) {
+            var clearBtn = $('<button>')
+                .attr('id', 'clearPhotosBtn')
+                .addClass('btn btn-danger btn-sm mb-2')
+                .text('지우기');
+            
+            clearBtn.on('click', function(e) {
+                e.preventDefault();
+                $('#trvImgUpload').val('');
+                $('#photoPreview').empty();
+                $(this).remove();
+            });
+            
+            // Add button after the label in a div wrapper
+            var labelDiv = $('<div>').addClass('d-flex align-items-center gap-2');
+            $('#photoDiv label').wrap(labelDiv);
+            $('#photoDiv label').after(clearBtn);
+        }
+    }  
+
+    // Display existing images with new preview style
+    if (data.trvImg1) {
+        var imgWrap = $('<div class="img-wrap"></div>');
+        var img = $('<img>').attr('src', data.trvImg1).addClass('img-thumbnail');
+        imgWrap.append(img);
+        photoPreview.append(imgWrap);
+    }
+    if (data.trvImg2) {
+        var imgWrap = $('<div class="img-wrap"></div>');
+        var img = $('<img>').attr('src', data.trvImg2).addClass('img-thumbnail');
+        imgWrap.append(img);
+        photoPreview.append(imgWrap);
+    }
+    if (data.trvImg3) {
+        var imgWrap = $('<div class="img-wrap"></div>');
+        var img = $('<img>').attr('src', data.trvImg3).addClass('img-thumbnail');
+        imgWrap.append(img);
+        photoPreview.append(imgWrap);
+    }
+
+    $('#photoDiv').show();
+    
     $('#travelAddForm').attr('action', '/travelUpdate');
-    $('input[name="trvId"]').remove(); // Remove any existing trvId input
+    $('input[name="trvId"]').remove();
     $('<input>').attr({
         type: 'hidden',
         name: 'trvId',
@@ -724,11 +846,34 @@ function populateForm(data) {
     }).appendTo('#travelAddForm');
 }
 
-// Add image preview
-function addImagePreview(imgSrc, container) {
+function addImagePreview(imgSrc, container, index, isExisting) {
     var imgWrap = $('<div class="img-wrap"></div>');
+    if (isExisting) {
+        imgWrap.attr({
+            'data-existing': 'true',
+            'data-index': index
+        });
+    }
+    
     var img = $('<img>').attr('src', imgSrc).addClass('img-thumbnail');
-    imgWrap.append(img);
+    
+    // Add remove button for existing images
+    var removeBtn = $('<button type="button" class="remove-img">&times;</button>')
+        .css({
+            'position': 'absolute',
+            'top': '5px',
+            'right': '5px',
+            'background': 'rgba(255, 0, 0, 0.7)',
+            'color': 'white',
+            'border': 'none',
+            'border-radius': '50%',
+            'width': '20px',
+            'height': '20px',
+            'line-height': '1',
+            'cursor': 'pointer'
+        });
+    
+    imgWrap.append(img, removeBtn);
     container.append(imgWrap);
 }
 
