@@ -11,6 +11,7 @@ td {
 	padding-right: 0px !important;
 }
 
+/*
 .accordion-button {
 	font-size: 22px !important;
 }
@@ -44,7 +45,7 @@ td {
 -bs-accordion-btn-bg);
 	box-shadow: none;
 }
-
+*/
 .writing-button {
 	position: fixed;
 	bottom: 15%;
@@ -189,81 +190,81 @@ td {
 			<section class="mypage_side col-2 p-0" style="margin-top: 6%;">
 				<div class="mb-4">
 					<h2>우리의 추억</h2>
-					<p>여행기록을 추가하고 관리하세요!</p>
+					<p>여행기록을 추가하고 관리하세요</p>
 				</div>
-				<div class="accordion w-100" id="regionAccordion">
-					<div class="accordion-item">
-						<h2 class="accordion-header">
-							<button class="accordion-button no-toggle" type="button">서울</button>
-						</h2>
-					</div>
-					<div class="accordion-item">
-						<h2 class="accordion-header">
-							<button class="accordion-button no-toggle" type="button">경기도</button>
-						</h2>
-					</div>
-					<div class="accordion-item">
-						<h2 class="accordion-header">
-							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChungcheong">광역시</button>
-						</h2>
-						<div id="collapseChungcheong" class="accordion-collapse collapse">
-							<div class="accordion-body">
-								<ul>
-									<li>부산</li>
-									<li>대구</li>
-									<li>인천</li>
-									<li>광주</li>
-									<li>대전</li>
-									<li>울산</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="accordion-item">
-						<h2 class="accordion-header">
-							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChungcheong">충청도</button>
-						</h2>
-						<div id="collapseChungcheong" class="accordion-collapse collapse">
-							<div class="accordion-body">
-								<ul>
-									<li>충북</li>
-									<li>충남</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="accordion-item">
-						<h2 class="accordion-header">
-							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseJeolla">전라도</button>
-						</h2>
-						<div id="collapseJeolla" class="accordion-collapse collapse">
-							<div class="accordion-body">
-								<ul>
-									<li>전북</li>
-									<li>전남</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="accordion-item">
-						<h2 class="accordion-header">
-							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGyeongsang">경상도</button>
-						</h2>
-						<div id="collapseGyeongsang" class="accordion-collapse collapse">
-							<div class="accordion-body">
-								<ul>
-									<li>경북</li>
-									<li>경남</li>
-								</ul>
-							</div>
-						</div>
-					</div>
-					<div class="accordion-item">
-						<h2 class="accordion-header">
-							<button class="accordion-button no-toggle" type="button">제주도</button>
-						</h2>
-					</div>
-				</div>
+<!-- 				<div class="accordion w-100" id="regionAccordion"> -->
+<!-- 					<div class="accordion-item"> -->
+<!-- 						<h2 class="accordion-header"> -->
+<!-- 							<button class="accordion-button no-toggle" type="button">서울</button> -->
+<!-- 						</h2> -->
+<!-- 					</div> -->
+<!-- 					<div class="accordion-item"> -->
+<!-- 						<h2 class="accordion-header"> -->
+<!-- 							<button class="accordion-button no-toggle" type="button">경기도</button> -->
+<!-- 						</h2> -->
+<!-- 					</div> -->
+<!-- 					<div class="accordion-item"> -->
+<!-- 						<h2 class="accordion-header"> -->
+<!-- 							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChungcheong">광역시</button> -->
+<!-- 						</h2> -->
+<!-- 						<div id="collapseChungcheong" class="accordion-collapse collapse"> -->
+<!-- 							<div class="accordion-body"> -->
+<!-- 								<ul> -->
+<!-- 									<li>부산</li> -->
+<!-- 									<li>대구</li> -->
+<!-- 									<li>인천</li> -->
+<!-- 									<li>광주</li> -->
+<!-- 									<li>대전</li> -->
+<!-- 									<li>울산</li> -->
+<!-- 								</ul> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 					<div class="accordion-item"> -->
+<!-- 						<h2 class="accordion-header"> -->
+<!-- 							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChungcheong">충청도</button> -->
+<!-- 						</h2> -->
+<!-- 						<div id="collapseChungcheong" class="accordion-collapse collapse"> -->
+<!-- 							<div class="accordion-body"> -->
+<!-- 								<ul> -->
+<!-- 									<li>충북</li> -->
+<!-- 									<li>충남</li> -->
+<!-- 								</ul> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 					<div class="accordion-item"> -->
+<!-- 						<h2 class="accordion-header"> -->
+<!-- 							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseJeolla">전라도</button> -->
+<!-- 						</h2> -->
+<!-- 						<div id="collapseJeolla" class="accordion-collapse collapse"> -->
+<!-- 							<div class="accordion-body"> -->
+<!-- 								<ul> -->
+<!-- 									<li>전북</li> -->
+<!-- 									<li>전남</li> -->
+<!-- 								</ul> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 					<div class="accordion-item"> -->
+<!-- 						<h2 class="accordion-header"> -->
+<!-- 							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGyeongsang">경상도</button> -->
+<!-- 						</h2> -->
+<!-- 						<div id="collapseGyeongsang" class="accordion-collapse collapse"> -->
+<!-- 							<div class="accordion-body"> -->
+<!-- 								<ul> -->
+<!-- 									<li>경북</li> -->
+<!-- 									<li>경남</li> -->
+<!-- 								</ul> -->
+<!-- 							</div> -->
+<!-- 						</div> -->
+<!-- 					</div> -->
+<!-- 					<div class="accordion-item"> -->
+<!-- 						<h2 class="accordion-header"> -->
+<!-- 							<button class="accordion-button no-toggle" type="button">제주도</button> -->
+<!-- 						</h2> -->
+<!-- 					</div> -->
+<!-- 				</div> -->
 			</section>
 			<section class="col-9" style="margin-top: 4%; margin-left: 100px" id="viewMode">
 				<table class="table" style="margin-top: 2% !important; margin: 0 auto; border-bottom: #ffffff;">
@@ -418,7 +419,7 @@ $(document).ready(function() {
         photoPreview.empty();
         clickOrder = []; // Reset click order
 
-        // Add clear button if it doesn't exist
+        // Add clear button
         if ($('#clearPhotosBtn').length === 0) {
             var clearBtn = $('<button>')
                 .attr('id', 'clearPhotosBtn')
@@ -465,29 +466,40 @@ $(document).ready(function() {
                     imgWrap.append(img, indexLabel);
                     photoPreview.append(imgWrap);
 
-                    // Add click handler
-                    imgWrap.on('click', function() {
-                        var currentIndex = $(this).data('index');
+                    // If only one image, automatically set it as first
+                    if (files.length === 1) {
+                        clickOrder = [0];
+                        indexLabel.text('1번째');
+                    } else {
+                        // For multiple images, make them clickable
+                        indexLabel.text('클릭하세요');
                         
-                        // Remove from clickOrder if already exists
-                        var existingIndex = clickOrder.indexOf(currentIndex);
-                        if (existingIndex !== -1) {
-                            clickOrder.splice(existingIndex, 1);
-                        }
-                        
-                        // Add to clickOrder
-                        clickOrder.push(currentIndex);
-                        
-                        // Update all index labels
-                        updateIndexLabels();
-                        
-                        // Log the current order
-                        console.log('Current click order:', clickOrder);
-                    });
+                        // Add click handler only for multiple images
+                        imgWrap.on('click', function() {
+                            var currentIndex = $(this).data('index');
+                            
+                            // Remove from clickOrder if already exists
+                            var existingIndex = clickOrder.indexOf(currentIndex);
+                            if (existingIndex !== -1) {
+                                clickOrder.splice(existingIndex, 1);
+                            }
+                            
+                            // Add to clickOrder
+                            clickOrder.push(currentIndex);
+                            
+                            // Update all index labels
+                            updateIndexLabels();
+                        });
+                    }
                 };
             })(file, i);
 
             reader.readAsDataURL(file);
+        }
+
+        // If only one image is uploaded, no need for further interaction
+        if (files.length === 1) {
+            console.log('Single image automatically set as first');
         }
     });
 
@@ -496,21 +508,19 @@ $(document).ready(function() {
         var formData = new FormData(this);
         var files = $('#trvImgUpload')[0].files;
         
-        if (isEditMode && currentTrvId) {
-            formData.append('trvId', currentTrvId);
-        }
-
         // Remove existing files
         formData.delete('trvImgs');
         
-        // Add files in click order
-        if (clickOrder.length > 0) {
+        if (files.length === 1) {
+            // For single image, just append it directly
+            formData.append('trvImgs', files[0]);
+        } else if (clickOrder.length > 0) {
+            // For multiple images, use the click order
             clickOrder.forEach((index, orderIndex) => {
-                console.log(`Adding file ${index} as position ${orderIndex + 1}`);
                 formData.append('trvImgs', files[index]);
             });
         } else {
-            // If no clicks recorded, use original order
+            // If no clicks recorded but multiple images, use original order
             for (var i = 0; i < files.length; i++) {
                 formData.append('trvImgs', files[i]);
             }
@@ -525,7 +535,6 @@ $(document).ready(function() {
             processData: false,
             contentType: false,
             success: function(response) {
-                console.log('Final submission order:', clickOrder);
                 alert(isEditMode ? '여행 기록이 성공적으로 수정되었습니다!' : '여행 기록이 성공적으로 저장되었습니다!');
                 location.href = 'travelView';
             },
@@ -577,7 +586,6 @@ function updateIndexLabels() {
         
         if (orderIndex !== -1) {
             indexLabel.text((orderIndex + 1) + '번째');
-            indexLabel.show();
         } else {
             indexLabel.text('클릭하세요');
         }
