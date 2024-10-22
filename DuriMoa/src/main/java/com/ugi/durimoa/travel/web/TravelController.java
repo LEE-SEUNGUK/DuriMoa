@@ -106,7 +106,6 @@ public class TravelController {
             travelService.travelUpdate(vo);
             
             System.out.println(files);
-
             
             // Delete existing images
             imageService.deleteImagesByTrvId(vo.getTrvId());
@@ -148,11 +147,13 @@ public class TravelController {
         }
     }
 	
-	
 
 	@ResponseBody
 	@RequestMapping("/travelDel")
-	public String travelDel(@RequestParam("trvId") int trvId) {
+	public String travelDel(@RequestParam("trvId") int trvId) throws Exception {
+
+		imageService.deleteImagesByTrvId(trvId);
+
 		travelService.travelDel(trvId);
 		
 		return "success";
@@ -200,7 +201,6 @@ public class TravelController {
 	    return response;
 	}
 	
-
 	@RequestMapping("/travelWrite")
 	public String TravelWrite() {
 
