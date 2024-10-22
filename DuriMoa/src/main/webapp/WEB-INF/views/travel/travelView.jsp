@@ -427,15 +427,17 @@ $(document).ready(function() {
     $('#trvImgUpload').on('change', function(event) {
         var files = event.target.files;
         var photoPreview = $('#photoPreview');
-
+        
         if (files.length > 3) {
             alert('최대 3장의 사진만 업로드할 수 있습니다.');
             $(this).val('');
             photoPreview.empty();
+            clickOrder = [];
             return;
         }
 
         photoPreview.empty();
+        clickOrder = []; // Reset click order
 
         // Add clear button if it doesn't exist
         if ($('#clearPhotosBtn').length === 0) {
@@ -448,50 +450,90 @@ $(document).ready(function() {
                 e.preventDefault();
                 $('#trvImgUpload').val('');
                 $('#photoPreview').empty();
+                clickOrder = [];
                 $(this).remove();
             });
             
-            // Add button after the label in a div wrapper
             var labelDiv = $('<div>').addClass('d-flex align-items-center gap-2');
             $('#photoDiv label').wrap(labelDiv);
             $('#photoDiv label').after(clearBtn);
         }
 
+        // Create preview containers with click handlers
         for (var i = 0; i < files.length; i++) {
             var file = files[i];
             var reader = new FileReader();
 
-            reader.onload = (function(theFile) {
+            reader.onload = (function(theFile, index) {
                 return function(e) {
-                    var imgWrap = $('<div class="img-wrap"></div>');
+                    var imgWrap = $('<div class="img-wrap" data-index="' + index + '"></div>');
                     var img = $('<img>').attr('src', e.target.result).addClass('img-thumbnail');
-                    imgWrap.append(img);
+                    
+                    // Add index display
+                    var indexLabel = $('<div>')
+                        .addClass('index-label')
+                        .css({
+                            'position': 'absolute',
+                            'top': '5px',
+                            'left': '5px',
+                            'background': 'rgba(0, 0, 0, 0.7)',
+                            'color': 'white',
+                            'padding': '2px 6px',
+                            'border-radius': '3px',
+                            'font-size': '12px'
+                        });
+
+                    imgWrap.append(img, indexLabel);
                     photoPreview.append(imgWrap);
+
+                    // Add click handler
+                    imgWrap.on('click', function() {
+                        var currentIndex = $(this).data('index');
+                        
+                        // Remove from clickOrder if already exists
+                        var existingIndex = clickOrder.indexOf(currentIndex);
+                        if (existingIndex !== -1) {
+                            clickOrder.splice(existingIndex, 1);
+                        }
+                        
+                        // Add to clickOrder
+                        clickOrder.push(currentIndex);
+                        
+                        // Update all index labels
+                        updateIndexLabels();
+                        
+                        // Log the current order
+                        console.log('Current click order:', clickOrder);
+                    });
                 };
-            })(file);
+            })(file, i);
 
             reader.readAsDataURL(file);
         }
     });
 
-
     $('#travelAddForm').submit(function(e) {
         e.preventDefault();
         var formData = new FormData(this);
+        var files = $('#trvImgUpload')[0].files;
         
-        // Ensure we're including the travel ID for updates
         if (isEditMode && currentTrvId) {
             formData.append('trvId', currentTrvId);
         }
+
+        // Remove existing files
+        formData.delete('trvImgs');
         
-        // Ensure the file input is included in the form data
-        var fileInput = $('#trvImgUpload')[0];
-        if (fileInput.files.length > 0) {
-            // Remove existing files from formData
-            formData.delete('trvImgs');
-            // Add each file individually
-            for (var i = 0; i < fileInput.files.length; i++) {
-                formData.append('trvImgs', fileInput.files[i]);
+        // Add files in click order
+        if (clickOrder.length > 0) {
+            clickOrder.forEach((index, orderIndex) => {
+                console.log(`Adding file ${index} as position ${orderIndex + 1}`);
+                formData.append('trvImgs', files[index]);
+            });
+        } else {
+            // If no clicks recorded, use original order
+            for (var i = 0; i < files.length; i++) {
+                formData.append('trvImgs', files[i]);
             }
         }
 
@@ -504,7 +546,7 @@ $(document).ready(function() {
             processData: false,
             contentType: false,
             success: function(response) {
-                console.log('Success:', response);
+                console.log('Final submission order:', clickOrder);
                 alert(isEditMode ? '여행 기록이 성공적으로 수정되었습니다!' : '여행 기록이 성공적으로 저장되었습니다!');
                 location.href = 'travelView';
             },
@@ -545,6 +587,23 @@ $(document).on('click', '.remove-img', function() {
 var map, marker, geocoder;
 var isEditMode = false;
 var currentTrvId = null;
+let clickOrder  = [];
+
+
+function updateIndexLabels() {
+    $('.img-wrap').each(function() {
+        var index = $(this).data('index');
+        var orderIndex = clickOrder.indexOf(index);
+        var indexLabel = $(this).find('.index-label');
+        
+        if (orderIndex !== -1) {
+            indexLabel.text((orderIndex + 1) + '번째');
+            indexLabel.show();
+        } else {
+            indexLabel.text('클릭하세요');
+        }
+    });
+}
 
 function clearForm() {
     $('#travelAddForm')[0].reset();
