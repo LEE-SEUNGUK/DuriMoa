@@ -125,27 +125,6 @@ td {
 	object-fit: cover;
 }
 
-/* Styles specific to the thumbnail (first image) */
-.img-wrap:first-child {
-	width: 120px;
-	height: 150px;
-	border-color: #007bff;
-	box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-}
-
-/* Label for the thumbnail */
-.img-wrap:first-child::after {
-	content: '썸네일';
-	position: absolute;
-	top: 5px;
-	left: 5px;
-	background-color: rgba(0, 123, 255, 0.7);
-	color: white;
-	padding: 2px 5px;
-	font-size: 12px;
-	border-radius: 3px;
-}
-
 .img-wrap:hover {
 	transform: scale(1.02);
 	transition: transform 0.3s ease;
