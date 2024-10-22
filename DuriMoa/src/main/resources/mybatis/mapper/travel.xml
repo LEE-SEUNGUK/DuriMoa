@@ -3,14 +3,13 @@
 <mapper namespace="com.ugi.durimoa.travel.dao.ITravelDAO">
 
 	<insert id="travelAdd" parameterType="TravelVO" useGeneratedKeys="true" keyProperty="trvId" keyColumn="trv_id">
-		INSERT INTO TRAVEL(mem_id, cop_id, trv_tt, trv_pc, trv_x, trv_y, trv_dt, trv_ct, trv_op) 
-		VALUES (#{memId}, #{copId}, #{trvTt}, #{trvPc}, #{trvX}, #{trvY}, #{trvDt}, #{trvCt}, #{trvOp})
+		INSERT INTO TRAVEL(mem_id, trv_tt, trv_pc, trv_x, trv_y, trv_dt, trv_ct, trv_op) 
+		VALUES (#{memId}, #{trvTt}, #{trvPc}, #{trvX}, #{trvY}, #{trvDt}, #{trvCt}, #{trvOp})
 	</insert>
 	
 	<update id="travelUpdate" parameterType="TravelVO">
         UPDATE TRAVEL
         SET mem_id = #{memId},
-            cop_id = #{copId},
             trv_tt = #{trvTt},
             trv_pc = #{trvPc},
             trv_x = #{trvX},
@@ -46,8 +45,19 @@
 	</select>	
 
 	<select id="getTravelList" resultType="TravelInfoVO" parameterType="MemberVO">
+		WITH couple_members AS (
+		    SELECT m1.mem_id, m1.cop_id
+		    FROM MEMBER m1
+		    WHERE m1.mem_id = #{memId}
+		    UNION
+		    SELECT m2.mem_id, m2.cop_id
+		    FROM MEMBER m1
+		    JOIN MEMBER m2 ON m1.cop_id = m2.cop_id
+		    WHERE m1.mem_id = #{memId} AND m1.cop_id IS NOT NULL
+		)
 		SELECT 
 		    a.trv_id,
+		    a.mem_id,
 		    a.trv_tt,
 		    a.trv_pc,
 		    SUBSTR(a.trv_pc, 0, 2) trv_plc,
@@ -59,9 +69,49 @@
 		    MAX(CASE WHEN b.trv_idx = 3 THEN b.trv_img END) AS trv_img3
 		FROM travel a
 		LEFT JOIN images b ON a.trv_id = b.trv_id
-		WHERE a.mem_id = #{memId}
-		AND b.trv_idx IN (1, 2, 3)
-		GROUP BY a.trv_id, a.trv_Tt, a.trv_Pc, a.trv_Dt, DBMS_LOB.SUBSTR(a.trv_Ct, 4000, 1), a.trv_Op
+		JOIN couple_members cm ON a.mem_id = cm.mem_id
+		GROUP BY a.trv_id, a.mem_id, a.trv_Tt, a.trv_Pc, a.trv_Dt, DBMS_LOB.SUBSTR(a.trv_Ct, 4000, 1), a.trv_Op
+		ORDER BY a.trv_dt DESC
 	</select>
+	
+	<select id="getTravelSearch" resultType="TravelInfoVO" parameterType="SearchVO">
+	SELECT *
+	FROM
+	(WITH couple_members AS (
+	    SELECT m1.mem_id, m1.cop_id
+	    FROM MEMBER m1
+	    WHERE m1.mem_id = #{memId}
+	    UNION
+	    SELECT m2.mem_id, m2.cop_id
+	    FROM MEMBER m1
+	    JOIN MEMBER m2 ON m1.cop_id = m2.cop_id
+	    WHERE m1.mem_id = #{memId} AND m1.cop_id IS NOT NULL
+	)
+	SELECT 
+	    a.trv_id,
+	    a.mem_id,
+	    a.trv_tt,
+	    a.trv_pc,
+	    SUBSTR(a.trv_pc, 0, 2) trv_plc,
+	    a.trv_dt,
+	    DBMS_LOB.SUBSTR(a.trv_Ct, 4000, 1) AS trv_ct,
+	    a.trv_op,
+	    MAX(CASE WHEN b.trv_idx = 1 THEN b.trv_img END) AS trv_img1,
+	    MAX(CASE WHEN b.trv_idx = 2 THEN b.trv_img END) AS trv_img2,
+	    MAX(CASE WHEN b.trv_idx = 3 THEN b.trv_img END) AS trv_img3
+	FROM travel a
+	LEFT JOIN images b ON a.trv_id = b.trv_id
+	JOIN couple_members cm ON a.mem_id = cm.mem_id
+	GROUP BY a.trv_id, a.mem_id, a.trv_Tt, a.trv_Pc, a.trv_Dt, DBMS_LOB.SUBSTR(a.trv_Ct, 4000, 1), a.trv_Op
+	ORDER BY a.trv_dt DESC)
+	WHERE #{keyWord} IS NULL 
+	   OR trv_tt LIKE '%' || #{keyWord} || '%'
+	   OR trv_pc LIKE '%' || #{keyWord} || '%'
+	</select>
+	
+	<delete id="travelDel" parameterType="int">
+		DELETE FROM travel
+		WHERE trv_id = #{trvId}
+	</delete>
 
 </mapper>

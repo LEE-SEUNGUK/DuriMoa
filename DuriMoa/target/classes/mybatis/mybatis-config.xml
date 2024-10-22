@@ -17,5 +17,6 @@
       <typeAlias type="com.ugi.durimoa.travel.vo.TravelVO" alias="TravelVO" />
       <typeAlias type="com.ugi.durimoa.travel.vo.ImageVO" alias="ImageVO" />
       <typeAlias type="com.ugi.durimoa.travel.vo.TravelInfoVO" alias="TravelInfoVO" />
+      <typeAlias type="com.ugi.durimoa.travel.vo.SearchVO" alias="SearchVO" />
    </typeAliases>
 </configuration>

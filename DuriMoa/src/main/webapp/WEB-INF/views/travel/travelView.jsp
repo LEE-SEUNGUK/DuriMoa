@@ -36,244 +36,15 @@ td {
 	cursor: default;
 }
 
-.accordion-button
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-.no-toggle
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-:not
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-(
-.collapsed
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-){
-color
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-:
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-var
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-(-
--bs-accordion-btn-color
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-);
-background-color
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-:
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-var
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-(-
--bs-accordion-btn-bg
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-);
-box-shadow
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-:
-
-
-
-
-
-
-
- 
-
-
-
-
-
-
-
-none
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-;
+.accordion-button.no-toggle:not (
+.collapsed ){
+	color: var(- 
+-bs-accordion-btn-color);
+	background-color: var(- 
+-bs-accordion-btn-bg);
+	box-shadow: none;
 }
+
 .writing-button {
 	position: fixed;
 	bottom: 15%;
@@ -523,39 +294,39 @@ none
 								<td>
 									<div class="d-flex">
 										<form action="">
-										<div style="height: 300px; width: 860px; border-radius: 20px; background-color: #fdf7f7;">
-											<div class="row d-flex w-100 h-100">
-												<div class="col-3" style="text-align: center;">
-													<img class="p-3" src=${travel.trvImg1 } style="width: 240px; height: 300px; object-fit: cover; border-radius: 25px;" alt="">
-												</div>
-												<div class="col-9" style="width: 55%; height: 95%; padding: 0; margin-left: 80px; margin-top: 30px;">
-													<div class="d-flex flex-column ">
-														<h4 style="font-weight: bold; font-size: 30px; font-family: LeeSeoyun;">
-															<span style="font-size: 28px;">[${travel.trvPlc }]</span>${travel.trvTt }
-														</h4>
-														<div class="dropdown position-absolute" style="left: 72%;">
-															<button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 20px; appearance: none; -webkit-appearance: none;">&#8942;</button>
-															<ul class="dropdown-menu compact-menu">
-																<li><a class="dropdown-item edit-travel" href="#" data-trv-id="${travel.trvId}">수정</a></li>
-                                                                <li><a class="dropdown-item" href="#">삭제</a></li>
-															</ul>
-														</div>
-														<div class="d-flex align-items-center" style="font-size: 18px;">
-															<img src="resources/assets/img/board_map.png" width="22px" alt="">
-															<p class="ms-2" style="color: #6a6a6a;">${travel.trvPc }</p>
-														</div>
-														<div class="d-flex align-items-center" style="font-size: 18px;">
-															<img src="resources/assets/img/date.png" width="23px" alt="">
-															<p class="ms-2" style="color: #6a6a6a;">${travel.trvDt }</p>
-														</div>
+											<div style="height: 300px; width: 860px; border-radius: 20px; background-color: #fdf7f7;">
+												<div class="row d-flex w-100 h-100">
+													<div class="col-3" style="text-align: center;">
+														<img class="p-3" src="${travel.trvImg1 }" style="width: 240px; height: 300px; object-fit: cover; border-radius: 25px;" alt="">
 													</div>
-													<div class="d-inline-block" style=" margin-top: 35px; height: 105px; width: 500px; border-radius: 10px;">
-														<div class="content mt-4" style="width: 90%; font-size: 18px; margin: 0 auto; margin-left: 0px;">${travel.trvCt }</div>
+													<div class="col-9" style="width: 55%; height: 95%; padding: 0; margin-left: 80px; margin-top: 30px;">
+														<div class="d-flex flex-column ">
+															<h4 style="font-weight: bold; font-size: 30px; font-family: LeeSeoyun;">
+																<span style="font-size: 28px;">[${travel.trvPlc }]</span>${travel.trvTt }
+															</h4>
+															<div class="dropdown position-absolute" style="left: 72%;">
+																<button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 20px; appearance: none; -webkit-appearance: none;">&#8942;</button>
+																<ul class="dropdown-menu compact-menu">
+																	<li><a class="dropdown-item edit-travel" href="#" data-trv-id="${travel.trvId}">수정</a></li>
+																	<li><a class="dropdown-item delete-travel" href="#" data-trv-id="${travel.trvId}">삭제</a></li>
+																</ul>
+															</div>
+															<div class="d-flex align-items-center" style="font-size: 18px;">
+																<img src="resources/assets/img/board_map.png" width="22px" alt="">
+																<p class="ms-2" style="color: #6a6a6a;">${travel.trvPc }</p>
+															</div>
+															<div class="d-flex align-items-center" style="font-size: 18px;">
+																<img src="resources/assets/img/date.png" width="23px" alt="">
+																<p class="ms-2" style="color: #6a6a6a;">${travel.trvDt }</p>
+															</div>
+														</div>
+														<div class="d-inline-block" style="margin-top: 35px; height: 105px; width: 500px; border-radius: 10px;">
+															<div class="content mt-4" style="width: 90%; font-size: 18px; margin: 0 auto; margin-left: 0px;">${travel.trvCt }</div>
+														</div>
 													</div>
 												</div>
 											</div>
-										</div>
-									</form>
+										</form>
 									</div>
 								</td>
 							</tr>
@@ -592,9 +363,6 @@ none
 											<input type="checkbox" name="trvOp" class="form-check-input" id="trvOp" checked> <label class="form-check-label" for="isPublic">공개 설정</label>
 										</div>
 										<input type="hidden" name="memId" value="${sessionScope.login.memId}">
-										<c:if test="${sessionScope.couple != null}">
-											<input type="hidden" name="copId" value="${sessionScope.couple.copId}">
-										</c:if>
 										<button type="submit" class="btn btn-primary">저장하기</button>
 									</div>
 								</div>
@@ -617,11 +385,15 @@ none
 	</div>
 
 	<script>
-
-
-// Document ready function
 $(document).ready(function() {
     initializeMap();
+    
+    // 여행 정보 검색
+     $('.search_btn').click(function(e) {
+        e.preventDefault(); // Prevent form submission
+        const keyWord = $('#marker_search').val();
+        performSearch(keyWord);
+    });
 
     $('#writeButton').click(function() {
         if (isEditMode) {
@@ -637,6 +409,14 @@ $(document).ready(function() {
         editTravel(trvId);
     });
 
+    $('.delete-travel').click(function(e) {
+        e.preventDefault();
+        var trvId = $(this).data('trv-id');
+        if (confirm('정말 삭제하시겠습니까?')) {
+            deleteTravel(trvId);
+        }
+    });
+    
     $('.accordion-button.no-toggle').click(function(e) {
         e.preventDefault();
         return false;
@@ -772,6 +552,122 @@ function editTravel(trvId) {
     });
 }
 
+function deleteTravel(trvId) {
+    $.ajax({
+        url: '/travelDel',
+        type: 'POST',
+        data: { trvId: trvId },
+        success: function(response) {
+            console.log('Success:', response);
+            alert('여행 기록이 성공적으로 삭제되었습니다!');
+            location.reload(); // Reload the page to reflect the changes
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+            alert('여행 기록 삭제 중 오류가 발생했습니다.');
+        }
+    });
+}
+
+// 여행 정보 검색
+function performSearch(keyWord) {
+	console.log("검색 ㄱㄱ");
+    $.ajax({
+        url: '/getTravelSearch',  // You'll need to create this endpoint
+        type: 'GET',
+        data: { 
+        	keyWord: keyWord
+        },
+        success: function(response) {
+            if (response.status === "success") {
+                const travels = response.data;
+                updateTravelList(travels);
+            } else {
+                console.error('Search failed:', response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Search error:', error);
+        }
+    });
+}
+
+function updateTravelList(travels) {
+    const tbody = $('table tbody');
+    tbody.empty();
+    
+    if (travels.length === 0) {
+        tbody.append(`
+            <tr>
+                <td class="text-center">
+                    <p class="my-5">검색 결과가 없습니다.</p>
+                </td>
+            </tr>
+        `);
+        return;
+    }
+    
+    travels.forEach(travel => {
+    	console.log(travels);
+    	console.log(travel.trvTt);
+        tbody.append('<tr>' +
+        	    '<td>' +
+                '<div class="d-flex">' +
+                    '<form action="">' +
+                        '<div style="height: 300px; width: 860px; border-radius: 20px; background-color: #fdf7f7;">' +
+                            '<div class="row d-flex w-100 h-100">' +
+                                '<div class="col-3" style="text-align: center;">' +
+                                    '<img class="p-3" src="' + travel.trvImg1 + '" style="width: 240px; height: 300px; object-fit: cover; border-radius: 25px;" alt="">' +
+                                '</div>' +
+                                '<div class="col-9" style="width: 55%; height: 95%; padding: 0; margin-left: 80px; margin-top: 30px;">' +
+                                    '<div class="d-flex flex-column">' +
+                                        '<h4 style="font-weight: bold; font-size: 30px; font-family: LeeSeoyun;">' +
+                                            '<span style="font-size: 28px;">[' + travel.trvPlc + ']</span>' + travel.trvTt +
+                                        '</h4>' +
+                                        '<div class="dropdown position-absolute" style="left: 72%;">' +
+                                            '<button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 20px; appearance: none; -webkit-appearance: none;">&#8942;</button>' +
+                                            '<ul class="dropdown-menu compact-menu">' +
+                                                '<li><a class="dropdown-item edit-travel" href="#" data-trv-id="' + travel.trvId + '">수정</a></li>' +
+                                                '<li><a class="dropdown-item delete-travel" href="#" data-trv-id="' + travel.trvId + '">삭제</a></li>' +
+                                            '</ul>' +
+                                        '</div>' +
+                                        '<div class="d-flex align-items-center" style="font-size: 18px;">' +
+                                            '<img src="resources/assets/img/board_map.png" width="22px" alt="">' +
+                                            '<p class="ms-2" style="color: #6a6a6a;">' + travel.trvPc + '</p>' +
+                                        '</div>' +
+                                        '<div class="d-flex align-items-center" style="font-size: 18px;">' +
+                                            '<img src="resources/assets/img/date.png" width="23px" alt="">' +
+                                            '<p class="ms-2" style="color: #6a6a6a;">' + travel.trvDt + '</p>' +
+                                        '</div>' +
+                                    '</div>' +
+                                    '<div class="d-inline-block" style="margin-top: 35px; height: 105px; width: 500px; border-radius: 10px;">' +
+                                        '<div class="content mt-4" style="width: 90%; font-size: 18px; margin: 0 auto; margin-left: 0px;">' + travel.trvCt + '</div>' +
+                                    '</div>' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</form>' +
+                '</div>' +
+            '</td>' +
+        '</tr>');
+    });
+    
+    // Reattach event handlers
+    $('.edit-travel').click(function(e) {
+        e.preventDefault();
+        const trvId = $(this).data('trv-id');
+        editTravel(trvId);
+    });
+    
+    $('.delete-travel').click(function(e) {
+        e.preventDefault();
+        const trvId = $(this).data('trv-id');
+        if (confirm('정말 삭제하시겠습니까?')) {
+            deleteTravel(trvId);
+        }
+    });
+}
+    
 // Populate form with travel data
 function populateForm(data) {
     $('#travelTitle').val(data.trvTt);

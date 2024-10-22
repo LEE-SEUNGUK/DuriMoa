@@ -46,7 +46,7 @@
 			style="width: 34%;">
 			<form class="position-relative" role="search">
 				<input class="form-control rounded-pill ps-3" type="search"
-					placeholder="검색어를 입력하세요" id="marker_search"
+					placeholder="검색어를 입력하세요" id="marker_search" name="search"
 					style="line-height: 1.5;">
 				<button class="search_btn"></button>
 			</form>

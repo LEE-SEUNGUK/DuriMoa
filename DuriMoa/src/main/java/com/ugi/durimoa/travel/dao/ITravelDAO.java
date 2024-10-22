@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.ugi.durimoa.member.vo.MemberVO;
+import com.ugi.durimoa.travel.vo.SearchVO;
 import com.ugi.durimoa.travel.vo.TravelInfoVO;
 import com.ugi.durimoa.travel.vo.TravelVO;
 
@@ -22,4 +23,11 @@ public interface ITravelDAO {
 	
 	// 여행 정보 수정
 	public int travelUpdate(TravelVO vo);
+	
+	// 여행 삭제
+	public void travelDel(int trvId);
+	
+	// 여행 검색(위치, 제목)
+	public ArrayList<TravelInfoVO> getTravelSearch(SearchVO vo);
+	
 }

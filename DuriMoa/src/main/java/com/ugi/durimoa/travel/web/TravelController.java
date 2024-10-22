@@ -3,6 +3,7 @@ package com.ugi.durimoa.travel.web;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -25,6 +26,7 @@ import com.ugi.durimoa.member.vo.MemberVO;
 import com.ugi.durimoa.travel.service.ImageService;
 import com.ugi.durimoa.travel.service.TravelService;
 import com.ugi.durimoa.travel.vo.ImageVO;
+import com.ugi.durimoa.travel.vo.SearchVO;
 import com.ugi.durimoa.travel.vo.TravelInfoVO;
 import com.ugi.durimoa.travel.vo.TravelVO;
 
@@ -49,6 +51,7 @@ public class TravelController {
 			throws Exception {
 		System.out.println(vo);
 		try {
+			
 			// Handle TravelVO data
 			String trvOp = vo.getTrvOp();
 			vo.setTrvOp(trvOp != null && trvOp.equals("on") ? "Y" : "N");
@@ -102,6 +105,9 @@ public class TravelController {
             // Update travel information
             travelService.travelUpdate(vo);
             
+            System.out.println(files);
+
+            
             // Delete existing images
             imageService.deleteImagesByTrvId(vo.getTrvId());
             
@@ -110,6 +116,7 @@ public class TravelController {
                 List<ImageVO> images = new ArrayList<>();
                 for (int i = 0; i < files.size(); i++) {
                     MultipartFile file = files.get(i);
+                    System.out.println(file);
                     if (!file.isEmpty()) {
                         String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
                         String filePath = uploadPath + File.separator + fileName;
@@ -140,7 +147,16 @@ public class TravelController {
             return "Error: " + e.getMessage();
         }
     }
+	
+	
 
+	@ResponseBody
+	@RequestMapping("/travelDel")
+	public String travelDel(@RequestParam("trvId") int trvId) {
+		travelService.travelDel(trvId);
+		
+		return "success";
+	}
 
 	@ResponseBody
 	@RequestMapping("/getTravel")
@@ -159,6 +175,31 @@ public class TravelController {
 
 		return "/travel/travelView";
 	}
+	
+	@ResponseBody
+	@RequestMapping("/getTravelSearch")
+	public Map<String, Object> getTravelSearch(HttpSession session, @RequestParam("keyWord") String keyWord) throws Exception {
+	    Map<String, Object> response = new HashMap<>();
+	    
+	    try {
+	        MemberVO login = (MemberVO) session.getAttribute("login");
+	        
+	        SearchVO search = new SearchVO();
+	        search.setMemId(login.getMemId());
+	        search.setKeyWord(keyWord);
+	        
+	        ArrayList<TravelInfoVO> travelList = travelService.getTravelSearch(search);
+	        
+	        response.put("status", "success");
+	        response.put("data", travelList);
+	    } catch (Exception e) {
+	        response.put("status", "error");
+	        response.put("message", e.getMessage());
+	    }
+	    
+	    return response;
+	}
+	
 
 	@RequestMapping("/travelWrite")
 	public String TravelWrite() {

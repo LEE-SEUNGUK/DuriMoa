@@ -18,6 +18,7 @@ import com.ugi.durimoa.travel.dao.ITravelDAO;
 import com.ugi.durimoa.travel.vo.ImageVO;
 import com.ugi.durimoa.travel.vo.TravelInfoVO;
 import com.ugi.durimoa.travel.vo.TravelVO;
+import com.ugi.durimoa.travel.vo.SearchVO;
 
 @Service
 public class TravelService {
@@ -65,4 +66,24 @@ public class TravelService {
 		dao.travelUpdate(vo);
 	};
 	
+	// 여행 정보 삭제
+	public void travelDel(int trvId) {
+		System.out.println("여행 정보 삭제");
+		
+		dao.travelDel(trvId);
+	};
+	
+	// 여행 검색
+	public ArrayList<TravelInfoVO> getTravelSearch(SearchVO vo) throws Exception {
+		System.out.println("여행 정보 검색");
+		
+		ArrayList<TravelInfoVO> result = dao.getTravelSearch(vo);
+		if (result == null) {
+			throw new Exception();
+		}
+		
+		System.out.println(result);
+		
+		return result;
+	}
 }

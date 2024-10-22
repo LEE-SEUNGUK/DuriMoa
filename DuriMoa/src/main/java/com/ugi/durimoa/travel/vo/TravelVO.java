@@ -4,7 +4,6 @@ public class TravelVO {
 
 	private int trvId;
 	private String memId;
-	private int copId;
 	private String trvTt;
 	private String trvPc;
 	private String trvX;
@@ -27,14 +26,6 @@ public class TravelVO {
 
 	public void setMemId(String memId) {
 		this.memId = memId;
-	}
-
-	public int getCopId() {
-		return copId;
-	}
-
-	public void setCopId(int copId) {
-		this.copId = copId;
 	}
 
 	public String getTrvTt() {
@@ -97,7 +88,7 @@ public class TravelVO {
 
 	@Override
 	public String toString() {
-		return "TravelVO [trvId=" + trvId + ", memId=" + memId + ", copId=" + copId + ", trvTt=" + trvTt + ", trvPc="
+		return "TravelVO [trvId=" + trvId + ", memId=" + memId  + ", trvTt=" + trvTt + ", trvPc="
 				+ trvPc + ", trvX=" + trvX + ", trvY=" + trvY + ", trvDt=" + trvDt + ", trvCt=" + trvCt + ", trvOp="
 				+ trvOp + "]";
 	}
