@@ -8,7 +8,8 @@ public class TravelVO {
 	private String trvPc;
 	private String trvX;
 	private String trvY;
-	private String trvDt;
+	private String trvSdt;
+	private String trvEdt;
 	private String trvCt;
 	private String trvOp;
 
@@ -60,12 +61,20 @@ public class TravelVO {
 		this.trvY = trvY;
 	}
 
-	public String getTrvDt() {
-		return trvDt;
+	public String getTrvSdt() {
+		return trvSdt;
 	}
 
-	public void setTrvDt(String trvDt) {
-		this.trvDt = trvDt;
+	public void setTrvSdt(String trvSdt) {
+		this.trvSdt = trvSdt;
+	}
+
+	public String getTrvEdt() {
+		return trvEdt;
+	}
+
+	public void setTrvEdt(String trvEdt) {
+		this.trvEdt = trvEdt;
 	}
 
 	public String getTrvCt() {
@@ -84,13 +93,10 @@ public class TravelVO {
 		this.trvOp = trvOp;
 	}
 
-
-
 	@Override
 	public String toString() {
-		return "TravelVO [trvId=" + trvId + ", memId=" + memId  + ", trvTt=" + trvTt + ", trvPc="
-				+ trvPc + ", trvX=" + trvX + ", trvY=" + trvY + ", trvDt=" + trvDt + ", trvCt=" + trvCt + ", trvOp="
-				+ trvOp + "]";
+		return "TravelVO [trvId=" + trvId + ", memId=" + memId + ", trvTt=" + trvTt + ", trvPc=" + trvPc + ", trvX="
+				+ trvX + ", trvY=" + trvY + ", trvSdt=" + trvSdt + ", trvEdt=" + trvEdt + ", trvCt=" + trvCt
+				+ ", trvOp=" + trvOp + "]";
 	}
-
 }

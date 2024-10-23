@@ -181,6 +181,7 @@ td {
 	font-size: 16px;
 	/* Reduce font size if needed */
 }
+
 </style>
 </head>
 <body>
@@ -297,7 +298,13 @@ td {
 															</div>
 															<div class="d-flex align-items-center" style="font-size: 18px;">
 																<img src="resources/assets/img/date.png" width="23px" alt="">
-																<p class="ms-2" style="color: #6a6a6a;">${travel.trvDt }</p>
+																<c:if test="${travel.trvSdt == travel.trvEdt}">
+ 																	<p class="ms-2" style="color: #6a6a6a;">${travel.trvSdt }</p>	
+																</c:if>
+																<c:if test="${travel.trvSdt != travel.trvEdt}">
+																	 <p class="ms-2" style="color: #6a6a6a;">${travel.trvSdt }</p>
+																	 <p class="ms-1">~</p> <p class="ms-1" style="color: #6a6a6a;">${travel.trvEdt }</p>
+																</c:if>	 
 															</div>
 														</div>
 														<div class="d-inline-block" style="margin-top: 35px; height: 105px; width: 500px; border-radius: 10px;">
@@ -332,7 +339,14 @@ td {
 									</div>
 									<input type="hidden" id="coordinateX" name="trvX"> <input type="hidden" id="coordinateY" name="trvY">
 									<div class="mb-3">
-										<label for="travelDate" class="form-label">여행 날짜</label> <input type="date" name="trvDt" class="form-control" id="travelDate" placeholder="여행 날짜를 선택하세요">
+									    <label for="travelDate" class="form-label">여행 날짜</label>
+									    <input type="text" name="trvDt" class="form-control" id="travelDate" placeholder="여행 날짜를 선택하세요">
+									    <div class="form-check mt-2">
+									        <input class="form-check-input" type="checkbox" id="singleDayTrip" checked>
+									        <label class="form-check-label" for="singleDayTrip">
+									            당일 여행
+									        </label>
+									    </div>
 									</div>
 									<div class="mb-3">
 										<label for="travelContent" class="form-label">내용</label>
@@ -367,6 +381,42 @@ td {
 	<script>
 $(document).ready(function() {
     initializeMap();
+    
+    $('#travelDate').daterangepicker({
+    	singleDatePicker: true, // Start with single date picker
+        autoApply: true,
+        locale: {
+            format: 'YYYY-MM-DD',
+            separator: ' ~ ',
+            applyLabel: '확인',
+            cancelLabel: '취소',
+            daysOfWeek: ['일', '월', '화', '수', '목', '금', '토'],
+            monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+        },
+        showCustomRangeLabel: false,
+        linkedCalendars: false, 
+        startDate: moment()
+    });
+    
+ // 체크박스 변경 이벤트
+    $('#singleDayTrip').change(function() {
+        let isSingleDay = $(this).is(':checked');
+        let picker = $('#travelDate').data('daterangepicker');
+
+        if (isSingleDay) {
+            // 당일 여행 모드일 때
+            picker.setStartDate(moment());  // 오늘 날짜로 설정
+            picker.setEndDate(moment());    // 오늘 날짜로 종료일 설정
+            picker.singleDatePicker = true; // 단일 날짜 선택 모드
+        } else {
+            picker.singleDatePicker = false;
+        }
+
+        // 기존 달력 다시 보여주기
+        picker.updateView();
+        picker.showCalendars();
+    });
+
     
     // 여행 정보 검색
      $('.search_btn').click(function(e) {
@@ -507,6 +557,17 @@ $(document).ready(function() {
         e.preventDefault();
         var formData = new FormData(this);
         var files = $('#trvImgUpload')[0].files;
+        var dateValue = $('#travelDate').val();
+        
+        if (!$('#singleDayTrip').is(':checked') && dateValue.includes('~')) {
+            var dates = dateValue.split('~').map(date => date.trim());
+            formData.set('trvSdt', dates[0]);
+            formData.set('trvEdt', dates[1]);
+        } else {
+            // Single date
+            formData.set('trvSdt', dateValue);
+            formData.set('trvEdt', dateValue);
+        }
         
         // If we're in edit mode and no new files were selected, preserve existing images
         if (isEditMode) {
@@ -761,6 +822,15 @@ function updateTravelList(travels) {
     }
     
     travels.forEach(travel => {
+    	let dateHtml = '';
+    	if (travel.trvSdt === travel.trvEdt) {
+    	    dateHtml = '<p class="ms-2" style="color: #6a6a6a;">' + travel.trvSdt + '</p>';
+    	} else {
+    	    dateHtml = '<p class="ms-2" style="color: #6a6a6a;">' + travel.trvSdt + '</p>' +
+    	               '<p class="ms-1">~</p>' +
+    	               '<p class="ms-1" style="color: #6a6a6a;">' + travel.trvEdt + '</p>';
+    	}
+    	
     	console.log(travels);
     	console.log(travel.trvTt);
         tbody.append('<tr>' +
@@ -790,7 +860,7 @@ function updateTravelList(travels) {
                                         '</div>' +
                                         '<div class="d-flex align-items-center" style="font-size: 18px;">' +
                                             '<img src="resources/assets/img/date.png" width="23px" alt="">' +
-                                            '<p class="ms-2" style="color: #6a6a6a;">' + travel.trvDt + '</p>' +
+                                            dateHtml +
                                         '</div>' +
                                     '</div>' +
                                     '<div class="d-inline-block" style="margin-top: 35px; height: 105px; width: 500px; border-radius: 10px;">' +
@@ -855,6 +925,20 @@ function populateForm(data) {
                 marker.setPosition(coords);
             }
         });
+    }
+    
+    if (data.trvSdt && data.trvEdt) {
+        if (data.trvSdt === data.trvEdt) {
+            // Single day trip
+            $('#singleDayTrip').prop('checked', true);
+            $('#travelDate').data('daterangepicker').singleDatePicker = true;
+            $('#travelDate').val(data.trvSdt);
+        } else {
+            // Multi-day trip
+            $('#singleDayTrip').prop('checked', false);
+            $('#travelDate').data('daterangepicker').singleDatePicker = false;
+            $('#travelDate').val(data.trvSdt + ' ~ ' + data.trvEdt);
+        }
     }
 
     // Clear existing photos and preview

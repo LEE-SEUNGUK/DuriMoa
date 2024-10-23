@@ -9,7 +9,8 @@ public class TravelInfoVO {
 	private String tryX;
 	private String tryY;	
 	private String trvCt;
-	private String trvDt;
+	private String trvSdt;
+	private String trvEdt;
 	private String trvOp;
 	private String trvImg1; // 썸네일 정보
 	private String trvImg2;
@@ -63,12 +64,20 @@ public class TravelInfoVO {
 		this.tryY = tryY;
 	}
 
-	public String getTrvDt() {
-		return trvDt;
+	public String getTrvSdt() {
+		return trvSdt;
 	}
 
-	public void setTrvDt(String trvDt) {
-		this.trvDt = trvDt;
+	public void setTrvSdt(String trvSdt) {
+		this.trvSdt = trvSdt;
+	}
+
+	public String getTrvEdt() {
+		return trvEdt;
+	}
+
+	public void setTrvEdt(String trvEdt) {
+		this.trvEdt = trvEdt;
 	}
 
 	public String getTrvCt() {
@@ -114,8 +123,8 @@ public class TravelInfoVO {
 	@Override
 	public String toString() {
 		return "TravelInfoVO [trvId=" + trvId + ", trvTt=" + trvTt + ", trvPc=" + trvPc + ", trvPlc=" + trvPlc
-				+ ", tryX=" + tryX + ", tryY=" + tryY + ", trvCt=" + trvCt + ", trvDt=" + trvDt + ", trvOp=" + trvOp
-				+ ", trvImg1=" + trvImg1 + ", trvImg2=" + trvImg2 + ", trvImg3=" + trvImg3 + "]";
+				+ ", tryX=" + tryX + ", tryY=" + tryY + ", trvCt=" + trvCt + ", trvSdt=" + trvSdt + ", trvEdt=" + trvEdt
+				+ ", trvOp=" + trvOp + ", trvImg1=" + trvImg1 + ", trvImg2=" + trvImg2 + ", trvImg3=" + trvImg3 + "]";
 	}
-	
+
 }

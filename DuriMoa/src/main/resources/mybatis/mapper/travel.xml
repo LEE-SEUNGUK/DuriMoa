@@ -3,8 +3,8 @@
 <mapper namespace="com.ugi.durimoa.travel.dao.ITravelDAO">
 
 	<insert id="travelAdd" parameterType="TravelVO" useGeneratedKeys="true" keyProperty="trvId" keyColumn="trv_id">
-		INSERT INTO TRAVEL(mem_id, trv_tt, trv_pc, trv_x, trv_y, trv_dt, trv_ct, trv_op) 
-		VALUES (#{memId}, #{trvTt}, #{trvPc}, #{trvX}, #{trvY}, #{trvDt}, #{trvCt}, #{trvOp})
+		INSERT INTO TRAVEL(mem_id, trv_tt, trv_pc, trv_x, trv_y, trv_sdt, trv_edt, trv_ct, trv_op) 
+		VALUES (#{memId}, #{trvTt}, #{trvPc}, #{trvX}, #{trvY}, #{trvSdt}, #{trvEdt}, #{trvCt}, #{trvOp})
 	</insert>
 	
 	<update id="travelUpdate" parameterType="TravelVO">
@@ -14,7 +14,8 @@
             trv_pc = #{trvPc},
             trv_x = #{trvX},
             trv_y = #{trvY},
-            trv_dt = #{trvDt},
+            trv_sdt = #{trvSdt},
+            trv_edt = #{trvEdt},
             trv_ct = #{trvCt},
             trv_op = #{trvOp}
         WHERE trv_id = #{trvId}
@@ -32,7 +33,8 @@
 	    t.trv_pc,
 	    t.trv_x,
 	    t.trv_y,
-	    t.trv_dt,
+	    TO_CHAR(t.trv_sdt, 'YYYY-MM-DD') trv_sdt,
+	    TO_CHAR(t.trv_edt, 'YYYY-MM-DD') trv_edt,
 	    DBMS_LOB.SUBSTR(t.trv_ct, 4000, 1) AS trv_ct,
 	    t.trv_op,
 	    MAX(CASE WHEN i.trv_idx = '1' THEN i.trv_img END) AS trv_img1,
@@ -41,7 +43,7 @@
 	FROM travel t
 	LEFT JOIN images i ON t.trv_id = i.trv_id
 	WHERE t.trv_id = #{trvId}
-	GROUP BY t.trv_id, t.trv_tt, t.trv_pc, t.trv_x, t.trv_y, t.trv_dt, DBMS_LOB.SUBSTR(t.trv_ct, 4000, 1), t.trv_op    
+	GROUP BY t.trv_id, t.trv_tt, t.trv_pc, t.trv_x, t.trv_y, t.trv_sdt, t.trv_edt, DBMS_LOB.SUBSTR(t.trv_ct, 4000, 1), t.trv_op    
 	</select>	
 
 	<select id="getTravelList" resultType="TravelInfoVO" parameterType="MemberVO">
@@ -61,7 +63,8 @@
 		    a.trv_tt,
 		    a.trv_pc,
 		    SUBSTR(a.trv_pc, 0, 2) trv_plc,
-		    a.trv_dt,
+		    TO_CHAR(a.trv_sdt, 'YYYY-MM-DD') trv_sdt,
+	   	 	TO_CHAR(a.trv_edt, 'YYYY-MM-DD') trv_edt,
 		    DBMS_LOB.SUBSTR(a.trv_Ct, 4000, 1) AS trv_ct,
 		    a.trv_op,
 		    MAX(CASE WHEN b.trv_idx = 1 THEN b.trv_img END) AS trv_img1,
@@ -70,8 +73,8 @@
 		FROM travel a
 		LEFT JOIN images b ON a.trv_id = b.trv_id
 		JOIN couple_members cm ON a.mem_id = cm.mem_id
-		GROUP BY a.trv_id, a.mem_id, a.trv_Tt, a.trv_Pc, a.trv_Dt, DBMS_LOB.SUBSTR(a.trv_Ct, 4000, 1), a.trv_Op
-		ORDER BY a.trv_dt DESC
+		GROUP BY a.trv_id, a.mem_id, a.trv_Tt, a.trv_Pc, a.trv_Sdt, a.trv_Edt, DBMS_LOB.SUBSTR(a.trv_Ct, 4000, 1), a.trv_Op
+		ORDER BY a.trv_sdt DESC
 	</select>
 	
 	<select id="getTravelSearch" resultType="TravelInfoVO" parameterType="SearchVO">
@@ -93,7 +96,8 @@
 	    a.trv_tt,
 	    a.trv_pc,
 	    SUBSTR(a.trv_pc, 0, 2) trv_plc,
-	    a.trv_dt,
+	    TO_CHAR(a.trv_sdt, 'YYYY-MM-DD') trv_sdt,
+	    TO_CHAR(a.trv_edt, 'YYYY-MM-DD') trv_edt,
 	    DBMS_LOB.SUBSTR(a.trv_Ct, 4000, 1) AS trv_ct,
 	    a.trv_op,
 	    MAX(CASE WHEN b.trv_idx = 1 THEN b.trv_img END) AS trv_img1,
@@ -102,8 +106,8 @@
 	FROM travel a
 	LEFT JOIN images b ON a.trv_id = b.trv_id
 	JOIN couple_members cm ON a.mem_id = cm.mem_id
-	GROUP BY a.trv_id, a.mem_id, a.trv_Tt, a.trv_Pc, a.trv_Dt, DBMS_LOB.SUBSTR(a.trv_Ct, 4000, 1), a.trv_Op
-	ORDER BY a.trv_dt DESC)
+	GROUP BY a.trv_id, a.mem_id, a.trv_Tt, a.trv_Pc, a.trv_Sdt, a.trv_Edt, DBMS_LOB.SUBSTR(a.trv_Ct, 4000, 1), a.trv_Op
+	ORDER BY a.trv_sdt DESC)
 	WHERE #{keyWord} IS NULL 
 	   OR trv_tt LIKE '%' || #{keyWord} || '%'
 	   OR trv_pc LIKE '%' || #{keyWord} || '%'
