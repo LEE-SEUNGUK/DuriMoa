@@ -508,21 +508,43 @@ $(document).ready(function() {
         var formData = new FormData(this);
         var files = $('#trvImgUpload')[0].files;
         
-        // Remove existing files
-        formData.delete('trvImgs');
-        
-        if (files.length === 1) {
-            // For single image, just append it directly
-            formData.append('trvImgs', files[0]);
-        } else if (clickOrder.length > 0) {
-            // For multiple images, use the click order
-            clickOrder.forEach((index, orderIndex) => {
-                formData.append('trvImgs', files[index]);
-            });
+        // If we're in edit mode and no new files were selected, preserve existing images
+        if (isEditMode) {
+            if (!files || files.length === 0) {
+                formData.append('preserveImages', 'true');
+                formData.delete('trvImgs'); // Remove any empty file input data
+            } else {
+                // Remove existing files
+                formData.delete('trvImgs');
+                
+                // Handle new files
+                if (files.length === 1) {
+                    formData.append('trvImgs', files[0]);
+                } else if (clickOrder.length > 0) {
+                    clickOrder.forEach((index, orderIndex) => {
+                        formData.append('trvImgs', files[index]);
+                    });
+                } else {
+                    for (var i = 0; i < files.length; i++) {
+                        formData.append('trvImgs', files[i]);
+                    }
+                }
+            }
         } else {
-            // If no clicks recorded but multiple images, use original order
-            for (var i = 0; i < files.length; i++) {
-                formData.append('trvImgs', files[i]);
+            // Handle new travel creation
+            if (files && files.length > 0) {
+                formData.delete('trvImgs');
+                if (files.length === 1) {
+                    formData.append('trvImgs', files[0]);
+                } else if (clickOrder.length > 0) {
+                    clickOrder.forEach((index, orderIndex) => {
+                        formData.append('trvImgs', files[index]);
+                    });
+                } else {
+                    for (var i = 0; i < files.length; i++) {
+                        formData.append('trvImgs', files[i]);
+                    }
+                }
             }
         }
 
