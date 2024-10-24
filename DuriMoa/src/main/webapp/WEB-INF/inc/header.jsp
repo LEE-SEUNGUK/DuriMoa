@@ -54,7 +54,7 @@
 							<p class="nav_text" style="padding-top: 3px !important">포토존</p> </a>
 					</c:if>
 					<c:if test="${sessionScope.login != null}">
-						<a class="nav_page d-flex flex-column align-items-center" href="#"><img src="resources/assets/img/photo.png" alt="" style="width: 40px;">
+						<a class="nav_page d-flex flex-column align-items-center" href="#" onclick="fn_alert()"><img src="resources/assets/img/photo.png" alt="" style="width: 40px;">
 							<p class="nav_text" style="padding-top: 3px !important">포토존</p> </a>
 					</c:if>
 					</div>
@@ -254,6 +254,12 @@
 				$('#loginForm')[0].reset();
 			}
 		});
+	}
+	
+	// 개발중입니다
+	function fn_alert(){
+		console.log("왜 안떠 ㅅㅂ");
+		alert("준비중입니다");
 	}
 
 	// 추가된 checkId 함수

@@ -216,7 +216,7 @@
 							                </div>
 							                <div class="ps-2 d-flex justify-content-between align-items-center mt-4 mb-5 w-75">
 							                    <label for="">디데이 수정</label> 
-							                    <input class="form-control couple-input" type="date" id="copDt" name="copNm" value="${sessionScope.couple.copDt}">
+							                    <input class="form-control couple-input" type="date" id="copDt" name="copDt" value="${sessionScope.couple.copDt}">
 							                </div>
 							            </div>
 							            <div class="w-100" style="margin: 0 auto; text-align: center;">
@@ -286,6 +286,7 @@
 
 <script>
 $(document).ready(
+		
 		function() {
 			var now = new Date();
 			// '-'를 '/'로 변경
@@ -322,18 +323,25 @@ function coupleAdd() {
 
 	// JSON으로 변환하여 AJAX 요청
 	$.ajax({
-		type : 'POST',
-		url : '/coupleAdd?memId=' + encodeURIComponent(memId),
-		contentType : 'application/json', // JSON 형식으로 데이터 전송
-		data : JSON.stringify(coupleData), // JSON 문자열로 변환
-		success : function(res) {
-			console.log("응답: ", res);
-			location.href = "myPageView";
-		},
-		error : function(xhr, status, error) {
-			alert("서버 오류: " + "여기야");
-		}
-	});
+        type: 'POST',
+        url: '/coupleAdd?memId=' + encodeURIComponent(memId),
+        contentType: 'application/json',
+        data: JSON.stringify(coupleData),
+        success: function(res) {
+            console.log("응답: ", res);
+            if(res == "success"){
+            	alert("이미 커플인 회원입니다.");
+            }
+            // Check if response has data
+            if (Object.keys(res).length === 0) {
+                alert("상대방이 수락을 받을 수 없는 상태입니다");
+            }
+            location.href = "myPageView";
+        },
+        error: function(xhr, status, error) {
+            alert("서버 오류가 발생했습니다.");
+        }
+    });
 
 }
 
@@ -435,16 +443,25 @@ function coupleCk() {
 				console.log("정상 응답");
 				console.log(res);
 				coupleInfo = res;
-
-				let str = "";
-				str += "<div id='couple_result' class='mt-3 d-flex couple-input align-items-center' style='height: 50px; width: 55%; margin: 0 auto; margin-right: 136px; border-radius: 10px;'>";
-				str += "<img class='ms-4' src='"
-						+ res.memImg
-						+ "' style='width: 41px; height: 41px; border-radius: 20%;'>";
-				str += "<a style='margin-left: 70px;'>" + res.memNm
-						+ "님" + "</a></div>";
-				str += "<input type='text' id='memId2' name='memId2' value='" + res.memId + "' style='display: none;'>";
-				$('#couple_search').append(str);
+				
+				$('#couple_result').remove();
+		        $('#memId2').remove();
+				
+				if(res == ''){
+					alert("존재하지 않는 회원입니다.");
+				}
+				else{
+					let str = "";
+					str += "<div id='couple_result' class='mt-3 d-flex couple-input align-items-center' style='height: 50px; width: 55%; margin: 0 auto; margin-right: 136px; border-radius: 10px;'>";
+					str += "<img class='ms-4' src='"
+							+ res.memImg
+							+ "' style='width: 41px; height: 41px; border-radius: 20%;'>";
+					str += "<a style='margin-left: 70px;'>" + res.memNm
+							+ "님" + "</a></div>";
+					str += "<input type='text' id='memId2' name='memId2' value='" + res.memId + "' style='display: none;'>";
+					$('#couple_search').append(str);
+				}
+				
 
 				$(document).on(
 						'click',

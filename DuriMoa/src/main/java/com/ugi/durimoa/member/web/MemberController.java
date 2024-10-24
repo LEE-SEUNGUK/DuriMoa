@@ -14,6 +14,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -115,7 +117,6 @@ public class MemberController {
 			session.setAttribute("couple", couple);
 		}
 
-		System.out.println(login);
 		// 입력한 비밀번호와 db의 암호화된 비번을 비교해서 일치하면 true, 그렇지 않으면 false 반환
 
 		System.out.println("로그인 세션: " + login);
@@ -141,15 +142,25 @@ public class MemberController {
 
 	@ResponseBody
 	@RequestMapping("/coupleAdd")
-	public RequestVO updateCop(@RequestBody CoupleVO vo, HttpSession session, @RequestParam("memId") String cop_memId,
+	public ResponseEntity<?> updateCop(@RequestBody CoupleVO vo, HttpSession session, @RequestParam("memId") String cop_memId,
 			HttpServletResponse response) throws Exception {
 		// 세션에 있는 값을 가져올땐 객체에 담아서 메소드로 가져온다.
 		MemberVO login = (MemberVO) session.getAttribute("login");
 		String login_memId = login.getMemId();
-
+		
+		MemberVO mem = memberService.coupleck(cop_memId);
+		if("Y".equals(mem.getCopYn())) {
+			return new ResponseEntity<>("success", HttpStatus.OK);
+		}
+		
+		int req_num = memberService.ResWait(cop_memId);
+		if(req_num == 1) {
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		
 		memberService.coupleAdd(vo); // 자동 생성된 copId 반환
 		System.out.println("커플 ID: " + vo.getCopId());
-		
+			
 		RequestVO req_send = new RequestVO();
 		req_send.setReqCid(vo.getCopId());
 		req_send.setReqMid(login_memId);
@@ -161,7 +172,7 @@ public class MemberController {
 		RequestVO req = memberService.reqInfo(login.getMemId());
 		session.setAttribute("req", req);
 
-		return req;
+		return new ResponseEntity<>(vo, HttpStatus.OK);
 	}
 	
 	@RequestMapping("/allowReq")
@@ -253,7 +264,7 @@ public class MemberController {
 	
 	@RequestMapping("/exit")
 	public String exit(HttpSession session) {
-		
+		MemberVO vo = (MemberVO) session.getAttribute("login");
 		CoupleInfoVO cop = (CoupleInfoVO) session.getAttribute("couple");
 		
 		if(cop != null) {
@@ -262,9 +273,9 @@ public class MemberController {
 			memberService.removeReq(copId);
 			memberService.memCoupleDel(copId);
 			memberService.delCouple(copId);
+		}else {
+			memberService.exitCopReq(vo.getMemId());
 		}
-		
-		MemberVO vo = (MemberVO) session.getAttribute("login");
 		
 		memberService.exit(vo.getMemId());
 		session.removeAttribute("login");

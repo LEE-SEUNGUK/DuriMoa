@@ -156,6 +156,10 @@ public class MemberService {
 		dao.delReqCop(memId);
 	};
 	
+	public void exitCopReq(String memId) {
+		dao.exitCopReq(memId);
+	}
+	
 	// 회원 탈퇴
 	public void exit(String memId) {
 		dao.exit(memId);

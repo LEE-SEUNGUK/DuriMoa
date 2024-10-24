@@ -25,6 +25,7 @@
 		    r.req_mid = m1.mem_id
 		    AND r.res_mid = m2.mem_id
 		    AND (r.req_mid = #{memId} OR r.res_mid = #{memId})
+		    AND r.req_yn = 'Y'
 		    AND r.req_ok = 'N'
 	</select>
 	
@@ -47,7 +48,7 @@
 	</select>
 
 	<select id="coupleck" resultType="MemberVO" parameterType="String">
-		SELECT mem_id, mem_nm, mem_img FROM member WHERE mem_id = #{memId}
+		SELECT mem_id, mem_nm, mem_img, cop_yn FROM member WHERE mem_id = #{memId} AND mem_yse = 'Y'
 	</select>
 
 	<insert id="coupleAdd" parameterType="CoupleVO" useGeneratedKeys="true" keyProperty="copId" keyColumn="cop_id">
@@ -137,7 +138,7 @@
 		    b.mem_img,
 		    c.cop_id,
 		    c.cop_nm,
-		    c.cop_dt
+		    TO_CHAR(c.cop_dt, 'YYYY-MM-DD') cop_dt
 		FROM MEMBER a, MEMBER b, COUPLE c
 		WHERE 
 		    a.cop_id = b.cop_id
@@ -174,6 +175,15 @@
 	DELETE FROM request
 	WHERE req_mid = #{memId}
 	</delete>
+	
+<!-- 회원 탈퇴 시 요청 삭제 처리 -->
+	<update id="exitCopReq" parameterType="String">
+	UPDATE request 
+	SET req_yn = 'N', 
+	    req_ok = 'N'
+	WHERE req_mid = #{memId}
+	   OR res_mid = #{memId}
+	</update>
 	
 	<update id="exit" parameterType="String">
 	UPDATE member SET mem_yse = 'N'

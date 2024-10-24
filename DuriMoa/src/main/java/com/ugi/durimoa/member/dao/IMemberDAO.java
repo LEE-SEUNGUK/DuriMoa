@@ -72,6 +72,9 @@ public interface IMemberDAO {
 	// 커플 요청 삭제
 	public void delReqCop(String memId);
 	
+	// 커플 요청 하거나 받은 상태로 탈퇴시 강제 요청 삭제
+	public void exitCopReq(String memId);
+	
 	// 회원 탈퇴
 	public void exit(String memId);
 }
