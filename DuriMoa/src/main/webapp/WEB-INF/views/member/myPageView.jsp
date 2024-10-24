@@ -37,8 +37,13 @@
 						enctype="multipart/form-data">
 						<div style="width: 46%; margin: 0 auto;">
 							<div class="my-4 d-flex flex-column align-items-center">
-								<label class="mb-3" for="my_profile">프로필 이미지</label> <img
-									src="${sessionScope.login.memImg}" id="my_profile" alt="">
+								<label class="mb-3" for="my_profile">프로필 이미지</label> 
+								<c:if test="${sessionScope.login.memImg == null}">
+									<img src="resources/assets/img/user.png" id="my_profile" alt="">
+								</c:if>
+								<c:if test="${sessionScope.login.memImg != null}">
+									<img src="${sessionScope.login.memImg}" id="my_profile" alt="">
+								</c:if>
 								<input type="file" id="imageUpload" name="profileImage"
 									accept="image/*" style="display: none;">
 							</div>
@@ -106,7 +111,12 @@
 							                    <span>커플정보</span>를 등록해주세요
 							                </div>
 							                <div class="mt-4 d-flex justify-content-center">
-							                    <img src="${sessionScope.login.memImg}" id="couple_profile_my" alt=""> 
+							                	<c:if test="${sessionScope.login.memImg == null}">
+							                    	<img src="resources/assets/img/user.png" id="couple_profile_my" alt="">
+							                    </c:if>
+							                    <c:if test="${sessionScope.login.memImg != null}">
+							                    	<img src="${sessionScope.login.memImg}" id="couple_profile_my" alt="">
+							                    </c:if>
 							                    <img class="ms-3" src="resources/assets/img/couple_add.png" alt="" id="couple_profile_insert" style="object-fit: cover; padding: 45px;">
 							                </div>
 							                <div class="mt-5" style="width: 92%; margin-left: 6%;" id="couple_div">
@@ -147,8 +157,18 @@
 							                    <span>${sessionScope.req.reqNm}</span>님이 수락 대기중입니다
 							                </div>
 							                <div class="mt-4 mb-5 d-flex justify-content-center">
-							                    <img src="${sessionScope.login.memImg}" id="couple_profile_my" alt=""> 
-							                    <img class="ms-3" src="${sessionScope.req.reqImg}" alt="" id="couple_profile_insert" style="object-fit: cover;">
+							                	<c:if test="${sessionScope.login.memImg == null}">
+							                    	<img src="resources/assets/img/user.png" id="couple_profile_my" alt="">
+							                    </c:if>
+							                    <c:if test="${sessionScope.login.memImg != null}">
+							                    	<img src="${sessionScope.login.memImg}" id="couple_profile_my" alt="">
+							                    </c:if>
+							                    <c:if test="${sessionScope.req.reqImg == null}">
+							                    	<img class="ms-3" src="resources/assets/img/user.png" alt="" id="couple_profile_insert" style="object-fit: cover;">
+							                	</c:if>
+							                	<c:if test="${sessionScope.req.reqImg != null}">
+							                    	<img class="ms-3" src="${sessionScope.req.reqImg}" alt="" id="couple_profile_insert" style="object-fit: cover;">
+							                	</c:if>
 							                </div>
 							                <div class="w-100" style="margin: 0 auto; text-align: center;">
 							                    <hr class="bg-black">
@@ -170,8 +190,18 @@
 							                    <span>${sessionScope.res.reqNm}</span>님이 커플 요청을 보냈습니다
 							                </div>
 							                <div class="mt-4 mb-5  d-flex justify-content-center">
-							                    <img src="${sessionScope.login.memImg}" id="couple_profile_my" alt=""> 
-							                    <img class="ms-3" src="${sessionScope.res.reqImg}" alt="" id="couple_profile_insert" style="object-fit: cover;">
+							                	<c:if test="${sessionScope.login.memImg == null}">
+							                    	<img src="resources/assets/img/user.png" id="couple_profile_my" alt="">
+							                    </c:if>
+							                    <c:if test="${sessionScope.login.memImg != null}">
+							                    	<img src="${sessionScope.login.memImg}" id="couple_profile_my" alt="">
+							                    </c:if>
+							                    <c:if test="${sessionScope.res.reqImg == null}">
+							                    	<img class="ms-3" src="resources/assets/img/user.png" alt="" id="couple_profile_insert" style="object-fit: cover;">
+							                    </c:if>
+							                    <c:if test="${sessionScope.res.reqImg != null}">
+							                    	<img class="ms-3" src="${sessionScope.res.reqImg}" alt="" id="couple_profile_insert" style="object-fit: cover;">
+							                    </c:if>
 							                </div>
 							                <div class="w-100" style="margin: 0 auto; text-align: center;">
 							                    <hr class="bg-black">
@@ -385,8 +415,7 @@ function fn_write() {
         // couple 세션 변수가 존재하지 않을 때
         console.log("couple 세션이 존재하지 않습니다.");
     }
-	if(couple != 'null') {
-		console.log("여기 왜옴")
+	if(couple !== 'null' && couple !== '') {
 		formData.append('copId', '${sessionScope.couple.copId}')
 		formData.append('copYn', "Y")
 	}
@@ -413,15 +442,19 @@ function fn_write() {
 		processData : false,
 		contentType : false,
 		success : function(res) {
-			console.log('응답');
 			console.log(res);
 			$('#memPw_up').val(res.memPw);
 			$('#memNpw').val("");
 			$('#memPw_ck').val("");
 			$('#memNm').val(res.memNm);
-			if(couple == 'null') {
-				$('#headNm').text(res.memNm);
-			}
+			if (couple !== 'null' && couple !== '') {
+		        // couple 세션 변수가 존재할 때
+		        console.log("couple 세션이 존재합니다.");
+		    } else {
+		        // couple 세션 변수가 존재하지 않을 때
+		        $('#headNm').text(res.memNm);
+		        console.log("couple 세션이 존재하지 않습니다.");
+		    }
 			$('#headImg').attr('src', res.memImg);
 			$('#couple_profile_my').attr('src', res.memImg);
 		},
@@ -454,7 +487,7 @@ function coupleCk() {
 					let str = "";
 					str += "<div id='couple_result' class='mt-3 d-flex couple-input align-items-center' style='height: 50px; width: 55%; margin: 0 auto; margin-right: 136px; border-radius: 10px;'>";
 					str += "<img class='ms-4' src='"
-							+ res.memImg
+							+ (res.memImg || "resources/assets/img/user.png")
 							+ "' style='width: 41px; height: 41px; border-radius: 20%;'>";
 					str += "<a style='margin-left: 70px;'>" + res.memNm
 							+ "님" + "</a></div>";
@@ -474,7 +507,10 @@ function coupleCk() {
 										"padding", '0px');
 
 							} else {
-								console.log("커플 프로필");
+								$("#couple_profile_insert").attr(
+										"src", "resources/assets/img/user.png");
+								$("#couple_profile_insert").css(
+										"padding", '0px');
 							}
 						});
 			},

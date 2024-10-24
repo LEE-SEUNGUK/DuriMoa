@@ -79,7 +79,13 @@
 							</a>
 						</c:if>
 						<c:if test="${sessionScope.login != null}">
-							<a class="nav_page d-flex flex-column align-items-center" href="${pageContext.request.contextPath}/myPageView" id="mypage"> <img src="${pageContext.request.contextPath}${sessionScope.login.memImg}" id="headImg" style="width: 41px; height: 41px; object-fit: cover; border-radius: 20%;">
+							<a class="nav_page d-flex flex-column align-items-center" href="${pageContext.request.contextPath}/myPageView" id="mypage"> 
+								<c:if test="${sessionScope.login.memImg == null}">
+									<img src="resources/assets/img/user.png" id="headImg" style="width: 41px; height: 41px; object-fit: cover; border-radius: 20%;">
+								</c:if>
+								<c:if test="${sessionScope.login.memImg != null}">
+									<img src="${pageContext.request.contextPath}${sessionScope.login.memImg}" id="headImg" style="width: 41px; height: 41px; object-fit: cover; border-radius: 20%;">
+								</c:if>
 								<p class="nav_text" style="padding-top: 3px !important">마이페이지</p>
 							</a>
 						</c:if>
