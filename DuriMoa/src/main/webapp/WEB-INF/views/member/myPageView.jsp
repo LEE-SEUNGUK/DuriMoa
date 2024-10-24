@@ -216,7 +216,7 @@
 							                </div>
 							                <div class="ps-2 d-flex justify-content-between align-items-center mt-4 mb-5 w-75">
 							                    <label for="">디데이 수정</label> 
-							                    <input class="form-control couple-input" type="date" id="copDt" name="copNm">
+							                    <input class="form-control couple-input" type="date" id="copDt" name="copNm" value="${sessionScope.couple.copDt}">
 							                </div>
 							            </div>
 							            <div class="w-100" style="margin: 0 auto; text-align: center;">
@@ -340,7 +340,7 @@ function coupleAdd() {
 function fn_copUpdate() {
 	var coupleData = {
 		copNm : $('#copNnm').val() || '${sessionScope.couple.copNm}',
-		copDt : $('#copDt').val(),
+		copDt : $('#copDt').val() || '${sessionScope.couple.copDt}',
 		copId : '${sessionScope.couple.copId}'
 	};
 	$.ajax({
@@ -369,8 +369,16 @@ function fn_copUpdate() {
 function fn_write() {
 	let formData = new FormData();
 	formData.append('memId', '${sessionScope.login.memId}');
-	
-	if('${SessionScope.couple}' == null) {
+	var couple = "${sessionScope.couple}";
+    if (couple !== 'null' && couple !== '') {
+        // couple 세션 변수가 존재할 때
+        console.log("couple 세션이 존재합니다.");
+    } else {
+        // couple 세션 변수가 존재하지 않을 때
+        console.log("couple 세션이 존재하지 않습니다.");
+    }
+	if(couple != 'null') {
+		console.log("여기 왜옴")
 		formData.append('copId', '${sessionScope.couple.copId}')
 		formData.append('copYn', "Y")
 	}
@@ -403,7 +411,9 @@ function fn_write() {
 			$('#memNpw').val("");
 			$('#memPw_ck').val("");
 			$('#memNm').val(res.memNm);
-			$('#headNm').text(res.memNm);
+			if(couple == 'null') {
+				$('#headNm').text(res.memNm);
+			}
 			$('#headImg').attr('src', res.memImg);
 			$('#couple_profile_my').attr('src', res.memImg);
 		},

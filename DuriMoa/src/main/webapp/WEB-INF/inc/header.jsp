@@ -9,7 +9,7 @@
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=9d407e93fbddd6bd9146ab8e8274441c&libraries=clusterer"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=9d407e93fbddd6bd9146ab8e8274441c&libraries=services,clusterer"></script>
 
 
 <!-- css -->
