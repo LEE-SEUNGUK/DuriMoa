@@ -46,7 +46,7 @@ public class TravelService {
 		System.out.println("전체 조회 서비스");
 
 		ArrayList<TravelInfoVO> result = dao.getTravelList(vo);
-
+		
 		if (result == null) {
 			throw new Exception();
 		}

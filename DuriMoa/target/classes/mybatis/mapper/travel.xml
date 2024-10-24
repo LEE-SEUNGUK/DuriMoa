@@ -62,6 +62,8 @@
 		    a.mem_id,
 		    a.trv_tt,
 		    a.trv_pc,
+		    a.trv_x,
+	    	a.trv_y,
 		    SUBSTR(a.trv_pc, 0, 2) trv_plc,
 		    TO_CHAR(a.trv_sdt, 'YYYY-MM-DD') trv_sdt,
 	   	 	TO_CHAR(a.trv_edt, 'YYYY-MM-DD') trv_edt,
@@ -73,7 +75,7 @@
 		FROM travel a
 		LEFT JOIN images b ON a.trv_id = b.trv_id
 		JOIN couple_members cm ON a.mem_id = cm.mem_id
-		GROUP BY a.trv_id, a.mem_id, a.trv_Tt, a.trv_Pc, a.trv_Sdt, a.trv_Edt, DBMS_LOB.SUBSTR(a.trv_Ct, 4000, 1), a.trv_Op
+		GROUP BY a.trv_id, a.mem_id, a.trv_Tt, a.trv_Pc, a.trv_X, a.trv_Y, a.trv_Sdt, a.trv_Edt, DBMS_LOB.SUBSTR(a.trv_Ct, 4000, 1), a.trv_Op
 		ORDER BY a.trv_sdt DESC
 	</select>
 	

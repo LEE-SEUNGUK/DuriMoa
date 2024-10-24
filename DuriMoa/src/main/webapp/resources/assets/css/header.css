@@ -136,6 +136,15 @@ nav #header_menu {
 	transition: 0.5s;
 }
 
+#loginModalCon{
+	width: 798px;
+	height: 545px;
+}
+
+#loginModalMain{
+	height: 100%;
+}
+
 .modal-content {
 	border-radius: 10px;
 	overflow: hidden;
@@ -306,7 +315,7 @@ nav #header_menu {
 	border: 1px solid #ccc;
 	color: transparent;
 	transition: 0.2s;
-	font-size: 10px;
+	font-size: 14px !important;
 	margin-right: 8px;
 	margin-bottom: 2px;
 }

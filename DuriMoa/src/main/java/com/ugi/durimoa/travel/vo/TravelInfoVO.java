@@ -6,8 +6,8 @@ public class TravelInfoVO {
 	private String trvTt;
 	private String trvPc;
 	private String trvPlc;
-	private String tryX;
-	private String tryY;	
+	private String trvX;
+	private String trvY;	
 	private String trvCt;
 	private String trvSdt;
 	private String trvEdt;
@@ -48,21 +48,23 @@ public class TravelInfoVO {
 		this.trvPlc = trvPlc;
 	}
 
-	public String getTryX() {
-		return tryX;
+	
+	public String getTrvX() {
+		return trvX;
 	}
 
-	public void setTryX(String tryX) {
-		this.tryX = tryX;
+	public void setTrvX(String trvX) {
+		this.trvX = trvX;
 	}
 
-	public String getTryY() {
-		return tryY;
+	public String getTrvY() {
+		return trvY;
 	}
 
-	public void setTryY(String tryY) {
-		this.tryY = tryY;
+	public void setTrvY(String trvY) {
+		this.trvY = trvY;
 	}
+
 
 	public String getTrvSdt() {
 		return trvSdt;
@@ -123,7 +125,7 @@ public class TravelInfoVO {
 	@Override
 	public String toString() {
 		return "TravelInfoVO [trvId=" + trvId + ", trvTt=" + trvTt + ", trvPc=" + trvPc + ", trvPlc=" + trvPlc
-				+ ", tryX=" + tryX + ", tryY=" + tryY + ", trvCt=" + trvCt + ", trvSdt=" + trvSdt + ", trvEdt=" + trvEdt
+				+ ", trvX=" + trvX + ", trvY=" + trvY + ", trvCt=" + trvCt + ", trvSdt=" + trvSdt + ", trvEdt=" + trvEdt
 				+ ", trvOp=" + trvOp + ", trvImg1=" + trvImg1 + ", trvImg2=" + trvImg2 + ", trvImg3=" + trvImg3 + "]";
 	}
 

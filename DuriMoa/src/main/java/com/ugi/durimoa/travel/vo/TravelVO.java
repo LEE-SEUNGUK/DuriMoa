@@ -6,8 +6,8 @@ public class TravelVO {
 	private String memId;
 	private String trvTt;
 	private String trvPc;
-	private String trvX;
-	private String trvY;
+	private Double trvX;
+	private Double trvY;
 	private String trvSdt;
 	private String trvEdt;
 	private String trvCt;
@@ -45,19 +45,19 @@ public class TravelVO {
 		this.trvPc = trvPc;
 	}
 
-	public String getTrvX() {
+	public Double getTrvX() {
 		return trvX;
 	}
 
-	public void setTrvX(String trvX) {
+	public void setTrvX(Double trvX) {
 		this.trvX = trvX;
 	}
 
-	public String getTrvY() {
+	public Double getTrvY() {
 		return trvY;
 	}
 
-	public void setTrvY(String trvY) {
+	public void setTrvY(Double trvY) {
 		this.trvY = trvY;
 	}
 

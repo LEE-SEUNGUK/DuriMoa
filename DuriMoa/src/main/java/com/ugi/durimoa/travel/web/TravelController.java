@@ -159,6 +159,9 @@ public class TravelController {
 	@ResponseBody
 	@RequestMapping("/getTravel")
 	public TravelInfoVO getTravel(@RequestParam("trvId") int trvId) {
+		
+		System.out.println(travelService.getTravel(trvId));
+		
 		return travelService.getTravel(trvId);
 	}
 

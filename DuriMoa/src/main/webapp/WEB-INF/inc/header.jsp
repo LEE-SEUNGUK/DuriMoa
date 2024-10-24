@@ -3,20 +3,23 @@
 	<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 <link href="/resources/assets/css/header.css?after" rel="stylesheet" />
 <link href="/resources/assets/css/mypage.css?after" rel="stylesheet" />
+
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=9d407e93fbddd6bd9146ab8e8274441c&libraries=services"></script>
+<script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=9d407e93fbddd6bd9146ab8e8274441c&libraries=clusterer"></script>
+
 
 <!-- css -->
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
+<div id="top">
 <header>
-	<nav class="d-flex" style="height: 80px; background-color: #ffefef;">
+	<nav class="d-flex" style="height: 9vh; background-color: #ffefef;">
 		<div class="d-flex align-items-center justify-content-center" style="width: 33%;">
 			<div style="width: 80%; text-align: center;">
 				<a href="${pageContext.request.contextPath}/"> <img src="resources/assets/img/logo.png" style="width: 35%;">
@@ -46,14 +49,26 @@
 			<ul class="h-100 d-flex justify-content-between" id="header_menu" style="width: 60%;">
 				<li class="menu_option h-100">
 					<div>
+					<c:if test="${sessionScope.login == null}">
+						<a class="nav_page d-flex flex-column align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><img src="resources/assets/img/photo.png" alt="" style="width: 40px;">
+							<p class="nav_text" style="padding-top: 3px !important">포토존</p> </a>
+					</c:if>
+					<c:if test="${sessionScope.login != null}">
 						<a class="nav_page d-flex flex-column align-items-center" href="#"><img src="resources/assets/img/photo.png" alt="" style="width: 40px;">
 							<p class="nav_text" style="padding-top: 3px !important">포토존</p> </a>
+					</c:if>
 					</div>
 				</li>
 				<li class="menu_option h-100">
 					<div class="ms-3">
+					<c:if test="${sessionScope.login == null}">
+						<a class="nav_page d-flex flex-column align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><img src="resources/assets/img/diary.png" alt="" style="width: 36px; padding-top: 2px;">
+							<p class="pt-1 nav_text">우리의 추억</p> </a>
+					</c:if>
+					<c:if test="${sessionScope.login != null}">
 						<a class="nav_page d-flex flex-column align-items-center" href="${pageContext.request.contextPath}/travelView"><img src="resources/assets/img/diary.png" alt="" style="width: 36px; padding-top: 2px;">
 							<p class="pt-1 nav_text">우리의 추억</p> </a>
+					</c:if>
 					</div>
 				</li>
 				<li class="menu_option h-100">
@@ -77,11 +92,11 @@
 
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
 	<div class="login modal-dialog modal-dialog-centered modal-lg">
-		<div class="modal-content">
-			<div class="container-fluid" style="padding: 0 !important;">
-				<div class="row w-100">
+		<div class="modal-content" id="loginModalCon">
+			<div class="container-fluid" style="padding: 0 !important;" id="loginModalMain">
+				<div class="row w-100 h-100">
 					<div class="col-6 login-left">
-						<div class="modal-body">
+						<div class="modal-body h-100">
 							<div class="mt-5 d-flex justify-content-center">
 								<img src="resources/assets/img/logo.png" alt="" width="150px">
 							</div>
@@ -155,6 +170,7 @@
 			</div>
 		</div>
 	</div>
+</div>
 </div>
 
 <script>

@@ -118,11 +118,10 @@ public class MemberController {
 		System.out.println(login);
 		// 입력한 비밀번호와 db의 암호화된 비번을 비교해서 일치하면 true, 그렇지 않으면 false 반환
 
-		System.out.println("로그인 성공");
+		System.out.println("로그인 세션: " + login);
 
 		session.setAttribute("login", login);
 
-		System.out.println(login);
 		if (remember) {
 			// 쿠키 생성
 			Cookie cookie = new Cookie("rememberId", login.getMemId());
@@ -135,8 +134,6 @@ public class MemberController {
 			cookie.setMaxAge(0);
 			response.addCookie(cookie);
 		}
-
-		System.out.println(login);
 
 		result.put("status", "success");
 		return result;
@@ -316,7 +313,7 @@ public class MemberController {
 	}
 
 	@ResponseBody
-	@PostMapping("/updateDo")
+	@RequestMapping("/updateDo")
 	public MemberVO updateMember(@ModelAttribute MemberVO vo,
 			@RequestParam(value = "profileImage", required = false) MultipartFile file, HttpServletRequest request,
 			HttpSession session) throws IOException {

@@ -369,8 +369,8 @@ function fn_copUpdate() {
 function fn_write() {
 	let formData = new FormData();
 	formData.append('memId', '${sessionScope.login.memId}');
-
-	if ('${sessionScope.couple}' != null) {
+	
+	if('${SessionScope.couple}' == null) {
 		formData.append('copId', '${sessionScope.couple.copId}')
 		formData.append('copYn', "Y")
 	}
