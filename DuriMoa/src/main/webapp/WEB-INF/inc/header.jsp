@@ -153,7 +153,7 @@
 								<form id="signUpForm" enctype="multipart/form-data" class="d-flex flex-column justify-content-center align-items-center w-75" method="post">
 									<p>프로필 이미지</p>
 									<div class="mb-1">
-										<img src="resources/assets/img/profile_img.png" id="profileImage" class="my-2" style="cursor: pointer; border-radius: 50%;"> <img src="resources/assets/img/camera.png" id="camera" alt="" style="width: 30px; position: absolute; top: 26%; right: 38%; cursor: pointer;"> <input type="file" id="imageUpload" name="profileImage" style="display: none;" accept="image/*">
+										<img src="resources/assets/img/profile_img.png" id="profileImage" class="my-2" style="cursor: pointer; border-radius: 50%;"> <img src="resources/assets/img/camera.png" id="camera" alt="" style="width: 30px; position: absolute; top: 27%; right: 37%; cursor: pointer;"> <input type="file" id="imageUpload" name="profileImage" style="display: none;" accept="image/*">
 									</div>
 									<div class="mb-1 w-100 d-flex justify-content-start">
 										<label for="memId">아이디</label>

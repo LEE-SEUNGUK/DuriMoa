@@ -334,11 +334,13 @@ $(document).ready(
 
 				$('#' + target).show();
 
-				$('#couple_info').hover(function() {
-					$('.speech-bubble').addClass('show');
-				}, function() {
-					$('.speech-bubble').removeClass('show');
-				});
+				
+			});
+			
+			$('#couple_info').hover(function() {
+				$('.speech-bubble').addClass('show');
+			}, function() {
+				$('.speech-bubble').removeClass('show');
 			});
 
 		});
@@ -372,7 +374,6 @@ function coupleAdd() {
             alert("서버 오류가 발생했습니다.");
         }
     });
-
 }
 
 function fn_copUpdate() {
@@ -519,8 +520,6 @@ function coupleCk() {
 			}
 		});
 	}
-	
-
 </script>
 </body>
 </html>
