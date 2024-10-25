@@ -49,7 +49,7 @@
 #ad_marker1 {
 	width: 70px;
 	position: absolute;
-	top: 20%;
+	top: 13%;
 	right: 40%;
 }
 
@@ -57,7 +57,14 @@
 	width: 70px;
 	position: absolute;
 	top: 60%;
-	right: 52%;
+	right: 37%;
+}
+
+#ad_marker3 {
+	width: 70px;
+	position: absolute;
+	top: 40%;
+	right: 54%;
 }
 
 .travelTitle{
@@ -148,7 +155,10 @@
 			<div class="d-flex w-100">
 				<section class="w-50" style="text-align: center;">
 					<div class="position-relative">
-						<img src="resources/assets/img/map.png" width="40%" alt=""> <img id="ad_marker1" src="resources/assets/img/marker.png" alt=""> <img id="ad_marker2" src="resources/assets/img/marker.png" alt="">
+						<img src="resources/assets/img/map.png" width="40%" alt=""> 
+						<img id="ad_marker1" src="resources/assets/img/marker.png" alt=""> 
+						<img id="ad_marker2" src="resources/assets/img/marker.png" alt="">
+						<img id="ad_marker3" src="resources/assets/img/marker.png" alt="">
 					</div>
 				</section>
 				<section class="d-flex flex-column align-items-center" style="width: 30%;">
