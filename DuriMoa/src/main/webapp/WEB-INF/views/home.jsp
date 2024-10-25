@@ -27,7 +27,7 @@
 	z-index: 0;
 }
 
-#firstMain>* {
+#firstMain > * {
 	position: relative;
 	z-index: 1;
 }
@@ -59,6 +59,11 @@
 	position: absolute;
 	top: 60%;
 	right: 52%;
+}
+
+.travelTitle{
+	font-family: 'LeeSeoyun';
+	font-size: 35px;
 }
 
 .carousel-item img {
@@ -197,7 +202,7 @@
 							</div>
 						</div>
 						<div class="col-md-6 p-0">
-							<h3 id="modalTitle" style="text-align: center; margin-top: 15%;"></h3>
+							<h3 class="travelTitle" id="modalTitle" style="text-align: center; margin-top: 15%;"></h3>
 							<div class="d-flex align-items-center mt-5 ms-4">
 								<img src="resources/assets/img/board_map.png" width="30px" alt="">
 								<p class="ms-4" id="modalPlace" style="font-size: 20px;"></p>

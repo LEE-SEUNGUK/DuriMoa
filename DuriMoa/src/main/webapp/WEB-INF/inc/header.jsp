@@ -183,6 +183,9 @@
 
 <script>
 	$(document).ready(function() {
+		document.querySelectorAll('input').forEach(input => {
+		    input.setAttribute('autocomplete', 'off');
+		});
 		
 		// 기존의 jQuery 코드들
 		$('#profileImage, #camera, #my_profile').click(function() {

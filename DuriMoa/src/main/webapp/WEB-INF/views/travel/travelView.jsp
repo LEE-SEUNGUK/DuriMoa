@@ -28,7 +28,7 @@ td {
 }
 
 .writing-button:hover {
-	background-color: #a0d498;
+	background-color: #a7cfa1;
 }
 
 /* 작성 폼 */
@@ -74,6 +74,10 @@ td {
 	box-shadow: none !important;
 }
 
+#travelDestination{
+	cursor: pointer;
+}
+
 #travelTitle:hover{
 	outline: 1px solid #0000009e;
 	transition: outline 0.5s;
@@ -102,6 +106,16 @@ td {
 #travelDate:focus{
 	transition: all 0.01s;
     outline: 2px solid #0000009e !important;
+}
+
+#trvImgUpload:focus{
+	box-shadow: none !important;
+	border: 1px solid #8989896c;
+}
+
+#trvImgUpload:active{
+	box-shadow: none !important;
+	border: 1px solid #8989896c;
 }
 
 #travelContent{
@@ -210,8 +224,8 @@ td {
 
 .speech-bubb {
 	width: 14%;
-	left: 77%;
-	margin-top: 18%;
+	left: 76%;
+	margin-top: 20%;
 	position: relative;
 	background: #c4ddc0;
 	border-radius: .4em;
@@ -222,22 +236,108 @@ td {
     height: 38px !important;
     color: black !important;
     border: none !important;
+    opacity: 0.9;
 }
+
+.travelBtn:hover{
+	opacity: 1.0;
+	transition: 0.5s;
+}
+
 
 .speech-bubb:after {
 	content: '';
 	position: absolute;
 	bottom: 0;
-	left: 50%;
+	left: 60%;
 	width: 0;
 	height: 0;
 	border: 39px solid transparent;
 	border-top-color: #c4ddc0;
 	border-bottom: 0;
 	border-right: 0;
-	margin-left: -19.5px;
-	margin-bottom: -39px;
+	margin-left: -12px;
+	margin-bottom: -24px;
 }
+
+#searchAddress{
+	opacity: 0.9;
+}
+
+#searchAddress:hover{
+	opacity: 1.0;
+	transition: 0.5s;
+}
+
+#singleDayTrip{
+	display: none;
+}
+
+#trvOp{
+	display: none;
+}
+
+#singleDayTrip ~label:before {
+	/* display: inline-block; */
+	content: "✔";
+	display: inline-block;
+	vertical-align: middle;
+	text-align: center;
+	width: 18px;
+	height: 18px;
+	line-height: 18px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	color: transparent;
+	transition: 0.2s;
+	font-size: 14px !important;
+	margin-right: 8px;
+	margin-bottom: 2px;
+}
+
+#trvOp ~label:before {
+	/* display: inline-block; */
+	content: "✔";
+	display: inline-block;
+	vertical-align: middle;
+	text-align: center;
+	width: 18px;
+	height: 18px;
+	line-height: 18px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	color: transparent;
+	transition: 0.2s;
+	font-size: 14px !important;
+	margin-right: 8px;
+	margin-bottom: 2px;
+}
+
+#singleDayTrip:checked+label::before {
+	background-color: #c4ddc0;
+	color: #000000;
+	outline: none;
+	border-color: transparent;
+}
+
+
+#trvOp:checked+label::before {
+	background-color: #c4ddc0;
+	color: #000000;
+	outline: none;
+	border-color: transparent;
+}
+
+label:hover::before, #singleDayTrip:hover+label::before {
+	border-color: #0000006c;
+	transition: all 0.3s;
+}
+
+label:hover::before, #trvOp:hover+label::before {
+	border-color: #0000006c;
+	transition: all 0.3s;
+}
+
 
 </style>
 </head>
@@ -312,10 +412,10 @@ td {
 							<div class="travel-form p-0" style="height: 600px">
 								<div class="pt-3" style="width: 90%; margin: 0 auto;">
 									<div class="mb-3">
-										<label for="travelTitle" class="form-label">여행 제목</label> <input type="text" name="trvTt" class="form-control" id="travelTitle" placeholder="여행 제목을 입력하세요">
+										<label for="travelTitle" class="form-label">제목</label> <input type="text" name="trvTt" class="form-control" id="travelTitle" placeholder="여행 제목을 입력하세요">
 									</div>
 									<div class="mb-3">
-										<label for="travelDestination" class="form-label">여행지</label>
+										<label for="travelDestination" class="form-label">장소</label>
 										<div class="input-group">
 											<input type="text" name="trvPc" class="form-control" id="travelDestination" placeholder="여행지를 검색하세요" readonly>
 											<button class="btn btn-outline-secondary" type="button" id="searchAddress" style="margin-left: 1px">검색</button>
@@ -323,7 +423,7 @@ td {
 									</div>
 									<input type="hidden" id="coordinateX" name="trvX"> <input type="hidden" id="coordinateY" name="trvY">
 									<div class="mb-3">
-									    <label for="travelDate" class="form-label">여행 날짜</label>
+									    <label for="travelDate" class="form-label">날짜</label>
 									    <input type="text" name="trvDt" class="form-control" id="travelDate" placeholder="여행 날짜를 선택하세요">
 									    <div class="form-check mt-2">
 									        <input class="form-check-input" type="checkbox" id="singleDayTrip" checked>
@@ -334,11 +434,11 @@ td {
 									</div>
 									<div class="mb-3">
 										<label for="travelContent" class="form-label">내용</label>
-										<textarea class="form-control" name="trvCt" id="travelContent" rows="6" placeholder="여행 내용을 입력하세요"></textarea>
+										<textarea class="form-control" name="trvCt" id="travelContent" rows="6" placeholder="내용을 입력하세요" style="resize: none;"></textarea>
 									</div>
 									<div class="mb-3 form-check d-flex justify-content-between">
 										<div>
-											<input type="checkbox" name="trvOp" class="form-check-input" id="trvOp"> <label class="form-check-label" for="isPublic">공개</label>
+											<input type="checkbox" name="trvOp" class="form-check-input" id="trvOp"> <label class="form-check-label" for="trvOp">공개</label>
 										</div>
 										<input type="hidden" name="memId" value="${sessionScope.login.memId}">
 										<button type="submit" class="btn travelBtn">저장하기</button>
@@ -346,7 +446,7 @@ td {
 								</div>
 							</div>
 						</section>
-						<section class="col-5 ms-4 d-flex flex-column align-items-center">
+						<section class="col-5 ms-4 mb-5 d-flex flex-column align-items-center">
 							<div class="mt-5" id="map"></div>
 							<div class="mt-3" id="photoDiv">
 								<label for="travelPhotos" class="form-label">사진(최대 3장)</label> <input type="file" id="trvImgUpload" name="trvImgs" class="form-control" multiple accept="image/*">
@@ -371,14 +471,17 @@ td {
 $(document).ready(function() {
     initializeMap();
     
+    $('#travelDestination').click(function(){
+    	$('#searchAddress').click();
+    })
+    
     $('#travelDate').daterangepicker({
     	singleDatePicker: true, // Start with single date picker
         autoApply: true,
+        showDropdowns: true,
         locale: {
             format: 'YYYY-MM-DD',
             separator: ' ~ ',
-            applyLabel: '확인',
-            cancelLabel: '취소',
             daysOfWeek: ['일', '월', '화', '수', '목', '금', '토'],
             monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
         },
@@ -544,6 +647,32 @@ $(document).ready(function() {
 
     $('#travelAddForm').submit(function(e) {
         e.preventDefault();
+        
+        if(!$('#travelTitle').val()){
+        	alert("제목을 입력하세요.");
+        	return;
+        }
+        
+        if(!$('#travelDestination').val()){
+        	alert("장소를 입력하세요.");
+        	return;
+        }
+        
+        if(!$('#travelDate').val()){
+        	alert("날짜를 선택하세요.");
+        	return;
+        }
+        
+        if(!$('#travelContent').val()){
+        	alert("내용을 입력하세요.");
+        	return;
+        }
+        
+        if(!$('#trvImgUpload').val()){
+        	alert("사진은 최소 1장 이상 선택해야 합니다.");
+        	return;
+        }
+        
         var formData = new FormData(this);
         var files = $('#trvImgUpload')[0].files;
         var dateValue = $('#travelDate').val();
