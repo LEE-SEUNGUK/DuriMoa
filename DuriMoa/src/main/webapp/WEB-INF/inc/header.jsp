@@ -153,20 +153,22 @@
 								<form id="signUpForm" enctype="multipart/form-data" class="d-flex flex-column justify-content-center align-items-center w-75" method="post">
 									<p>프로필 이미지</p>
 									<div class="mb-1">
-										<img src="resources/assets/img/profile_img.png" id="profileImage" class="my-2" style="cursor: pointer; border-radius: 50%;"> <img src="resources/assets/img/camera.png" id="camera" alt="" style="width: 30px; position: absolute; top: 27%; right: 37%; cursor: pointer;"> <input type="file" id="imageUpload" name="profileImage" style="display: none;" accept="image/*">
+										<img src="resources/assets/img/profile_img.png" id="profileImage" class="my-2" style="cursor: pointer; border-radius: 50%;"><img src="resources/assets/img/camera.png" id="camera" alt="" style="width: 30px; position: absolute; top: 27%; right: 37%; cursor: pointer;"><input type="file" id="imageUpload" name="profileImage" style="display: none;" accept="image/*">
 									</div>
 									<div class="mb-1 w-100 d-flex justify-content-start">
 										<label for="memId">아이디</label>
 									</div>
-									<input class="form-control memId" type="text" name="memId" oninput="checkId()" id="memNid" placeholder="이메일로 입력해주세요" style="background-image: none;"> <span class="mt-1" id="good" style="margin-right: 42%; display: none;">사용 가능한 아이디 입니다.</span> <span class="mt-1" id="bad" style="margin-right: 36%; display: none;">이미 사용중인 이메일 입니다.</span>
+									<input class="form-control memId" type="text" name="memId" oninput="checkId()" id="memNid" placeholder="아이디를 입력해주세요" style="background-image: none;"> <span class="mt-1" id="good" style="margin-right: 42%; display: none; color: #6cae62;">사용 가능한 아이디 입니다.</span> <span class="mt-1" id="bad" style="margin-right: 36%; display: none; color: #dc3545;">이미 사용중인 이메일 입니다.</span>
 									<div class="mt-3 mb-1 w-100 d-flex justify-content-start">
 										<label for="memPw">비밀번호</label>
 									</div>
-									<input class="form-control memPw" type="password" name="memPw" style="background-image: none;" placeholder="비밀번호를 입력해주세요" autocomplete="off"> <input class="mt-1 form-control memPw" type="password" name="memPw_ck" style="background-image: none;" placeholder="비밀번호를 다시 입력해주세요" autocomplete="off">
+									<input class="form-control memPw" type="password" id="signPw" name="memPw" style="background-image: none;" placeholder="비밀번호를 입력해주세요" autocomplete="off"> 
+									<input class="mt-1 form-control memPw" type="password" id="signPw_ck" name="memPw_ck" style="background-image: none;" placeholder="비밀번호를 다시 입력해주세요" autocomplete="off">
+									<span class="mt-1" id="pw_mismatch" style="margin-right: 34%; display: none; color: #dc3545;">비밀번호가 일치하지 않습니다.</span>
 									<div class="mt-3 mb-1 w-100 d-flex justify-content-start">
-										<label for="">이름</label>
+										<label for="memNm">이름</label>
 									</div>
-									<input class="form-control memNm" type="text" name="memNm" placeholder="이름을 입력해주세요" autocomplete="off">
+									<input class="form-control memNm" type="text" id="signNm" name="memNm" placeholder="이름을 입력해주세요" autocomplete="off">
 									<button type="submit" id="signUp" class="my-4 btn btn-primary rounded-pill w-50">완료</button>
 								</form>
 							</div>
@@ -181,6 +183,7 @@
 
 <script>
 	$(document).ready(function() {
+		
 		// 기존의 jQuery 코드들
 		$('#profileImage, #camera, #my_profile').click(function() {
 			$('#imageUpload').click();
@@ -197,9 +200,44 @@
 				reader.readAsDataURL(file);
 			}
 		});
+		
+		$('input[name="memPw_ck"]').on('blur', function() {
+		    let password = $('#signPw').val();
+		    let confirmPassword = $(this).val();
+		    
+		    if (password !== confirmPassword) {
+		        $('#pw_mismatch').show();
+		    } else {
+		        $('#pw_mismatch').hide();
+		    }
+		});
+
 
 		$('#signUpForm').submit(function(e) {
 			e.preventDefault();
+			
+			let memId = $('#memNid').val();
+		    let memPw = $('#signPw').val();
+		    let memPw_ck = $('#signPw_ck').val();
+		    let memNm = $('#signNm').val();
+		    
+		    if (!memId) {
+		        alert("아이디를 입력해주세요.");
+		        return;
+		    }
+		    if (!memPw) {
+		        alert("비밀번호를 입력해주세요.");
+		        return;
+		    }
+		    if (!memNm) {
+		        alert("이름을 입력해주세요.");
+		        return;
+		    }
+		    if (memPw != memPw_ck){
+		    	alert("비밀번호가 일치하지 않습니다.");
+		        return;
+		    }
+		    
 			var formData = new FormData(this); // 이미지 파일 포함된 폼 데이터 생성
 			$.ajax({
 				type : 'POST',
@@ -248,15 +286,13 @@
 			data : JSON.stringify(formData),
 			success : function(response) {
 				if (response.status === "success") {
-					alert("로그인 성공!");
 					window.location.href = '/';
 				} else {
-					alert(response.message);
 					$('#loginForm')[0].reset();
 				}
 			},
 			error : function() {
-				alert("서버 오류가 발생했습니다. 다시 시도해주세요.");
+				alert("계정 정보가 틀렸습니다.");
 				$('#loginForm')[0].reset();
 			}
 		});

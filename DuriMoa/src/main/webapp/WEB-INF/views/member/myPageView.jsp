@@ -38,12 +38,14 @@
 						<div style="width: 46%; margin: 0 auto;">
 							<div class="my-4 d-flex flex-column align-items-center">
 								<label class="mb-3" for="my_profile">프로필 이미지</label> 
-								<c:if test="${sessionScope.login.memImg == null}">
-									<img src="resources/assets/img/user.png" id="my_profile" alt="">
-								</c:if>
-								<c:if test="${sessionScope.login.memImg != null}">
-									<img src="${sessionScope.login.memImg}" id="my_profile" alt="">
-								</c:if>
+									<div>
+										<c:if test="${sessionScope.login.memImg == null}">
+											<img src="resources/assets/img/user.png" id="my_profile" alt="">
+										</c:if>
+										<c:if test="${sessionScope.login.memImg != null}">
+											<img src="${sessionScope.login.memImg}" id="my_profile" alt="">
+										</c:if>
+									</div>
 								<input type="file" id="imageUpload" name="profileImage"
 									accept="image/*" style="display: none;">
 							</div>
@@ -65,6 +67,7 @@
 								<label for="">새 비밀번호</label> <input class="form-control memNpw"
 									id="memNpw" name="memPw" type="password">
 							</div>
+							<span id="npw_mismatch" style="margin-left: 32%; display: none; color: #dc3545;">비밀번호가 일치하지 않습니다.</span>
 							<div
 								class="mb-4 d-flex justify-content-between align-items-center position-relative">
 								<label for="">새 비밀번호 확인</label> <input
@@ -131,7 +134,7 @@
 							                        <input type='text' id='memId1' name='memId1' value="${sessionScope.login.memId}" style='display: none;'>
 							                    </div>
 							                    <div class="ps-2 d-flex justify-content-between align-items-center mt-4 w-75">
-							                        <label for="">커플 이름</label> 
+							                        <label for="">커플 닉네임</label> 
 							                        <input class="form-control couple-input" type="text" id="copNmAdd" name="copNm" placeholder="커플 닉네임을 설정해주세요">
 							                    </div>
 							                    <div class="ps-2 d-flex justify-content-between align-items-center mt-4 mb-5 w-75">
@@ -141,7 +144,7 @@
 							                </div>
 							                <div class="w-100" style="margin: 0 auto; text-align: center;">
 							                    <hr class="bg-black">
-							                    <button type="button" class="mt-4 btn btn-danger" onclick="coupleAdd()" style="background-color: #c4ddc0; height: 45px; color: black; border: none;">
+							                    <button type="button" id="addCoupleBtn" class="mt-4 btn btn-danger" onclick="coupleAdd()" style="background-color: #c4ddc0; height: 45px; color: black; border: none;">
 							                        커플 등록
 							                    </button>
 							                </div>
@@ -172,7 +175,7 @@
 							                </div>
 							                <div class="w-100" style="margin: 0 auto; text-align: center;">
 							                    <hr class="bg-black">
-							                    <button type="submit" class="mt-4 btn btn-danger"
+							                    <button type="submit" class="mt-4 btn" id="removeReq"
 												onclick="document.getElementById('coupleForm').action='delReqCop';"
 							                    style="background-color: #c4ddc0; height: 45px; color: black; border: none;">
 							                        신청 취소
@@ -207,7 +210,7 @@
 							                    <hr class="bg-black">
 							                     <!-- 수락 버튼 -->
 							                     <div class="d-flex justify-content-between" style="width: 20%; margin: 0 auto;">
-											    <button type="submit" class="mt-4 btn btn-danger"
+											    <button type="submit" class="mt-4 btn" id="accept"
 											            onclick="document.getElementById('coupleForm').action='allowReq';"
 											            style="background-color: #c4ddc0; height: 45px; color: black; border: none;">
 											        수락
@@ -236,12 +239,22 @@
 							                </h3>
 							            </div>
 							            <div class="mt-4 d-flex justify-content-center">
-							                <img src="${sessionScope.login.memImg}" id="couple_profile_my" alt=""> 
-							                <img class="ms-3" src="${sessionScope.couple.memImg}" alt="" id="couple_profile" style="object-fit: cover;">
+							            	<c:if test="${sessionScope.login.memImg == null}">
+							                	<img src="resources/assets/img/user.png" id="couple_profile_my" alt=""> 
+							                </c:if>
+							                <c:if test="${sessionScope.login.memImg != null}">
+							                	<img src="${sessionScope.login.memImg}" id="couple_profile_my" alt=""> 
+							                </c:if>
+							                <c:if test="${sessionScope.couple.memImg == null}">
+							                	<img class="ms-3" src="resources/assets/img/user.png" alt="" id="couple_profile" style="object-fit: cover;">
+							            	</c:if>
+							            	<c:if test="${sessionScope.couple.memImg != null}">
+							                	<img class="ms-3" src="${sessionScope.couple.memImg}" alt="" id="couple_profile" style="object-fit: cover;">
+							            	</c:if>
 							            </div>
 							            <div class="mt-5" style="width: 92%; margin-left: 6%;" id="couple_div">
 							                <div class="ps-2 d-flex justify-content-between align-items-center mt-4 w-75">
-							                    <label for="">커플 이름</label> 
+							                    <label for="">커플 닉네임</label> 
 							                    <input class="form-control couple-input" type="text" id="copNnm" name="copNm" placeholder="수정할 커플 닉네임을 입력하세요">
 							                </div>
 							                <div class="ps-2 d-flex justify-content-between align-items-center mt-4 mb-5 w-75">
@@ -252,7 +265,7 @@
 							            <div class="w-100" style="margin: 0 auto; text-align: center;">
 							                <hr class="bg-black">
 							                <div class="d-flex justify-content-between" style="width: 30%; margin: 0 auto;">
-							                <button type="button" class="mt-4 btn btn-danger" onclick="fn_copUpdate()" style="background-color: #c4ddc0; height: 45px; color: black; border: none;">
+							                <button type="button" class="mt-4 btn" id="copUpdateBtn" onclick="fn_copUpdate()" style="background-color: #c4ddc0; height: 45px; color: black; border: none;">
 							                    커플정보 수정
 							                </button>
 							                <button type="submit" class="mt-4 btn btn-danger"
@@ -286,7 +299,7 @@
 				<h4>회원 탈퇴</h4>
 				<hr class="bg-dark mypage_hr">
 				<div class="container">
-					<form action ="/exit" style="border: none;">
+					<form action ="/exit" style="border: none;" onsubmit="return checkPassword()">
 						<div style="width: 41%; margin: 0 auto;">
 							<div
 								class="mt-5 mb-4 d-flex justify-content-between align-items-xl-center">
@@ -296,7 +309,7 @@
 							</div>
 							<div
 								class="mb-5 d-flex justify-content-between align-items-center">
-								<label for="">비밀번호</label> <input class="form-control"
+								<label for="">비밀번호</label> <input class="form-control" id="exitPw"
 									type="password">
 							</div>
 						</div>
@@ -315,35 +328,66 @@
 </div>
 
 <script>
-$(document).ready(
+$(document).ready(function() {
+	$('#memPw_ck').on('blur', function() {
+	    let password = $('#memNpw').val();
+	    let confirmPassword = $(this).val();
+	    console.log(password);
+	    console.log(confirmPassword);
+	    
+	    if (password !== confirmPassword) {
+	        $('#npw_mismatch').show();
+	    } else {
+	        $('#npw_mismatch').hide();
+	    }
+	});
+	
+	
+	var now = new Date();
+	// '-'를 '/'로 변경
+	var copDt = new Date("${sessionScope.couple.copDt}"
+			.replace(/-/g, '/'));
+	var timeDiff = now.getTime() - copDt.getTime();
+	var day = Math.floor(timeDiff / (1000 * 60 * 60 * 24) + 1);
+	// '0' 부분만 변경
+	$('#dayText').text(day);
+
+	$(".my-page-item").click(function() {
+		let target = $(this).data('target');
+
+		$('.content-section').hide();
+
+		$('#' + target).show();
+
 		
-		function() {
-			var now = new Date();
-			// '-'를 '/'로 변경
-			var copDt = new Date("${sessionScope.couple.copDt}"
-					.replace(/-/g, '/'));
-			var timeDiff = now.getTime() - copDt.getTime();
-			var day = Math.floor(timeDiff / (1000 * 60 * 60 * 24) + 1);
-			// '0' 부분만 변경
-			$('#dayText').text(day);
+	});
+	
+	$('#couple_info').hover(function() {
+		$('.speech-bubble').addClass('show');
+	}, function() {
+		$('.speech-bubble').removeClass('show');
+	});
 
-			$(".my-page-item").click(function() {
-				let target = $(this).data('target');
+});
 
-				$('.content-section').hide();
+function checkPassword() {
+	var exitPw = document.getElementById("exitPw").value;
+    var sessionPw = "${sessionScope.login.memPw}"; // 세션에 저장된 비밀번호
 
-				$('#' + target).show();
+    // 비밀번호 일치 여부 확인
+    if (exitPw !== sessionPw) {
+        alert("비밀번호가 일치하지 않습니다.");
+        return false; // form 제출을 막음
+    }
 
-				
-			});
-			
-			$('#couple_info').hover(function() {
-				$('.speech-bubble').addClass('show');
-			}, function() {
-				$('.speech-bubble').removeClass('show');
-			});
+    // 비밀번호가 맞으면 확인창 띄움
+    var confirmExit = confirm("정말 탈퇴하시겠습니까?");
+    if (!confirmExit) {
+        return false; // '취소'를 누르면 form 제출을 막음
+    }
 
-		});
+    return true; // '확인'을 누르면 form 제출을 허용
+}
 
 function coupleAdd() {
 	var coupleData = {
@@ -423,6 +467,13 @@ function fn_write() {
 
 	let newPw = $('#memNpw').val();
 	let newNm = $('#memNm').val();
+	let newPw_ck = $('#memPw_ck').val();
+	
+	if(newPw != newPw_ck){
+		alert("비밀번호가 다릅니다.");
+		return;
+	}
+	
 	formData.append('memPw',
 			newPw === '' ? '${sessionScope.login.memPw}' : newPw);
 	formData.append('memNm',

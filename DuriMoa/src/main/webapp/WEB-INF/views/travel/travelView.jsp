@@ -11,50 +11,15 @@ td {
 	padding-right: 0px !important;
 }
 
-/*
-.accordion-button {
-	font-size: 22px !important;
-}
-
-.accordion-body {
-	padding-left: 2rem;
-}
-
-.accordion-body ul {
-	list-style-type: none;
-	padding-left: 0;
-}
-
-.accordion-body li {
-	margin-bottom: 0.5rem;
-}
-
-.accordion-button.no-toggle::after {
-	display: none;
-}
-
-.accordion-button.no-toggle:hover {
-	cursor: default;
-}
-
-.accordion-button.no-toggle:not (
-.collapsed ){
-	color: var(- 
--bs-accordion-btn-color);
-	background-color: var(- 
--bs-accordion-btn-bg);
-	box-shadow: none;
-}
-*/
 .writing-button {
 	position: fixed;
 	bottom: 15%;
 	right: 12%;
 	width: 60px;
 	height: 60px;
-	background-color: #007bff;
+	background-color: #c4ddc0;
 	border-radius: 50%;
-	color: white;
+	color: black;
 	font-size: 24px;
 	cursor: pointer;
 	transition: background-color 0.3s;
@@ -63,7 +28,7 @@ td {
 }
 
 .writing-button:hover {
-	background-color: #0056b3;
+	background-color: #a0d498;
 }
 
 /* 작성 폼 */
@@ -98,8 +63,69 @@ td {
 }
 
 #travelAddForm {
-	max-height: 1200px; /* Adjust this value as needed */
+	max-height: 1300px; /* Adjust this value as needed */
 	margin: 0 auto;
+}
+
+#travelTitle,  #travelDestination, #travelDate{
+	height: 38px;
+	border: none;
+	outline: 1px solid #8989896c;
+	box-shadow: none !important;
+}
+
+#travelTitle:hover{
+	outline: 1px solid #0000009e;
+	transition: outline 0.5s;
+}
+
+
+#travelDestination:hover{
+	outline: 1px solid #0000009e;
+	transition: outline 0.5s;
+}
+#travelDate:hover{
+	outline: 1px solid #0000009e;
+	transition: outline 0.5s;
+}
+
+#travelTitle:focus{
+	transition: all 0.01s;
+    outline: 2px solid #0000009e !important;
+}
+
+#travelDestination:focus{
+	transition: all 0.01s;
+    outline: 2px solid #0000009e !important;
+}
+
+#travelDate:focus{
+	transition: all 0.01s;
+    outline: 2px solid #0000009e !important;
+}
+
+#travelContent{
+	height: 180px;
+	border: none;
+	outline: 1px solid #8989896c;
+	box-shadow: none !important;
+}
+
+#travelContent:hover{
+	outline: 1px solid #0000009e;
+	transition: outline 0.5s;
+}
+
+#travelContent:focus{
+	transition: all 0.01s;
+    outline: 2px solid #0000009e !important;
+}
+
+#searchAddress{
+	background: #c4ddc0;
+	border: none;
+	outline: 1px solid #8989896c;
+	color: black;
 }
 
 /* Styles for the photo preview container */
@@ -182,6 +208,37 @@ td {
 	/* Reduce font size if needed */
 }
 
+.speech-bubb {
+	width: 14%;
+	left: 77%;
+	margin-top: 18%;
+	position: relative;
+	background: #c4ddc0;
+	border-radius: .4em;
+}
+
+.travelBtn{
+	background-color: #c4ddc0 !important;
+    height: 38px !important;
+    color: black !important;
+    border: none !important;
+}
+
+.speech-bubb:after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	width: 0;
+	height: 0;
+	border: 39px solid transparent;
+	border-top-color: #c4ddc0;
+	border-bottom: 0;
+	border-right: 0;
+	margin-left: -19.5px;
+	margin-bottom: -39px;
+}
+
 </style>
 </head>
 <body>
@@ -193,79 +250,6 @@ td {
 					<h2>우리의 추억</h2>
 					<p>여행기록을 추가하고 관리하세요</p>
 				</div>
-<!-- 				<div class="accordion w-100" id="regionAccordion"> -->
-<!-- 					<div class="accordion-item"> -->
-<!-- 						<h2 class="accordion-header"> -->
-<!-- 							<button class="accordion-button no-toggle" type="button">서울</button> -->
-<!-- 						</h2> -->
-<!-- 					</div> -->
-<!-- 					<div class="accordion-item"> -->
-<!-- 						<h2 class="accordion-header"> -->
-<!-- 							<button class="accordion-button no-toggle" type="button">경기도</button> -->
-<!-- 						</h2> -->
-<!-- 					</div> -->
-<!-- 					<div class="accordion-item"> -->
-<!-- 						<h2 class="accordion-header"> -->
-<!-- 							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChungcheong">광역시</button> -->
-<!-- 						</h2> -->
-<!-- 						<div id="collapseChungcheong" class="accordion-collapse collapse"> -->
-<!-- 							<div class="accordion-body"> -->
-<!-- 								<ul> -->
-<!-- 									<li>부산</li> -->
-<!-- 									<li>대구</li> -->
-<!-- 									<li>인천</li> -->
-<!-- 									<li>광주</li> -->
-<!-- 									<li>대전</li> -->
-<!-- 									<li>울산</li> -->
-<!-- 								</ul> -->
-<!-- 							</div> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 					<div class="accordion-item"> -->
-<!-- 						<h2 class="accordion-header"> -->
-<!-- 							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseChungcheong">충청도</button> -->
-<!-- 						</h2> -->
-<!-- 						<div id="collapseChungcheong" class="accordion-collapse collapse"> -->
-<!-- 							<div class="accordion-body"> -->
-<!-- 								<ul> -->
-<!-- 									<li>충북</li> -->
-<!-- 									<li>충남</li> -->
-<!-- 								</ul> -->
-<!-- 							</div> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 					<div class="accordion-item"> -->
-<!-- 						<h2 class="accordion-header"> -->
-<!-- 							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseJeolla">전라도</button> -->
-<!-- 						</h2> -->
-<!-- 						<div id="collapseJeolla" class="accordion-collapse collapse"> -->
-<!-- 							<div class="accordion-body"> -->
-<!-- 								<ul> -->
-<!-- 									<li>전북</li> -->
-<!-- 									<li>전남</li> -->
-<!-- 								</ul> -->
-<!-- 							</div> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 					<div class="accordion-item"> -->
-<!-- 						<h2 class="accordion-header"> -->
-<!-- 							<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGyeongsang">경상도</button> -->
-<!-- 						</h2> -->
-<!-- 						<div id="collapseGyeongsang" class="accordion-collapse collapse"> -->
-<!-- 							<div class="accordion-body"> -->
-<!-- 								<ul> -->
-<!-- 									<li>경북</li> -->
-<!-- 									<li>경남</li> -->
-<!-- 								</ul> -->
-<!-- 							</div> -->
-<!-- 						</div> -->
-<!-- 					</div> -->
-<!-- 					<div class="accordion-item"> -->
-<!-- 						<h2 class="accordion-header"> -->
-<!-- 							<button class="accordion-button no-toggle" type="button">제주도</button> -->
-<!-- 						</h2> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
 			</section>
 			<section class="col-9" style="margin-top: 4%; margin-left: 100px" id="viewMode">
 				<table class="table" style="margin-top: 2% !important; margin: 0 auto; border-bottom: #ffffff;">
@@ -326,7 +310,7 @@ td {
 					<form class="d-flex" id="travelAddForm" action="/travelAdd" method="post" enctype="multipart/form-data">
 						<section class="col-7 mt-3">
 							<div class="travel-form p-0" style="height: 600px">
-								<div class="pt-5" style="width: 90%; margin: 0 auto;">
+								<div class="pt-3" style="width: 90%; margin: 0 auto;">
 									<div class="mb-3">
 										<label for="travelTitle" class="form-label">여행 제목</label> <input type="text" name="trvTt" class="form-control" id="travelTitle" placeholder="여행 제목을 입력하세요">
 									</div>
@@ -334,7 +318,7 @@ td {
 										<label for="travelDestination" class="form-label">여행지</label>
 										<div class="input-group">
 											<input type="text" name="trvPc" class="form-control" id="travelDestination" placeholder="여행지를 검색하세요" readonly>
-											<button class="btn btn-outline-secondary" type="button" id="searchAddress">검색</button>
+											<button class="btn btn-outline-secondary" type="button" id="searchAddress" style="margin-left: 1px">검색</button>
 										</div>
 									</div>
 									<input type="hidden" id="coordinateX" name="trvX"> <input type="hidden" id="coordinateY" name="trvY">
@@ -354,10 +338,10 @@ td {
 									</div>
 									<div class="mb-3 form-check d-flex justify-content-between">
 										<div>
-											<input type="checkbox" name="trvOp" class="form-check-input" id="trvOp" checked> <label class="form-check-label" for="isPublic">공개 설정</label>
+											<input type="checkbox" name="trvOp" class="form-check-input" id="trvOp"> <label class="form-check-label" for="isPublic">공개</label>
 										</div>
 										<input type="hidden" name="memId" value="${sessionScope.login.memId}">
-										<button type="submit" class="btn btn-primary">저장하기</button>
+										<button type="submit" class="btn travelBtn">저장하기</button>
 									</div>
 								</div>
 							</div>
@@ -374,6 +358,11 @@ td {
 			</section>
 		</div>
 	</div>
+	<c:if test="${empty travelList}">
+    <div class="speech-bubb" id="speechBubble">
+        <h5 class="p-3">버튼을 클릭하여 여행 기록을 작성해보세요!</h5>
+    </div>
+	</c:if>
 	<div id="writeButton" class="writing-button">
 		<i class="fa-regular fa-pen-to-square"></i>
 	</div>
@@ -723,8 +712,9 @@ function initializeMap() {
 
 // Toggle between view and write modes
 function toggleMode() {
-    $('#viewMode').toggle();
+	$('#viewMode').toggle();
     $('#writeMode').toggle();
+    $('#speechBubble').hide(); // Hide speech bubble when toggling modes
 
     if ($('#writeMode').is(':visible')) {
         $('#writeButton').html('<i class="fa-solid fa-xmark" style="padding: 0px;"></i>');
@@ -732,6 +722,10 @@ function toggleMode() {
         $('#writeButton').html('<i class="fa-regular fa-pen-to-square"></i>');
         // Clear form when closing
         clearForm();
+        // Show speech bubble again only if there are no travel records
+        if ($('.table tbody tr').length === 0) {
+            $('#speechBubble').show();
+        }
     }
 }
 

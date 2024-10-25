@@ -58,12 +58,32 @@ input[name='userId']:hover {
     color: black !important;
 }
 
-#update_user {
-    opacity: 0.8;
+#update_user, #copUpdateBtn, #removeReq, #accept, #addCoupleBtn {
+    opacity: 0.9;
+}
+
+#addCoupleBtn:hover{
+	opacity: 1;
+    transition: 0.5s;
+}
+
+#accept:hover{
+	opacity: 1;
+    transition: 0.5s;
+}
+
+#removeReq:hover{
+	opacity: 1;
+    transition: 0.5s;
 }
 
 #update_user:hover {
     opacity: 1;
+    transition: 0.5s;
+}
+
+#copUpdateBtn:hover{
+	opacity: 1;
     transition: 0.5s;
 }
 
