@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>두리모아</title>
 <style>
 td {
 	padding-left: 0px !important;
@@ -668,9 +668,19 @@ $(document).ready(function() {
         	return;
         }
         
-        if(!$('#trvImgUpload').val()){
-        	alert("사진은 최소 1장 이상 선택해야 합니다.");
-        	return;
+     	// New image validation logic
+        var hasNewImages = $('#trvImgUpload').val() !== '';
+        var existingImagesCount = $('#photoPreview .img-wrap[data-existing="true"]').length;
+        
+        // Only check for new images if there are no existing images
+        if (!isEditMode && !hasNewImages) {
+            alert("사진은 최소 1장 이상 선택해야 합니다.");
+            return;
+        }
+        
+        if (isEditMode && !hasNewImages && existingImagesCount === 0) {
+            alert("사진은 최소 1장 이상 선택해야 합니다.");
+            return;
         }
         
         var formData = new FormData(this);
@@ -1090,27 +1100,26 @@ function populateForm(data) {
         }
     }  
 
-    // Display existing images with new preview style
-    if (data.trvImg1) {
-        var imgWrap = $('<div class="img-wrap"></div>');
-        var img = $('<img>').attr('src', data.trvImg1).addClass('img-thumbnail');
-        imgWrap.append(img);
-        photoPreview.append(imgWrap);
-    }
-    if (data.trvImg2) {
-        var imgWrap = $('<div class="img-wrap"></div>');
-        var img = $('<img>').attr('src', data.trvImg2).addClass('img-thumbnail');
-        imgWrap.append(img);
-        photoPreview.append(imgWrap);
-    }
-    if (data.trvImg3) {
-        var imgWrap = $('<div class="img-wrap"></div>');
-        var img = $('<img>').attr('src', data.trvImg3).addClass('img-thumbnail');
-        imgWrap.append(img);
-        photoPreview.append(imgWrap);
-    }
+     if (data.trvImg1) {
+         var imgWrap = $('<div class="img-wrap" data-existing="true" data-index="1"></div>');
+         var img = $('<img>').attr('src', data.trvImg1).addClass('img-thumbnail');
+         imgWrap.append(img);
+         photoPreview.append(imgWrap);
+     }
+     if (data.trvImg2) {
+         var imgWrap = $('<div class="img-wrap" data-existing="true" data-index="2"></div>');
+         var img = $('<img>').attr('src', data.trvImg2).addClass('img-thumbnail');
+         imgWrap.append(img);
+         photoPreview.append(imgWrap);
+     }
+     if (data.trvImg3) {
+         var imgWrap = $('<div class="img-wrap" data-existing="true" data-index="3"></div>');
+         var img = $('<img>').attr('src', data.trvImg3).addClass('img-thumbnail');
+         imgWrap.append(img);
+         photoPreview.append(imgWrap);
+     }
 
-    $('#photoDiv').show();
+     $('#photoDiv').show();
     
     $('#travelAddForm').attr('action', '/travelUpdate');
     $('input[name="trvId"]').remove();

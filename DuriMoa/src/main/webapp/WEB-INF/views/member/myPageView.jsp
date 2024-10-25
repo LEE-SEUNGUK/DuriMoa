@@ -5,7 +5,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>로그인</title>
+<title>두리모아</title>
 </head>
 <body>
 <jsp:include page="/WEB-INF/inc/header.jsp"></jsp:include>
