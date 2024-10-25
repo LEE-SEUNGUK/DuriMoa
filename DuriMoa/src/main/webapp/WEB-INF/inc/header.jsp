@@ -261,6 +261,13 @@
 				}
 			});
 		});
+		
+		$('#loginForm input').on('keypress', function(e) {
+	        if (e.which === 13) { 
+	            e.preventDefault();
+	            submitLogin(); 
+	        }
+	    });
 
 		$('i.fa').on('click', function() {
 			const passwordInput = $(this).siblings('.memPw');
