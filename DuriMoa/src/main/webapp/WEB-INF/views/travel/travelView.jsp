@@ -425,7 +425,7 @@ label:hover::before, #trvOp:hover+label::before {
 									<div class="mb-3">
 									    <label for="travelDate" class="form-label">날짜</label>
 									    <input type="text" name="trvDt" class="form-control" id="travelDate" placeholder="여행 날짜를 선택하세요">
-									    <div class="form-check mt-2">
+									    <div class="form-check mt-2" style="padding-left: 0px">
 									        <input class="form-check-input" type="checkbox" id="singleDayTrip" checked>
 									        <label class="form-check-label" for="singleDayTrip">
 									            당일 여행
@@ -436,7 +436,7 @@ label:hover::before, #trvOp:hover+label::before {
 										<label for="travelContent" class="form-label">내용</label>
 										<textarea class="form-control" name="trvCt" id="travelContent" rows="6" placeholder="내용을 입력하세요" style="resize: none;"></textarea>
 									</div>
-									<div class="mb-3 form-check d-flex justify-content-between">
+									<div class="mb-3 form-check d-flex justify-content-between" style="padding-left: 0px">
 										<div>
 											<input type="checkbox" name="trvOp" class="form-check-input" id="trvOp"> <label class="form-check-label" for="trvOp">공개</label>
 										</div>
