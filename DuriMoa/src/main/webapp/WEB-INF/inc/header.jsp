@@ -54,7 +54,7 @@
 							<p class="nav_text" style="padding-top: 3px !important">포토존</p> </a>
 					</c:if>
 					<c:if test="${sessionScope.login != null}">
-						<a class="nav_page d-flex flex-column align-items-center" href="#" onclick="fn_alert()"><img src="resources/assets/img/photo.png" alt="" style="width: 40px;">
+						<a class="nav_page d-flex flex-column align-items-center" href="${pageContext.request.contextPath}/boardView"><img src="resources/assets/img/photo.png" alt="" style="width: 40px;">
 							<p class="nav_text" style="padding-top: 3px !important">포토존</p> </a>
 					</c:if>
 					</div>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ugi.durimoa.board.dao.IBoardDAO">
+
+	<insert id="boardAdd" parameterType="BoardVO" useGeneratedKeys="true" keyProperty="brdId" keyColumn="brd_id">
+		INSERT INTO BOARD(mem_id, trv_id, brd_tt, brd_ct) 
+		VALUES (#{memId}, #{trvId}, #{brdTt}, #{brdCt})
+	</insert> 
+	
+	<select id="getBoardList" resultType="BoardInfoVO">
+		SELECT a.*, c.trv_pc, b.brd_img brdImg1
+		FROM board a, board_img b, travel c
+		WHERE a.brd_id = b.brd_id
+		AND a.trv_id = c.trv_id
+		AND b.brd_idx = '1'
+	</select>
+	
+</mapper>
