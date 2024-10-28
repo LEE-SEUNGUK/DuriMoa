@@ -145,6 +145,8 @@
 	background:
 		url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
 }
+
+
 </style>
 </head>
 
@@ -220,7 +222,9 @@
 								<img src="resources/assets/img/date.png" width="30px" alt="">
 								<p class="ms-4" id="modalDates" style="font-size: 20px;"></p>
 							</div>
-							<div class="travelContet mx-4 p-3" id="modalContent" style="font-size: 18px; height: 40%; background-color: #ececec; border-radius: 15px; margin-top: 20%;"></div>
+							<pre class="travelContet mx-4 p-3" id="modalContent" style="font-size: 18px; height: 40%; 
+							background-color: #ececec; font-family: 'Pretendard-Regular';
+							border-radius: 15px; margin-top: 20%;"></pre>
 						</div>
 					</div>
 				</div>
@@ -238,7 +242,7 @@
 		        trvImg3: '${marker.trvImg3}',
 		        trvSdt: '${marker.trvSdt}',
 		        trvEdt: '${marker.trvEdt}',
-		        trvCt: '${marker.trvCt}',
+		        trvCt: `${marker.trvCt}`,
 		        latlng: new kakao.maps.LatLng(
 		        		parseFloat('${marker.trvY}'), // 위도 (Y)
 		                parseFloat('${marker.trvX}')  // 경도 (X)
@@ -271,6 +275,7 @@
         var markers = [];
 		
 		for (var i = 0; i < positions.length; i ++) {
+			console.log(positions[i].trvCt);
 		    
 		    var imageSrc = 'resources/assets/img/marker.png', // 마커이미지의 주소입니다    
             imageSize = new kakao.maps.Size(66, 55), // 마커이미지의 크기입니다

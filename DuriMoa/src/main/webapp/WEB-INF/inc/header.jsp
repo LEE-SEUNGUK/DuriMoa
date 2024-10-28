@@ -130,6 +130,8 @@
 					</div>
 					<div class="col-6 login-right">
 						<img class="login-image" src="resources/assets/img/login_slide/1.jpg" alt="">
+						<img class="login-image" src="resources/assets/img/login_slide/2.jpg" alt="">
+						<img class="login-image" src="resources/assets/img/login_slide/3.jpg" alt="">
 					</div>
 				</div>
 			</div>
@@ -186,6 +188,7 @@
 		document.querySelectorAll('input').forEach(input => {
 		    input.setAttribute('autocomplete', 'off');
 		});
+		
 		
 		// 기존의 jQuery 코드들
 		$('#profileImage, #camera, #my_profile').click(function() {
@@ -281,6 +284,24 @@
 			}
 		});
 	});
+	
+	document.addEventListener("DOMContentLoaded", function () {
+		  let currentImageIndex = 0;
+		  const images = document.querySelectorAll(".login-image");
+		  const totalImages = images.length;
+
+		  console.log("이미지 슬라이드 초기화"); // 초기화 확인용 콘솔 출력
+
+		  function showNextImage() {
+		    images[currentImageIndex].classList.remove("active");
+		    currentImageIndex = (currentImageIndex + 1) % totalImages;
+		    images[currentImageIndex].classList.add("active");
+		    console.log(`현재 이미지 인덱스: ${currentImageIndex}`); // 현재 이미지 인덱스 확인용 콘솔 출력
+		  }
+
+		  setInterval(showNextImage, 3000);
+		  images[currentImageIndex].classList.add("active");
+		});
 
 	function submitLogin() {
 		const formData = {
@@ -310,7 +331,6 @@
 	
 	// 개발중입니다
 	function fn_alert(){
-		console.log("왜 안떠 ㅅㅂ");
 		alert("준비중입니다");
 	}
 

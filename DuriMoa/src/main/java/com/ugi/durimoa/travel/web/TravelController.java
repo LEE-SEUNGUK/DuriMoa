@@ -55,7 +55,8 @@ public class TravelController {
 			// Handle TravelVO data
 			String trvOp = vo.getTrvOp();
 			vo.setTrvOp(trvOp != null && trvOp.equals("on") ? "Y" : "N");
-
+			vo.setTrvCt(vo.getTrvCt().replace("\r\n", "<br>"));
+			vo.setTrvCt(vo.getTrvCt().replace(" ", "&nbsp"));
 			// Save TravelVO
 			travelService.travelAdd(vo);
 
@@ -102,6 +103,8 @@ public class TravelController {
 	        @RequestParam(value = "preserveImages", required = false) String preserveImages) throws Exception {
 	    try {
 	        vo.setTrvOp(vo.getTrvOp() != null && vo.getTrvOp().equals("on") ? "Y" : "N");
+	        vo.setTrvCt(vo.getTrvCt().replace("\r\n", "<br>"));
+			vo.setTrvCt(vo.getTrvCt().replace(" ", "&nbsp"));
 	        
 	        // Update travel information
 	        travelService.travelUpdate(vo);
@@ -162,7 +165,14 @@ public class TravelController {
 		
 		System.out.println(travelService.getTravel(trvId));
 		
-		return travelService.getTravel(trvId);
+		TravelInfoVO info = travelService.getTravel(trvId);
+		
+		info.setTrvCt(info.getTrvCt().replace("&nbsp", " "));
+		info.setTrvCt(info.getTrvCt().replace("<br>", "\r\n"));
+		
+		System.out.println(info);
+		
+		return info;
 	}
 
 	@RequestMapping("/travelView")

@@ -35,6 +35,12 @@ public class HomeController {
 
 		ArrayList<TravelInfoVO> markerList = travelService.getTravelList(login);
 		
+		for(int i = 0; i < markerList.size(); i++) {
+			
+			markerList.get(i).setTrvCt(markerList.get(i).getTrvCt().replace("<br>", "\r\n"));
+			markerList.get(i).setTrvCt(markerList.get(i).getTrvCt().replace("&nbsp", " "));
+		}
+		
 		System.out.println(markerList);
 		
 		model.addAttribute("markerList", markerList);
