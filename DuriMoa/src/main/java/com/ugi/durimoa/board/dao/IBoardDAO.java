@@ -17,4 +17,7 @@ public interface IBoardDAO {
 	
 	// 게시글 전체 조회
 	public ArrayList<BoardInfoVO> getBoardList();
+	
+	// 게시글 상세 조회
+	public BoardInfoVO getBoard(int brdId);
 }

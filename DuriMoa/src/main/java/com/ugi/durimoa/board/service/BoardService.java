@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import com.ugi.durimoa.board.dao.IBoardDAO;
 import com.ugi.durimoa.board.vo.BoardInfoVO;
 import com.ugi.durimoa.board.vo.BoardVO;
-import com.ugi.durimoa.travel.vo.TravelInfoVO;
 
 @Service
 public class BoardService {
@@ -31,6 +30,17 @@ public class BoardService {
 		System.out.println("게시글 조회 서비스");
 
 		ArrayList<BoardInfoVO> result = dao.getBoardList();
+
+		if (result == null) {
+			throw new Exception();
+		}
+		return result;
+	};
+
+	// 게시글 상세 조회
+	public BoardInfoVO getBoard(int brdId) throws Exception {
+
+		BoardInfoVO result = dao.getBoard(brdId);
 
 		if (result == null) {
 			throw new Exception();

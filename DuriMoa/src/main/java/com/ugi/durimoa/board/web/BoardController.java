@@ -109,4 +109,17 @@ public class BoardController {
 			return "Error: " + e.getMessage();
 		}
 	}
+	
+	@RequestMapping("/getBoard")
+	public String boardDetailView(Model model, int brdId) throws Exception {
+		
+		System.out.println(brdId);
+		BoardInfoVO vo = boardService.getBoard(brdId);
+		
+		model.addAttribute("board", vo);
+		
+		System.out.println(vo.toString());
+		
+		return "board/boardDetailView";
+	}
 }

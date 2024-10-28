@@ -325,8 +325,7 @@ td {
 			        </c:if>
 			        <td class="ms-5">
 			            <div style="width: 95%; margin: 0 auto">
-			                <div style="height: 260px; border-radius: 20px; background-color: rgb(248, 248, 248); 
-			                 onclick="location.href='<c:url value='/getBoard?boardNo=${board.boardNo}'/>'" width: 100%; margin: auto 0" class="d-flex align-items-center">
+			                <div onclick="location.href='<c:url value='/getBoard?brdId=${board.brdId}'/>'" style="height: 260px; border-radius: 20px; background-color: rgb(248, 248, 248); width: 100%; margin: auto 0" class="d-flex align-items-center">
 			                    <div class="row d-flex align-items-center" style="width: 100%;">
 			                        <div class="col-5" style="text-align: center;">
 			                            <img src="${board.brdImg1}" style="width: 180px; height: 225px; object-fit: cover; border-radius: 10px;" alt="">
