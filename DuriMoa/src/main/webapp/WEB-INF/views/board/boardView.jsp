@@ -314,7 +314,7 @@ td {
 					<h2>포토존</h2>
 					<p>다른 커플들의 사진을 보고 다음 여행지를 정해보세요!</p>
 				</div>
-				<a class="mt-5 btn btn-primary" data-bs-toggle="modal" data-bs-target="#boardWrite" data-id="${travel.trvId}" data-place="${travel.trvPc}" data-x="${travel.trvX}" data-y="${travel.trvY}">글쓰기</a>
+				<a class="mt-5 btn btn-primary" data-bs-toggle="modal" data-bs-target="#boardWrite">글쓰기</a>
 			</div>
 			<div id="boardListContainer">
 				<table class="table" style="margin-top: 2% !important; margin: 0 auto; border-bottom: #ffffff;">
@@ -333,7 +333,8 @@ td {
 			                        <div class="col-7" style="padding: 0;">
 			                            <div>
 			                                <div class="d-flex justify-content-between align-items-center">
-			                                    <h4 style="margin: 0px; font-weight: bold;">${board.brdTt}</h4>
+			                                    <h4 style="margin: 0px; font-weight: bold;">
+			                                    <span>[${board.trvPlc}]</span> ${board.brdTt}</h4>
 			                                </div>
 			                                <div class="mt-2 d-flex align-items-center">
 			                                    <img src="resources/assets/img/board_map.png"  width="7%" alt="">
@@ -342,7 +343,6 @@ td {
 			                            </div>
 			                            <div class="me-5 d-flex flex-column align-items-end" style="color: rgb(107, 107, 107); margin-top: 80px;">
 			                                <i class="fa-regular fa-heart" style="font-size: 20px"></i>
-			                                <i class="fa-regular fa-comment" style="font-size: 20px"></i>
 			                            </div>
 			                        </div>
 			                    </div>
@@ -407,7 +407,8 @@ td {
 				<table class="w-100">
 					<tbody id="travelList">
 						<c:forEach items="${travelList}" var="travel">
-							<tr class="travel-item" data-title="${travel.trvTt}" data-place="${travel.trvPc}" data-id="${travel.trvId}">
+							<tr class="travel-item" data-title="${travel.trvTt}" data-id="${travel.trvId}" 
+							data-place="${travel.trvPc}" data-x="${travel.trvX}" data-y="${travel.trvY}">
 								<td class="d-flex">
 									<div class="col-5">
 										<img class="p-2" alt="" src="${travel.trvImg1}" width='240px' height='300px'>
@@ -429,6 +430,7 @@ td {
 <script>
 $(document).ready(function() {
 	initializeMap();
+	
 	
     // 검색창에서 엔터키를 눌렀을 때만 검색 실행
     $('#searchKeyword').on('keypress', function(e) {

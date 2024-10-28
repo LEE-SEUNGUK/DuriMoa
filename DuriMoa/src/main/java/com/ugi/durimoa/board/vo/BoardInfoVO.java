@@ -5,6 +5,7 @@ public class BoardInfoVO {
 	private int trvId;
 	private String trvX;
 	private String trvY;
+	private String trvPlc;
 	private int brdId;
 	private String brdTt;
 	private String brdCt;
@@ -35,6 +36,13 @@ public class BoardInfoVO {
 	}
 	public void setTrvY(String trvY) {
 		this.trvY = trvY;
+	}
+	
+	public String getTrvPlc() {
+		return trvPlc;
+	}
+	public void setTrvPlc(String trvPlc) {
+		this.trvPlc = trvPlc;
 	}
 	public int getBrdId() {
 		return brdId;
@@ -75,8 +83,14 @@ public class BoardInfoVO {
 	
 	@Override
 	public String toString() {
-		return "BoardInfoVO [trvPc=" + trvPc + ", trvId=" + trvId + ", trvX=" + trvX + ", trvY=" + trvY + ", brdId="
-				+ brdId + ", brdTt=" + brdTt + ", brdCt=" + brdCt + ", brdImg1=" + brdImg1 + ", brdImg2=" + brdImg2
-				+ ", brdImg3=" + brdImg3 + "]";
+		return "BoardInfoVO [trvPc=" + trvPc + ", trvId=" + trvId + ", trvX=" + trvX + ", trvY=" + trvY + ", trvPlc="
+				+ trvPlc + ", brdId=" + brdId + ", brdTt=" + brdTt + ", brdCt=" + brdCt + ", brdImg1=" + brdImg1
+				+ ", brdImg2=" + brdImg2 + ", brdImg3=" + brdImg3 + ", getTrvPc()=" + getTrvPc() + ", getTrvId()="
+				+ getTrvId() + ", getTrvX()=" + getTrvX() + ", getTrvY()=" + getTrvY() + ", getTrvPlc()=" + getTrvPlc()
+				+ ", getBrdId()=" + getBrdId() + ", getBrdTt()=" + getBrdTt() + ", getBrdCt()=" + getBrdCt()
+				+ ", getBrdImg1()=" + getBrdImg1() + ", getBrdImg2()=" + getBrdImg2() + ", getBrdImg3()=" + getBrdImg3()
+				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString()
+				+ "]";
 	}
+	
 }

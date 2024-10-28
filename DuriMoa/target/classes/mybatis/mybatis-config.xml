@@ -21,5 +21,6 @@
       <typeAlias type="com.ugi.durimoa.board.vo.BoardVO" alias="BoardVO" />
       <typeAlias type="com.ugi.durimoa.board.vo.BimageVO" alias="BimageVO" />
       <typeAlias type="com.ugi.durimoa.board.vo.BoardInfoVO" alias="BoardInfoVO" />
+      <typeAlias type="com.ugi.durimoa.board.vo.ReplyVO" alias="ReplyVO" />
    </typeAliases>
 </configuration>

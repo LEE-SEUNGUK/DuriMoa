@@ -8,7 +8,7 @@
 	</insert> 
 	
 	<select id="getBoardList" resultType="BoardInfoVO">
-		SELECT a.*, c.trv_pc, b.brd_img brdImg1
+		SELECT a.*, SUBSTR(c.trv_pc, 0, 2) trv_plc, c.trv_pc, b.brd_img brdImg1
 		FROM board a, board_img b, travel c
 		WHERE a.brd_id = b.brd_id
 		AND a.trv_id = c.trv_id
@@ -35,6 +35,41 @@
 	    BOARD_IMG I ON B.brd_id = I.brd_id
 	WHERE B.brd_id = #{brdId}
 	GROUP BY T.mem_id, T.trv_id, T.trv_pc, T.trv_x, T.trv_y, B.brd_id, B.brd_tt, DBMS_LOB.SUBSTR(B.brd_ct, 4000, 1)
+	</select>
+	
+	<insert id="writeReply" parameterType="ReplyVO">
+	INSERT INTO REPLY(brd_id, rpy_id, mem_id, rpy_ct) VALUES(#{brdId}, #{rpyId}, #{memId}, #{rpyCt})
+	</insert>
+	
+	<!-- 단일 댓글 조회 -->
+	<select id="getReply" parameterType="String" resultType="ReplyVO">
+	SELECT a.rpy_id, a.brd_id, b.mem_nm, b.mem_img, a.rpy_ct, TO_CHAR(a.rpy_dt, 'MM/DD HH24:MI') rpyDt
+	FROM reply a, member b
+	WHERE a.mem_id = b.mem_id
+	AND a.rpy_id = #{rpyId}
+	</select>
+	
+	<!-- 전체 댓글 조회 -->
+	<select id="getReplyList" parameterType="int" resultType="ReplyVO">
+	SELECT a.rpy_id, b.mem_id, a.brd_id, b.mem_nm, b.mem_img, a.rpy_ct, TO_CHAR(a.rpy_dt, 'MM/DD HH24:MI') rpyDt
+	FROM reply a, member b
+	WHERE a.mem_id = b.mem_id
+	AND a.brd_id = #{brdId}
+	ORDER BY rpyDt
+	</select>
+	
+	<!-- 댓글 삭제 -->
+	<delete id="delReply" parameterType="String">
+	DELETE FROM reply
+	WHERE rpy_id = #{rpyId}
+	</delete>
+	
+	<!-- 댓글 갯수 카운트 -->
+	<select id="cntReply" parameterType="int" resultType="int">
+	SELECT COUNT(*)
+	FROM reply a, member b
+	WHERE a.mem_id = b.mem_id
+	AND a.brd_id = #{brdId}
 	</select>
 	
 </mapper>

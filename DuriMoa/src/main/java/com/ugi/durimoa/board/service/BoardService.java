@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.ugi.durimoa.board.dao.IBoardDAO;
 import com.ugi.durimoa.board.vo.BoardInfoVO;
 import com.ugi.durimoa.board.vo.BoardVO;
+import com.ugi.durimoa.board.vo.ReplyVO;
 
 @Service
 public class BoardService {
@@ -48,4 +49,41 @@ public class BoardService {
 		return result;
 	};
 
+	// 댓글 작성
+	public int writeReply(ReplyVO vo) throws Exception {
+		int result = dao.writeReply(vo);
+		if (result == 0) {
+			throw new Exception();
+		}
+
+		return result;
+	}
+
+	// 단일 댓글 조회
+	public ReplyVO getReply (String rpyId) {
+		return dao.getReply(rpyId);
+	};
+	
+	// 전체 댓글 조회
+	public ArrayList<ReplyVO> getReplyList(int brdId){
+		return dao.getReplyList(brdId);
+	};
+	
+	// 댓글 삭제
+	public void delReply(String rpyId) throws Exception {
+		int result = dao.delReply(rpyId);
+		if (result == 0) {
+			throw new Exception();
+		}
+	}
+	
+	// 댓글 갯수 조회
+	public int cntReply(int brdId) throws Exception {
+		int result = dao.cntReply(brdId);
+		if (result == 0) {
+			throw new Exception();
+		}
+
+		return result;
+	}
 }
