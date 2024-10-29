@@ -3,6 +3,7 @@ package com.ugi.durimoa.board.vo;
 public class BoardInfoVO {
 	private String trvPc;
 	private int trvId;
+	private String memId;
 	private String trvX;
 	private String trvY;
 	private String trvPlc;
@@ -24,6 +25,13 @@ public class BoardInfoVO {
 	}
 	public void setTrvId(int trvId) {
 		this.trvId = trvId;
+	}
+	
+	public String getMemId() {
+		return memId;
+	}
+	public void setMemId(String memId) {
+		this.memId = memId;
 	}
 	public String getTrvX() {
 		return trvX;
@@ -80,17 +88,10 @@ public class BoardInfoVO {
 	public void setBrdImg3(String brdImg3) {
 		this.brdImg3 = brdImg3;
 	}
-	
 	@Override
 	public String toString() {
-		return "BoardInfoVO [trvPc=" + trvPc + ", trvId=" + trvId + ", trvX=" + trvX + ", trvY=" + trvY + ", trvPlc="
-				+ trvPlc + ", brdId=" + brdId + ", brdTt=" + brdTt + ", brdCt=" + brdCt + ", brdImg1=" + brdImg1
-				+ ", brdImg2=" + brdImg2 + ", brdImg3=" + brdImg3 + ", getTrvPc()=" + getTrvPc() + ", getTrvId()="
-				+ getTrvId() + ", getTrvX()=" + getTrvX() + ", getTrvY()=" + getTrvY() + ", getTrvPlc()=" + getTrvPlc()
-				+ ", getBrdId()=" + getBrdId() + ", getBrdTt()=" + getBrdTt() + ", getBrdCt()=" + getBrdCt()
-				+ ", getBrdImg1()=" + getBrdImg1() + ", getBrdImg2()=" + getBrdImg2() + ", getBrdImg3()=" + getBrdImg3()
-				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + ", toString()=" + super.toString()
-				+ "]";
+		return "BoardInfoVO [trvPc=" + trvPc + ", trvId=" + trvId + ", memId=" + memId + ", trvX=" + trvX + ", trvY="
+				+ trvY + ", trvPlc=" + trvPlc + ", brdId=" + brdId + ", brdTt=" + brdTt + ", brdCt=" + brdCt
+				+ ", brdImg1=" + brdImg1 + ", brdImg2=" + brdImg2 + ", brdImg3=" + brdImg3 + "]";
 	}
-	
 }

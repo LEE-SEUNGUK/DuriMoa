@@ -24,6 +24,15 @@
 		AND (#{keyWord} IS NULL OR a.brd_tt LIKE '%' || #{keyWord} || '%' OR c.trv_pc LIKE '%' || #{keyWord} || '%')
 	</select>
 	
+	<select id="myBoard" resultType="BoardInfoVO" parameterType="String">
+		SELECT a.*, SUBSTR(c.trv_pc, 0, 2) trv_plc, c.trv_pc, b.brd_img brdImg1
+		FROM board a, board_img b, travel c
+		WHERE a.brd_id = b.brd_id
+		AND a.trv_id = c.trv_id
+		AND b.brd_idx = '1'
+		AND a.mem_id = #{memId}
+	</select>
+	
 	<select id="getBoard" resultType="BoardInfoVO" parameterType="int">
 		SELECT 
 	    T.trv_pc,

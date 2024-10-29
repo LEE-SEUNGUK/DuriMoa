@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -71,13 +72,33 @@ public class BoardController {
 	
 	@ResponseBody
 	@RequestMapping("/getBoardSearch")
-	public ArrayList<BoardInfoVO> getTravelSearch(@RequestParam("keyWord") String keyWord) throws Exception {
+	public ArrayList<BoardInfoVO> getBoardSearch(@RequestParam("keyWord") String keyWord) throws Exception {
 	
 	    ArrayList<BoardInfoVO> boardList = boardService.getBoardSearch(keyWord);
 	    
 	    System.out.println(boardList);
 	        
 	    return boardList;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/myBoard")
+	public ArrayList<BoardInfoVO> myBoard(@RequestParam("memId") String memId) throws Exception {
+	
+	    ArrayList<BoardInfoVO> boardList = boardService.myBoard(memId);
+	    
+	    System.out.println(boardList);
+	        
+	    return boardList;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/showBoard")
+	public ArrayList<BoardInfoVO> showBoard() throws Exception{
+		ArrayList<BoardInfoVO> boardList = boardService.getBoardList();
+		System.out.println("전체 조회");
+		
+		return boardList;	
 	}
 	
 	@RequestMapping("/boardAdd")

@@ -19,7 +19,11 @@ public interface IBoardDAO {
 	// 게시글 전체 조회
 	public ArrayList<BoardInfoVO> getBoardList();
 	
+	// 게시글 검색
 	public ArrayList<BoardInfoVO> getBoardSearch(String kerWord);
+	
+	// 내 게시글 조회
+	public ArrayList<BoardInfoVO> myBoard(String memId);
 	
 	// 게시글 상세 조회
 	public BoardInfoVO getBoard(int brdId);

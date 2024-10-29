@@ -918,7 +918,6 @@ function deleteTravel(trvId) {
 
 // 여행 정보 검색
 function performSearch(keyWord) {
-	console.log("검색 ㄱㄱ");
     $.ajax({
         url: '/getTravelSearch',  // You'll need to create this endpoint
         type: 'GET',

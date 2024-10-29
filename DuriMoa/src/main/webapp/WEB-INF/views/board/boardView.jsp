@@ -303,6 +303,40 @@ td {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+#myBoard {
+	display: none;
+}
+
+#myBoard ~label:before {
+	/* display: inline-block; */
+	content: "✔";
+	display: inline-block;
+	vertical-align: middle;
+	text-align: center;
+	width: 21px;
+	height: 21px;
+	line-height: 21px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	color: transparent;
+	transition: 0.2s;
+	font-size: 14px !important;
+	margin-right: 8px;
+	margin-bottom: 2px;
+}
+
+#myBoard:checked+label::before {
+	background-color: #c4ddc0;
+	color: #000000;
+	outline: none;
+	border-color: transparent;
+}
+
+label:hover::before, #myBoard:hover+label::before {
+	border-color: #0000006c;
+	transition: all 0.3s;
+}
 </style>
 </head>
 <body>
@@ -316,6 +350,10 @@ td {
 				</div>
 				<div id="writeButton" class="writing-button" data-bs-toggle="modal" data-bs-target="#boardWrite">
 					<i class="fa-regular fa-pen-to-square"></i>
+				</div>
+				<div style="margin-top: 50px; margin-right: 30px;">
+					<input type="checkbox" id="myBoard" id="remember" name="remember"> 
+					<label for="myBoard">내 게시물</label> 
 				</div>
 			</div>
 			<div id="boardListContainer">
@@ -433,15 +471,26 @@ td {
 $(document).ready(function() {
 	initializeMap();
 	
+	$('#myBoard').change(function() {
+	    if ($(this).is(":checked")) {
+	        console.log("체크함");
+	        myBoard();
+	    } else {
+	        console.log("체크 안함");
+	        showBoard();
+	    }
+	});
+	
+	
 	 $('#marker_search').on('keypress', function(e) {
          if (e.keyCode === 13) {  // Enter key pressed
         	 e.preventDefault(); // Prevent form submission
-             const keyWord = $('#marker_search').val();
+             const keyWord = $('#marker_search').val().trim();
              performSearch(keyWord);
          }
      });
-	
-    
+	 
+
  // Add click handler for travel items
     $('.travel-item').on('click', function() {
         // Get data from the clicked item
@@ -674,6 +723,89 @@ $(document).ready(function() {
     });
 });
 
+function showBoard(){
+	console.log("전체 보기");
+	$.ajax({
+		url: '/showBoard',
+		type: 'GET',
+		success: function(res){
+			console.log(res);
+			$('#boardListContainer table tbody').empty();
+            
+            if (res && res.length > 0) {
+                let html = '';
+                
+                for (let i = 0; i < res.length; i += 2) {
+                    html += '<tr>';
+                    
+                    // Add first column
+                    html += createBoardColumn(res[i]);
+                    
+                    // Add second column if it exists
+                    if (i + 1 < res.length) {
+                        html += createBoardColumn(res[i + 1]);
+                    }
+                    
+                    html += '</tr>';
+                }
+                
+                $('#boardListContainer table tbody').html(html);
+            } 
+			
+		},
+		error: function(e){
+			console.log(e);
+		}
+	})
+}
+
+
+// 내 여행 보기
+function myBoard(){
+	console.log("내꺼 보기");
+	let memId = '${sessionScope.login.memId}';
+	
+	$.ajax({
+		url: '/myBoard',
+		type: 'GET',
+		data: {memId: memId},
+		success: function(res){
+			$('#boardListContainer table tbody').empty();
+            
+            if (res && res.length > 0) {
+                let html = '';
+                
+                for (let i = 0; i < res.length; i += 2) {
+                    html += '<tr>';
+                    
+                    // Add first column
+                    html += createBoardColumn(res[i]);
+                    
+                    // Add second column if it exists
+                    if (i + 1 < res.length) {
+                        html += createBoardColumn(res[i + 1]);
+                    }
+                    
+                    html += '</tr>';
+                }
+                
+                $('#boardListContainer table tbody').html(html);
+            } else {
+                // Show no results message
+                $('#boardListContainer table tbody').html(
+                    '<tr><td colspan="2" class="text-center p-5">' +
+                    '<h4>검색 결과가 없습니다.</h4></td></tr>'
+                );
+            }
+			
+		},
+		error: function(e){
+			console.log(e);
+		}
+	})
+}
+
+
 //여행 정보 검색
 function performSearch(keyWord) {
 	console.log("검색 ㄱㄱ");
@@ -709,7 +841,7 @@ function performSearch(keyWord) {
                 // Show no results message
                 $('#boardListContainer table tbody').html(
                     '<tr><td colspan="2" class="text-center p-5">' +
-                    '<h4>검색 결과가 없습니다.</h4></td></tr>'
+                    '<h4>게시물이 없습니다.</h4></td></tr>'
                 );
             }
         },
