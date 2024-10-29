@@ -316,7 +316,7 @@ function initializeMap() {
     geocoder = new kakao.maps.services.Geocoder();
 
     var imageSrc = 'resources/assets/img/marker.png',
-        imageSize = new kakao.maps.Size(66, 55),
+        imageSize = new kakao.maps.Size(70, 53),
         imageOption = { offset: new kakao.maps.Point(33, 45) };
 
     var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
