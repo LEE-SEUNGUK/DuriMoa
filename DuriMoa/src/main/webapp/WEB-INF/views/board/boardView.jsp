@@ -335,12 +335,12 @@ td {
 			                        <div class="col-7" style="padding: 0;">
 			                            <div>
 			                                <div class="d-flex justify-content-between align-items-center">
-			                                    <h4 style="margin: 0px; font-weight: bold;">
+			                                    <h4 class="brdTt" style="margin: 0px; font-weight: bold;">
 			                                    <span>[${board.trvPlc}]</span> ${board.brdTt}</h4>
 			                                </div>
 			                                <div class="mt-2 d-flex align-items-center">
 			                                    <img src="resources/assets/img/board_map.png"  width="7%" alt="">
-			                                    <p class="ms-2">${board.trvPc}</p>
+			                                    <p class="trvPc ms-2">${board.trvPc}</p>
 			                                </div>
 			                            </div>
 			                            <div class="me-5 d-flex flex-column align-items-end" style="color: rgb(107, 107, 107); margin-top: 80px;">
@@ -433,26 +433,14 @@ td {
 $(document).ready(function() {
 	initializeMap();
 	
+	 $('#marker_search').on('keypress', function(e) {
+         if (e.keyCode === 13) {  // Enter key pressed
+        	 e.preventDefault(); // Prevent form submission
+             const keyWord = $('#marker_search').val();
+             performSearch(keyWord);
+         }
+     });
 	
-    // 검색창에서 엔터키를 눌렀을 때만 검색 실행
-    $('#searchKeyword').on('keypress', function(e) {
-        if (e.keyCode === 13) {  // Enter 키 감지
-            const keyword = $(this).val().toLowerCase(); // 입력한 검색어를 소문자로 변환
-
-            // 각 항목을 순회하면서 제목 또는 장소가 검색어를 포함하는지 확인
-            $('.travel-item').each(function() {
-                const title = $(this).data('title').toLowerCase();
-                const place = $(this).data('place').toLowerCase();
-
-                // 검색어가 제목이나 장소에 포함되어 있으면 표시, 아니면 숨기기
-                if (title.includes(keyword) || place.includes(keyword)) {
-                    $(this).show(); // 일치하는 항목 표시
-                } else {
-                    $(this).hide(); // 일치하지 않는 항목 숨기기
-                }
-            });
-        }
-    });
     
  // Add click handler for travel items
     $('.travel-item').on('click', function() {
@@ -685,6 +673,85 @@ $(document).ready(function() {
         });
     });
 });
+
+//여행 정보 검색
+function performSearch(keyWord) {
+	console.log("검색 ㄱㄱ");
+    $.ajax({
+        url: '/getBoardSearch',  // You'll need to create this endpoint
+        type: 'GET',
+        data: { 
+        	keyWord: keyWord
+        },
+        success: function(response) {
+            // Clear existing content
+            $('#boardListContainer table tbody').empty();
+            
+            if (response && response.length > 0) {
+                let html = '';
+                
+                for (let i = 0; i < response.length; i += 2) {
+                    html += '<tr>';
+                    
+                    // Add first column
+                    html += createBoardColumn(response[i]);
+                    
+                    // Add second column if it exists
+                    if (i + 1 < response.length) {
+                        html += createBoardColumn(response[i + 1]);
+                    }
+                    
+                    html += '</tr>';
+                }
+                
+                $('#boardListContainer table tbody').html(html);
+            } else {
+                // Show no results message
+                $('#boardListContainer table tbody').html(
+                    '<tr><td colspan="2" class="text-center p-5">' +
+                    '<h4>검색 결과가 없습니다.</h4></td></tr>'
+                );
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Search error:', error);
+            alert('검색 중 오류가 발생했습니다.');
+        }
+    });
+}
+
+
+function createBoardColumn(board) {
+    return '<td class="ms-5">' +
+           '<div style="width: 95%; margin: 0 auto">' +
+           '<div onclick="location.href=\'/getBoard?brdId=' + board.brdId + '\'"' + 
+           ' style="height: 260px; border-radius: 20px; background-color: rgb(248, 248, 248); width: 100%; margin: auto 0" class="d-flex align-items-center">' +
+           '<div class="row d-flex align-items-center" style="width: 100%;">' +
+           '<div class="col-5" style="text-align: center;">' +
+           '<img src="' + board.brdImg1 + '" style="width: 180px; height: 225px; object-fit: cover; border-radius: 10px;" alt="">' +
+           '</div>' +
+           '<div class="col-7" style="padding: 0;">' +
+           '<div>' +
+           '<div class="d-flex justify-content-between align-items-center">' +
+           '<h4 class="brdTt" style="margin: 0px; font-weight: bold;">' +
+           '<span>[' + board.trvPlc + ']</span> ' + board.brdTt +
+           '</h4>' +
+           '</div>' +
+           '<div class="mt-2 d-flex align-items-center">' +
+           '<img src="resources/assets/img/board_map.png" width="7%" alt="">' +
+           '<p class="trvPc ms-2">' + board.trvPc + '</p>' +
+           '</div>' +
+           '</div>' +
+           '<div class="me-5 d-flex flex-column align-items-end" style="color: rgb(107, 107, 107); margin-top: 80px;">' +
+           '<i class="fa-regular fa-heart" style="font-size: 20px"></i>' +
+           '</div>' +
+           '</div>' +
+           '</div>' +
+           '</div>' +
+           '</div>' +
+           '</td>';
+}
+
 
 //Initialize the map
 function initializeMap() {

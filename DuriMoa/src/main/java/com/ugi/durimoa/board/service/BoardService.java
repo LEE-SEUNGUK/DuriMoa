@@ -37,6 +37,18 @@ public class BoardService {
 		}
 		return result;
 	};
+	
+	// 게시글 검색
+	public ArrayList<BoardInfoVO> getBoardSearch(String kerWord) throws Exception{
+		System.out.println("게시글 검색");
+		
+		ArrayList<BoardInfoVO> result = dao.getBoardSearch(kerWord);
+
+		if (result == null) {
+			throw new Exception();
+		}
+		return result;
+	};
 
 	// 게시글 상세 조회
 	public BoardInfoVO getBoard(int brdId) throws Exception {

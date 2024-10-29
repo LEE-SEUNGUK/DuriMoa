@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpSession;
@@ -30,6 +32,7 @@ import com.ugi.durimoa.board.vo.BoardVO;
 import com.ugi.durimoa.board.vo.ReplyVO;
 import com.ugi.durimoa.member.vo.MemberVO;
 import com.ugi.durimoa.travel.service.TravelService;
+import com.ugi.durimoa.travel.vo.SearchVO;
 import com.ugi.durimoa.travel.vo.TravelInfoVO;
 
 @Controller
@@ -64,6 +67,17 @@ public class BoardController {
 		System.out.println(boardList);
 
 		return "/board/boardView";
+	}
+	
+	@ResponseBody
+	@RequestMapping("/getBoardSearch")
+	public ArrayList<BoardInfoVO> getTravelSearch(@RequestParam("keyWord") String keyWord) throws Exception {
+	
+	    ArrayList<BoardInfoVO> boardList = boardService.getBoardSearch(keyWord);
+	    
+	    System.out.println(boardList);
+	        
+	    return boardList;
 	}
 	
 	@RequestMapping("/boardAdd")
