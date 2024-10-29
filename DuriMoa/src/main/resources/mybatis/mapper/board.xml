@@ -24,6 +24,16 @@
 		AND (#{keyWord} IS NULL OR a.brd_tt LIKE '%' || #{keyWord} || '%' OR c.trv_pc LIKE '%' || #{keyWord} || '%')
 	</select>
 	
+	<select id="getMyBoardSearch" resultType="BoardInfoVO" parameterType="SearchVO">
+		SELECT a.*, SUBSTR(c.trv_pc, 0, 2) AS trv_plc, c.trv_pc, b.brd_img AS brdImg1
+		FROM board a
+		JOIN board_img b ON a.brd_id = b.brd_id
+		JOIN travel c ON a.trv_id = c.trv_id
+		WHERE b.brd_idx = '1'
+		AND (#{keyWord} IS NULL OR a.brd_tt LIKE '%' || #{keyWord} || '%' OR c.trv_pc LIKE '%' || #{keyWord} || '%')
+		AND a.mem_id = #{memId}
+	</select>
+	
 	<select id="myBoard" resultType="BoardInfoVO" parameterType="String">
 		SELECT a.*, SUBSTR(c.trv_pc, 0, 2) trv_plc, c.trv_pc, b.brd_img brdImg1
 		FROM board a, board_img b, travel c

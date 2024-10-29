@@ -486,10 +486,29 @@ $(document).ready(function() {
          if (e.keyCode === 13) {  // Enter key pressed
         	 e.preventDefault(); // Prevent form submission
              const keyWord = $('#marker_search').val().trim();
-             performSearch(keyWord);
+             const isMyBoardChecked = $('#myBoard').is(':checked');
+             performSearch(keyWord, isMyBoardChecked);
          }
      });
 	 
+	 
+	// 검색창에서 엔터키를 눌렀을 때만 검색 실행 모달
+	    $('#searchKeyword').on('keypress', function(e) {
+	        if (e.keyCode === 13) {  // Enter 키 감지
+	            const keyword = $(this).val().toLowerCase(); // 입력한 검색어를 소문자로 변환
+	            // 각 항목을 순회하면서 제목 또는 장소가 검색어를 포함하는지 확인
+	            $('.travel-item').each(function() {
+	                const title = $(this).data('title').toLowerCase();
+	                const place = $(this).data('place').toLowerCase();
+	                // 검색어가 제목이나 장소에 포함되어 있으면 표시, 아니면 숨기기
+	                if (title.includes(keyword) || place.includes(keyword)) {
+	                    $(this).show(); // 일치하는 항목 표시
+	                } else {
+	                    $(this).hide(); // 일치하지 않는 항목 숨기기
+	                }
+	            });
+	        }
+	    });
 
  // Add click handler for travel items
     $('.travel-item').on('click', function() {
@@ -807,14 +826,23 @@ function myBoard(){
 
 
 //여행 정보 검색
-function performSearch(keyWord) {
-	console.log("검색 ㄱㄱ");
+function performSearch(keyWord, isMyBoardChecked) {
+	
+	let url = '/getBoardSearch';
+    let data = { keyWord: keyWord };
+    
+    // If viewing my posts, add memId to the search criteria
+    if (isMyBoardChecked) {
+    	console.log("체크 체크");
+        data.memId = '${sessionScope.login.memId}';
+        url = '/getMyBoardSearch'; // New endpoint for searching my posts
+    }
+	
+	
     $.ajax({
-        url: '/getBoardSearch',  // You'll need to create this endpoint
+        url: url,  // You'll need to create this endpoint
         type: 'GET',
-        data: { 
-        	keyWord: keyWord
-        },
+        data: data,
         success: function(response) {
             // Clear existing content
             $('#boardListContainer table tbody').empty();

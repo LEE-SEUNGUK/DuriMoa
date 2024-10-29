@@ -82,6 +82,22 @@ public class BoardController {
 	}
 	
 	@ResponseBody
+	@RequestMapping("/getMyBoardSearch")
+	public ArrayList<BoardInfoVO> getMyBoardSearch(@ModelAttribute SearchVO vo) throws Exception {
+		
+		System.out.println(vo);
+
+		
+		ArrayList<BoardInfoVO> boardList = boardService.getMyBoardSearch(vo);
+	    
+	    System.out.println(boardList);
+	        
+	    return boardList;
+	}
+	
+	
+	
+	@ResponseBody
 	@RequestMapping("/myBoard")
 	public ArrayList<BoardInfoVO> myBoard(@RequestParam("memId") String memId) throws Exception {
 	

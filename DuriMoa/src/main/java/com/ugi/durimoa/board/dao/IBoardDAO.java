@@ -8,6 +8,7 @@ import com.ugi.durimoa.board.vo.BoardInfoVO;
 import com.ugi.durimoa.board.vo.BoardVO;
 import com.ugi.durimoa.board.vo.ReplyVO;
 import com.ugi.durimoa.member.vo.MemberVO;
+import com.ugi.durimoa.travel.vo.SearchVO;
 import com.ugi.durimoa.travel.vo.TravelInfoVO;
 
 @Mapper
@@ -21,6 +22,9 @@ public interface IBoardDAO {
 	
 	// 게시글 검색
 	public ArrayList<BoardInfoVO> getBoardSearch(String kerWord);
+	
+	// 내 게시글 검색
+	public ArrayList<BoardInfoVO> getMyBoardSearch(SearchVO vo);
 	
 	// 내 게시글 조회
 	public ArrayList<BoardInfoVO> myBoard(String memId);

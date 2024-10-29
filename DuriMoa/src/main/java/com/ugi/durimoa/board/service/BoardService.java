@@ -9,6 +9,7 @@ import com.ugi.durimoa.board.dao.IBoardDAO;
 import com.ugi.durimoa.board.vo.BoardInfoVO;
 import com.ugi.durimoa.board.vo.BoardVO;
 import com.ugi.durimoa.board.vo.ReplyVO;
+import com.ugi.durimoa.travel.vo.SearchVO;
 
 @Service
 public class BoardService {
@@ -55,6 +56,16 @@ public class BoardService {
 		System.out.println("게시글 검색");
 		
 		ArrayList<BoardInfoVO> result = dao.getBoardSearch(kerWord);
+
+		if (result == null) {
+			throw new Exception();
+		}
+		return result;
+	};
+	
+	// 내 게시글 검색
+	public ArrayList<BoardInfoVO> getMyBoardSearch(SearchVO vo) throws Exception{
+		ArrayList<BoardInfoVO> result = dao.getMyBoardSearch(vo);
 
 		if (result == null) {
 			throw new Exception();
