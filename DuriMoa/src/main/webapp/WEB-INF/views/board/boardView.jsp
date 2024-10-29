@@ -314,7 +314,9 @@ td {
 					<h2>포토존</h2>
 					<p>다른 커플들의 사진을 보고 다음 여행지를 정해보세요!</p>
 				</div>
-				<a class="mt-5 btn btn-primary" data-bs-toggle="modal" data-bs-target="#boardWrite">글쓰기</a>
+				<div id="writeButton" class="writing-button" data-bs-toggle="modal" data-bs-target="#boardWrite">
+					<i class="fa-regular fa-pen-to-square"></i>
+				</div>
 			</div>
 			<div id="boardListContainer">
 				<table class="table" style="margin-top: 2% !important; margin: 0 auto; border-bottom: #ffffff;">

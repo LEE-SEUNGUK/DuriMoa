@@ -48,6 +48,20 @@
 .carousel.multi-images .carousel-indicators {
     display: flex;
 }
+
+.rpyDel{
+	color: #2424246c !important;
+	cursor: pointer;
+}
+
+.rpyHr{
+	color: #2424246c;
+}
+
+
+#replyInput:focus{
+	outline: 1px solid #0000009e;	
+}
 </style>
 </head>
 <body>
@@ -127,13 +141,17 @@
 			                </td>
 			                <c:if test="${sessionScope.login.memId == reply.memId}">
 			                    <td class="col-1">
-			                        <a onclick="replyDel('${reply.rpyId}')">X</a>
+			                        <a class="rpyDel" onclick="replyDel('${reply.rpyId}')">X</a>
+			                    </td>
+			                </c:if>
+			                <c:if test="${sessionScope.login.memId != reply.memId}">
+			                    <td class="col-1">
 			                    </td>
 			                </c:if>
 			            </tr>
 			            <tr>
 			                <td colspan="4">
-			                    <hr class="my-3" style="width: 88%; margin: 0 auto;">
+			                    <hr class="rpyHr my-3" style="width: 88%; margin: 0 auto;">
 			                </td>
 			            </tr>
 			        </c:forEach>
@@ -224,7 +242,7 @@ function replyWrite(e){
 				console.log('응답');
 				console.log(res);
 				let str = "";			
-				str += "<tr>";
+				str += "<tr id='" + res.rpyId + "'>";
 				str += "    <td class='col-2' style='text-align: center;'>"; 
 				str += "        <img src='" + res.memImg + "' width='50px' height='50px' style='border-radius: 50%;' alt=''>";
 				str += "        <p>" + res.memNm + "</p>";
@@ -236,11 +254,12 @@ function replyWrite(e){
 				str += "        " + res.rpyDt;
 				str += "    </td>";
 				str += "    <td class='col-1'>";
-				str += "        <a onclick='replyDel(\"" + res.rpyId + "\")' style='cursor: pointer;'>X</a>";
+				str += "        <a class='rpyDel' onclick='replyDel(" + res.rpyId + ")' style='cursor: pointer;'>X</a>";
 				str += "    </td>";
 				str += "</tr>";
-				str += "<tr><td colspan='4'><hr class='my-3' style='width: 88%; margin: 0 auto;'></td></tr>";				
+				str += "<tr><td colspan='4'><hr class='rpyHr my-3' style='width: 88%; margin: 0 auto;'></td></tr>";				
 				$("#replyBody").append(str);
+				$("#replyInput").val('');
 			},
 			error : function(e) {
 				console.log(e);
