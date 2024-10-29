@@ -20,8 +20,6 @@
     align-items: center;
     width: 100%;
     height: 100%;
-    padding-left: 3px;
-    padding-bottom: 3px;
     transition: transform 0.3s ease;
 }
 
@@ -32,6 +30,19 @@
 td {
 	padding-left: 0px !important;
 	padding-right: 0px !important;
+}
+
+.travelBtn{
+	background-color: #c4ddc0 !important;
+    height: 38px !important;
+    color: black !important;
+    border: none !important;
+    opacity: 0.9;
+}
+
+.travelBtn:hover{
+	opacity: 1.0;
+	transition: 0.5s;
 }
 
 .writing-button {
@@ -381,17 +392,16 @@ label:hover::before, #myBoard:hover+label::before {
 								<label for="travelTitle" class="form-label">제목</label> <input name="brdTt" type="text" class="form-control" id="travelTitle" required>
 							</div>
 							<div class="mb-3">
-								<label for="travelDestination" class="form-label">장소</label> <input type="text" class="form-control" id="travelDestination" required>
+								<label for="travelDestination" class="form-label">장소</label> <input type="text" class="form-control" id="travelDestination" readonly="readonly">
 							</div>
 							<div class="mb-3">
 								<label for="travelContent" class="form-label">내용</label>
-								<textarea name="brdCt" class="form-control" id="travelContent" rows="3"></textarea>
-							</div>
-							<div class="mb-3">
-								<label for="travelContent" class="form-label">해시태그</label> <input type="text" id="travelTag">
+								<textarea name="brdCt" class="form-control" id="travelContent" rows="3" style="resize: none;"></textarea>
 							</div>
 							<input type="hidden" name="memId" value="${sessionScope.login.memId}"> <input type="hidden" id="trvId" name="trvId" value="">
-							<button type="submit" class="btn travelBtn">등록하기</button>
+							<div class="d-flex justify-content-end">
+								<button type="submit" class="btn travelBtn">저장하기</button>
+							</div>
 						</div>
 					</section>
 					<section class="ms-4 col-4 d-flex flex-column align-items-center">
@@ -608,85 +618,87 @@ $(document).ready(function() {
     
 	// 이미지 추가    
     $('#trvImgUpload').on('change', function(event) {
-        var files = event.target.files;
-        var photoPreview = $('#photoPreview');
-        
-        if (files.length > 3) {
-            alert('최대 3장의 사진만 업로드할 수 있습니다.');
-            $(this).val('');
-            photoPreview.empty();
-            clickOrder = [];
-            return;
-        }
-
+    var files = event.target.files;
+    var photoPreview = $('#photoPreview');
+    
+    if (files.length > 3) {
+        alert('최대 3장의 사진만 업로드할 수 있습니다.');
+        $(this).val('');
         photoPreview.empty();
-        clickOrder = []; // Reset click order
+        clickOrder = [];
+        return;
+    }
 
-     // Add clear button if not exists
-        if ($('#clearPhotosBtn').length === 0) {
-            var clearBtn = $('<button>')
-                .attr('id', 'clearPhotosBtn')
-                .addClass('btn btn-danger btn-sm mb-2')
-                .text('지우기')
-                .on('click', function(e) {
-                    e.preventDefault();
-                    $('#trvImgUpload').val('');
-                    photoPreview.empty();
-                    clickOrder = [];
-                    $(this).remove();
-                });
-            
-            var labelDiv = $('<div>').addClass('d-flex align-items-center gap-2');
-            $('#photoDiv label').wrap(labelDiv);
-            $('#photoDiv label').after(clearBtn);
-        }
+    // Remove only new images, keep existing ones
+    $('.img-wrap:not([data-existing="true"])').remove();
+    
+    // Add clear button if not exists
+    if ($('#clearPhotosBtn').length === 0) {
+        var clearBtn = $('<button>')
+            .attr('id', 'clearPhotosBtn')
+            .addClass('btn btn-danger btn-sm mb-2')
+            .text('지우기')
+            .on('click', function(e) {
+                e.preventDefault();
+                $('#trvImgUpload').val('');
+                photoPreview.empty();
+                clickOrder = [];
+                $(this).remove();
+            });
+        
+        var labelDiv = $('<div>').addClass('d-flex align-items-center gap-2');
+        $('#photoDiv label').wrap(labelDiv);
+        $('#photoDiv label').after(clearBtn);
+    }
 
-        // Create preview containers with click handlers
-        for (var i = 0; i < files.length; i++) {
-            var file = files[i];
-            var reader = new FileReader();
+    // Create preview containers for new images
+    for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var reader = new FileReader();
 
-            reader.onload = (function(theFile, index) {
-                return function(e) {
-                    var imgWrap = $('<div class="img-wrap" data-index="' + index + '"></div>');
-                    var img = $('<img>').attr('src', e.target.result).addClass('img-thumbnail');
-                    
-                    var indexLabel = $('<div>')
-                        .addClass('index-label')
-                        .css({
-                            'position': 'absolute',
-                            'top': '5px',
-                            'left': '5px',
-                            'background': 'rgba(0, 0, 0, 0.7)',
-                            'color': 'white',
-                            'padding': '2px 6px',
-                            'border-radius': '3px',
-                            'font-size': '12px'
-                        });
+        reader.onload = (function(theFile, index) {
+            return function(e) {
+                var imgWrap = $('<div class="img-wrap" data-index="' + index + '"></div>');
+                var img = $('<img>').attr('src', e.target.result).addClass('img-thumbnail');
+                
+                // Add index label only for new images
+                var indexLabel = $('<div>')
+                    .addClass('index-label')
+                    .css({
+                        'position': 'absolute',
+                        'top': '5px',
+                        'left': '5px',
+                        'background': 'rgba(0, 0, 0, 0.7)',
+                        'color': 'white',
+                        'padding': '2px 6px',
+                        'border-radius': '3px',
+                        'font-size': '12px'
+                    });
 
-                    imgWrap.append(img, indexLabel);
-                    photoPreview.append(imgWrap);
+                imgWrap.append(img, indexLabel);
+                photoPreview.append(imgWrap);
 
-                    if (files.length === 1) {
-                        clickOrder = [0];
-                        indexLabel.text('1번째');
-                    } else {
-                        indexLabel.text('클릭하세요');
-                        imgWrap.on('click', function() {
-                            var currentIndex = $(this).data('index');
-                            var existingIndex = clickOrder.indexOf(currentIndex);
-                            if (existingIndex !== -1) {
-                                clickOrder.splice(existingIndex, 1);
-                            }
-                            clickOrder.push(currentIndex);
-                            updateIndexLabels();
-                        });
-                    }
-                };
-            })(file, i);
+                // Handle single new image case
+                if (files.length === 1) {
+                    clickOrder = [index];
+                    indexLabel.text('1번째');
+                } else {
+                    indexLabel.text('클릭하세요');
+                    imgWrap.on('click', function() {
+                        var currentIndex = $(this).data('index');
+                        var existingIndex = clickOrder.indexOf(currentIndex);
+                        if (existingIndex !== -1) {
+                            clickOrder.splice(existingIndex, 1);
+                        }
+                        clickOrder.push(currentIndex);
+                        updateIndexLabels();
+                    });
+                }
+            };
+        })(file, i);
 
-            reader.readAsDataURL(file);
-        }
+        reader.readAsDataURL(file);
+    }
 
         // If only one image is uploaded, no need for further interaction
         if (files.length === 1) {
@@ -792,7 +804,7 @@ function editBoard(brdId) {
                 .addClass('close-mode')
                 .find('i')
                 .removeClass('fa-pen-to-square')
-                .addClass('fa-plus');
+                .addClass('pt-1 fa-plus');
 
             // Populate form with board data
             $('#travelTitle').val(board.brdTt);
@@ -878,37 +890,11 @@ function addExistingImage(imgSrc, index) {
         .attr('src', imgSrc)
         .addClass('img-thumbnail');
     
-    // Add index label for order selection
-    var indexLabel = $('<div>')
-        .addClass('index-label')
-        .css({
-            'position': 'absolute',
-            'top': '5px',
-            'left': '5px',
-            'background': 'rgba(0, 0, 0, 0.7)',
-            'color': 'white',
-            'padding': '2px 6px',
-            'border-radius': '3px',
-            'font-size': '12px'
-        });
-    
-    imgWrap.append(img, indexLabel);
+    imgWrap.append(img);
     $('#photoPreview').append(imgWrap);
     
-    // Make existing images clickable for reordering
-    if ($('#photoPreview .img-wrap').length > 1) {
-        indexLabel.text('클릭하세요');
-        imgWrap.on('click', function() {
-            var currentIndex = $(this).data('index');
-            var existingIndex = clickOrder.indexOf(currentIndex);
-            if (existingIndex !== -1) {
-                clickOrder.splice(existingIndex, 1);
-            }
-            clickOrder.push(currentIndex);
-            updateIndexLabels();
-        });
-    } else {
-        indexLabel.text('1번째');
+    // Only update the clickOrder array if there's only one image
+    if ($('#photoPreview .img-wrap').length === 1) {
         clickOrder = [index];
     }
 }
