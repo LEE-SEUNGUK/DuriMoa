@@ -6,6 +6,29 @@
 <meta charset="UTF-8">
 <title>두리모아</title>
 <style>
+.writing-button.close-mode {
+    background-color: #ff6b6b;
+}
+
+.writing-button.close-mode:hover {
+    background-color: #ff5252;
+}
+
+.writing-button i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding-left: 3px;
+    padding-bottom: 3px;
+    transition: transform 0.3s ease;
+}
+
+.writing-button.close-mode i {
+    transform: rotate(45deg);
+}
+
 td {
 	padding-left: 0px !important;
 	padding-right: 0px !important;
@@ -204,56 +227,20 @@ td {
 	-webkit-box-orient: vertical;
 }
 
-.compact-menu {
+.dropdown-menu {
 	min-width: 50px !important;
 	/* Adjust this value as needed */
 	width: auto;
 	white-space: nowrap;
 }
 
-.compact-menu .dropdown-item {
+.dropdown-menu .dropdown-item {
 	padding: 0.25rem 0.5rem;
 	/* Reduce padding */
 	font-size: 16px;
 	/* Reduce font size if needed */
 }
 
-.speech-bubb {
-	width: 14%;
-	left: 76%;
-	margin-top: 20%;
-	position: relative;
-	background: #c4ddc0;
-	border-radius: .4em;
-}
-
-.travelBtn {
-	background-color: #c4ddc0 !important;
-	height: 38px !important;
-	color: black !important;
-	border: none !important;
-	opacity: 0.9;
-}
-
-.travelBtn:hover {
-	opacity: 1.0;
-	transition: 0.5s;
-}
-
-.speech-bubb:after {
-	content: '';
-	position: absolute;
-	bottom: 0;
-	left: 60%;
-	width: 0;
-	height: 0;
-	border: 39px solid transparent;
-	border-top-color: #c4ddc0;
-	border-bottom: 0;
-	border-right: 0;
-	margin-left: -12px;
-	margin-bottom: -24px;
-}
 
 #searchAddress {
 	opacity: 0.9;
@@ -264,34 +251,6 @@ td {
 	transition: 0.5s;
 }
 
-#singleDayTrip {
-	display: none;
-}
-
-#singleDayTrip ~label:before {
-	/* display: inline-block; */
-	content: "✔";
-	display: inline-block;
-	vertical-align: middle;
-	text-align: center;
-	width: 18px;
-	height: 18px;
-	line-height: 18px;
-	border-radius: 5px;
-	border: 1px solid #ccc;
-	color: transparent;
-	transition: 0.2s;
-	font-size: 14px !important;
-	margin-right: 8px;
-	margin-bottom: 2px;
-}
-
-#singleDayTrip:checked+label::before {
-	background-color: #c4ddc0;
-	color: #000000;
-	outline: none;
-	border-color: transparent;
-}
 
 #boardModal {
 	max-width: 650px !important;
@@ -415,9 +374,6 @@ label:hover::before, #myBoard:hover+label::before {
 				</table>
 			</div>
 			<div id="boardAddForm" class="container mt-4" style="display: none;">
-				<div class="d-flex justify-content-between mb-4">
-					<button type="button" class="btn btn-secondary" id="backToList">목록으로 돌아가기</button>
-				</div>
 				<form class="d-flex justify-content-center" action="">
 					<section class="col-6">
 						<div class="travel-form">
@@ -553,6 +509,13 @@ $(document).ready(function() {
         $('#boardListContainer').hide();
         $('#boardAddForm').show();
         
+        // Change write button to close button
+        $('#writeButton').removeAttr('data-bs-toggle data-bs-target')
+            .addClass('close-mode')
+            .find('i')
+            .removeClass('fa-pen-to-square')
+            .addClass('pt-1 fa-plus');
+        
         // Display location on map
         geocoder.addressSearch(data.trvPc, function(results, status) {
             if (status === kakao.maps.services.Status.OK) {
@@ -575,6 +538,29 @@ $(document).ready(function() {
             top: 0,
             behavior: 'smooth'
         });
+    });
+ 
+    // Handle write/close button click
+    $('#writeButton').on('click', function() {
+        if ($(this).hasClass('close-mode')) {
+            // Close mode - return to list
+            $('#boardAddForm').hide();
+            $('#boardListContainer').show();
+            $('#boardAddForm form')[0].reset();
+            $('#photoPreview').empty();
+            $('#map').hide();
+            
+            // Reset button to write mode
+            $(this)
+                .removeClass('close-mode')
+                .attr({
+                    'data-bs-toggle': 'modal',
+                    'data-bs-target': '#boardWrite'
+                })
+                .find('i')
+                .removeClass('fa-plus')
+                .addClass('fa-pen-to-square');
+        }
     });
 
     // Make travel items appear clickable

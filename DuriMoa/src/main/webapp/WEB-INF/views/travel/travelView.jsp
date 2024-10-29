@@ -12,25 +12,47 @@ td {
 }
 
 .writing-button {
-	position: fixed;
-	bottom: 15%;
-	right: 12%;
-	width: 60px;
-	height: 60px;
-	background-color: #c4ddc0;
-	border-radius: 50%;
-	color: black;
-	font-size: 24px;
-	cursor: pointer;
-	transition: background-color 0.3s;
-	z-index: 1000;
-	border: none;
+    position: fixed;
+    bottom: 15%;
+    right: 12%;
+    width: 60px;
+    height: 60px;
+    background-color: #c4ddc0;
+    border-radius: 50%;
+    color: black;
+    font-size: 24px;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 1000;
+    border: none;
 }
 
 .writing-button:hover {
-	background-color: #a7cfa1;
+    background-color: #a7cfa1;
+    transform: scale(1.05);
 }
 
+.writing-button.close-mode {
+    background-color: #ff6b6b;
+}
+
+.writing-button.close-mode:hover {
+    background-color: #ff5252;
+    transform: scale(1.05);
+}
+
+.writing-button i {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    transition: all 0.3s;
+}
+
+.writing-button.close-mode i {
+    transform: rotate(45deg);
+}
 /* 작성 폼 */
 .travel-form {
 	background-color: #f8f9fa;
@@ -52,15 +74,6 @@ td {
 	display: none;
 }
 
-.writing-button i {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	width: 100%;
-	height: 100%;
-	padding-left: 3px;
-	padding-bottom: 3px;
-}
 
 #travelAddForm {
 	max-height: 1300px; /* Adjust this value as needed */
@@ -464,7 +477,7 @@ label:hover::before, #trvOp:hover+label::before {
     </div>
 	</c:if>
 	<div id="writeButton" class="writing-button">
-		<i class="fa-regular fa-pen-to-square"></i>
+		<i class="fa-regular fa-pen-to-square" style="padding-left: 3px; padding-bottom: 3px;"></i>
 	</div>
 
 	<script>
@@ -855,12 +868,30 @@ function toggleMode() {
     $('#writeMode').toggle();
     $('#speechBubble').hide(); // Hide speech bubble when toggling modes
 
+    const writeButton = $('#writeButton');
+    const buttonIcon = writeButton.find('i');
+
     if ($('#writeMode').is(':visible')) {
-        $('#writeButton').html('<i class="fa-solid fa-xmark" style="padding: 0px;"></i>');
+        buttonIcon
+            .removeClass('fa-pen-to-square')
+            .addClass(' pt-1 fa-plus');
+        writeButton
+            .addClass('close-mode')
+            .removeAttr('data-bs-toggle data-bs-target');
     } else {
-        $('#writeButton').html('<i class="fa-regular fa-pen-to-square"></i>');
+        buttonIcon
+            .removeClass('fa-plus')
+            .addClass('fa-pen-to-square');
+        writeButton
+            .removeClass('close-mode')
+            .attr({
+                'data-bs-toggle': 'modal',
+                'data-bs-target': '#boardWrite'
+            });
+        
         // Clear form when closing
         clearForm();
+        
         // Show speech bubble again only if there are no travel records
         if ($('.table tbody tr').length === 0) {
             $('#speechBubble').show();
