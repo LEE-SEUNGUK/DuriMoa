@@ -100,4 +100,8 @@
 	AND a.brd_id = #{brdId}
 	</select>
 	
+	<delete id="boardDel" parameterType="int">
+	DELETE FROM board WHERE brd_id = #{brdId}
+	</delete>
+	
 </mapper>

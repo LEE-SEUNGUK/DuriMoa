@@ -297,11 +297,11 @@ td {
 	max-width: 650px !important;
 }
 
-.boardCard{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+.boardCard {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
 }
 
 #myBoard {
@@ -340,7 +340,7 @@ label:hover::before, #myBoard:hover+label::before {
 </style>
 </head>
 <body>
-<jsp:include page="/WEB-INF/inc/header.jsp"></jsp:include>
+	<jsp:include page="/WEB-INF/inc/header.jsp"></jsp:include>
 	<div class="container" style="padding: 0 !important;">
 		<div class="row">
 			<div class="d-flex board-header justify-content-between" style="margin-top: 6%;">
@@ -352,53 +352,72 @@ label:hover::before, #myBoard:hover+label::before {
 					<i class="fa-regular fa-pen-to-square"></i>
 				</div>
 				<div style="margin-top: 50px; margin-right: 30px;">
-					<input type="checkbox" id="myBoard" id="remember" name="remember"> 
-					<label for="myBoard">내 게시물</label> 
+					<input type="checkbox" id="myBoard" id="remember" name="remember"> <label for="myBoard">내 게시물</label>
 				</div>
 			</div>
 			<div id="boardListContainer">
 				<table class="table" style="margin-top: 2% !important; margin: 0 auto; border-bottom: #ffffff;">
-	            <tbody>
-			    <c:forEach items="${boardList}" var="board" varStatus="status">
-			        <c:if test="${status.index % 2 == 0}">
-			            <tr>
-			        </c:if>
-			        <td class="ms-5">
-			            <div style="width: 95%; margin: 0 auto">
-			                <div onclick="location.href='<c:url value='/getBoard?brdId=${board.brdId}'/>'" style="height: 260px; border-radius: 20px; background-color: rgb(248, 248, 248); width: 100%; margin: auto 0" class="d-flex align-items-center">
-			                    <div class="row d-flex align-items-center" style="width: 100%;">
-			                        <div class="col-5" style="text-align: center;">
-			                            <img src="${board.brdImg1}" style="width: 180px; height: 225px; object-fit: cover; border-radius: 10px;" alt="">
-			                        </div>
-			                        <div class="col-7" style="padding: 0;">
-			                            <div>
-			                                <div class="d-flex justify-content-between align-items-center">
-			                                    <h4 class="brdTt" style="margin: 0px; font-weight: bold;">
-			                                    <span>[${board.trvPlc}]</span> ${board.brdTt}</h4>
-			                                </div>
-			                                <div class="mt-2 d-flex align-items-center">
-			                                    <img src="resources/assets/img/board_map.png"  width="7%" alt="">
-			                                    <p class="trvPc ms-2">${board.trvPc}</p>
-			                                </div>
-			                            </div>
-			                            <div class="me-5 d-flex flex-column align-items-end" style="color: rgb(107, 107, 107); margin-top: 80px;">
-			                                <i class="fa-regular fa-heart" style="font-size: 20px"></i>
-			                            </div>
-			                        </div>
-			                    </div>
-			                </div>
-			            </div>
-			        </td>
-			        <c:if test="${status.index % 2 == 1 || status.last}">
-			        </c:if>
-			    </c:forEach>
-			</tbody>
-	        </table>
-        </div>
+					<tbody>
+						<c:forEach items="${boardList}" var="board" varStatus="status">
+							<c:if test="${status.index % 2 == 0}">
+								<tr>
+							</c:if>
+							<td class="ms-5" style="width: 50%;">
+								<!-- Added fixed width -->
+								<div style="width: 95%; margin: 0 auto">
+									<div style="height: 260px; border-radius: 20px; background-color: rgb(248, 248, 248); width: 100%; margin: auto 0" class="d-flex align-items-center">
+										<div class="row d-flex align-items-center" style="width: 100%;">
+											<div class="col-5" style="text-align: center;">
+												<img onclick="location.href='<c:url value='/getBoard?brdId=${board.brdId}'/>'" src="${board.brdImg1}" style="width: 180px; height: 225px; object-fit: cover; border-radius: 10px;" alt="">
+											</div>
+											<div class="col-7" style="padding: 0;">
+												<div>
+													<div class="d-flex justify-content-between align-items-center">
+														<h4 class="brdTt" style="margin: 0px; font-weight: bold;">
+															<span>[${board.trvPlc}]</span> ${board.brdTt}
+														</h4>
+														<c:if test="${sessionScope.login.memId == board.memId}">
+															<div class="dropdown me-5 mb-2">
+																<button class="btn" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 20px; appearance: none; -webkit-appearance: none;">&#8942;</button>
+																<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+																	<li><a class="dropdown-item edit-board" href="#" data-brd-id="${board.brdId}">수정</a></li>
+																	<li><a class="dropdown-item delete-board" href="#" data-brd-id="${board.brdId}">삭제</a></li>
+																</ul>
+															</div>
+														</c:if>
+														<c:if test="${sessionScope.login.memId != board.memId}">
+															<div class="me-5 mb-2" style="font-size: 20px; padding: 6px 12px; height: 44px">
+																<button class="btn" style="visibility: hidden; border: none; background: transparent;">&#8942;</button>
+															</div>
+														</c:if>
+													</div>
+													<div class="mt-2 d-flex align-items-center">
+														<img src="resources/assets/img/board_map.png" width="7%" alt="">
+														<p class="trvPc ms-2">${board.trvPc}</p>
+													</div>
+												</div>
+												<div class="me-5 d-flex flex-column align-items-end" style="color: rgb(107, 107, 107); margin-top: 80px;">
+													<i class="fa-regular fa-heart" style="font-size: 20px"></i>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</td>
+							<c:if test="${status.index % 2 == 1 || status.last}">
+								<c:if test="${status.last && status.index % 2 == 0}">
+									<!-- Add empty td to maintain layout when odd number of items -->
+									<td style="width: 50%;"></td>
+								</c:if>
+							</c:if>
+						</c:forEach>
+					</tbody>
+				</table>
+			</div>
 			<div id="boardAddForm" class="container mt-4" style="display: none;">
 				<div class="d-flex justify-content-between mb-4">
-	                <button type="button" class="btn btn-secondary" id="backToList">목록으로 돌아가기</button>
-	            </div>
+					<button type="button" class="btn btn-secondary" id="backToList">목록으로 돌아가기</button>
+				</div>
 				<form class="d-flex justify-content-center" action="">
 					<section class="col-6">
 						<div class="travel-form">
@@ -413,21 +432,17 @@ label:hover::before, #myBoard:hover+label::before {
 								<textarea name="brdCt" class="form-control" id="travelContent" rows="3"></textarea>
 							</div>
 							<div class="mb-3">
-								<label for="travelContent" class="form-label">해시태그</label>
-								<input type="text" id="travelTag">
+								<label for="travelContent" class="form-label">해시태그</label> <input type="text" id="travelTag">
 							</div>
-							<input type="hidden" name="memId" value="${sessionScope.login.memId}">
-							<input type="hidden" name="trvId" value="">							
+							<input type="hidden" name="memId" value="${sessionScope.login.memId}"> <input type="hidden" name="trvId" value="">
 							<button type="submit" class="btn travelBtn">등록하기</button>
 						</div>
 					</section>
 					<section class="ms-4 col-4 d-flex flex-column align-items-center">
 						<div id="map"></div>
-						<input type="hidden" id="coordinateX">
-            			<input type="hidden" id="coordinateY">
+						<input type="hidden" id="coordinateX"> <input type="hidden" id="coordinateY">
 						<div class="mt-3" id="photoDiv">
-							<label for="travelPhotos" class="form-label">사진(최대 3장)</label> 
-							<input type="file" id="trvImgUpload" name="brdImgs" class="form-control" multiple accept="image/*">
+							<label for="travelPhotos" class="form-label">사진(최대 3장)</label> <input type="file" id="trvImgUpload" name="brdImgs" class="form-control" multiple accept="image/*">
 							<div id="photoPreview" class="d-flex justify-content-start align-items-center mt-3"></div>
 						</div>
 					</section>
@@ -437,37 +452,36 @@ label:hover::before, #myBoard:hover+label::before {
 	</div>
 
 	<!-- Modal -->
-<div class="modal fade" id="boardWrite" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" id="boardModal">
-		<div class="modal-content">
-			<div class="modal-header">
-				<input class="form-control w-75" id="searchKeyword" type="text" placeholder="검색어를 입력하세요." style="margin: 0 auto;">
-			</div>
-			<div class="modal-body">
-				<table class="w-100">
-					<tbody id="travelList">
-						<c:forEach items="${travelList}" var="travel">
-							<tr class="travel-item" data-title="${travel.trvTt}" data-id="${travel.trvId}" 
-							data-place="${travel.trvPc}" data-x="${travel.trvX}" data-y="${travel.trvY}">
-								<td class="d-flex">
-									<div class="col-5">
-										<img class="p-2" alt="" src="${travel.trvImg1}" width='240px' height='300px'>
-									</div>
-									<div class="col-7 d-flex flex-column justify-content-center">
-										<h5>제목: ${travel.trvTt}</h5>
-										<h5>장소: ${travel.trvPc}</h5>
-									</div>
-								</td>
-							</tr>
-						</c:forEach>
-					</tbody>
-				</table>
+	<div class="modal fade" id="boardWrite" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" id="boardModal">
+			<div class="modal-content">
+				<div class="modal-header">
+					<input class="form-control w-75" id="searchKeyword" type="text" placeholder="검색어를 입력하세요." style="margin: 0 auto;">
+				</div>
+				<div class="modal-body">
+					<table class="w-100">
+						<tbody id="travelList">
+							<c:forEach items="${travelList}" var="travel">
+								<tr class="travel-item" data-title="${travel.trvTt}" data-id="${travel.trvId}" data-place="${travel.trvPc}" data-x="${travel.trvX}" data-y="${travel.trvY}">
+									<td class="d-flex">
+										<div class="col-5">
+											<img class="p-2" alt="" src="${travel.trvImg1}" width='240px' height='300px'>
+										</div>
+										<div class="col-7 d-flex flex-column justify-content-center">
+											<h5>제목: ${travel.trvTt}</h5>
+											<h5>장소: ${travel.trvPc}</h5>
+										</div>
+									</td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
-</div>
 
-<script>
+	<script>
 $(document).ready(function() {
 	initializeMap();
 	
@@ -475,11 +489,22 @@ $(document).ready(function() {
 	    if ($(this).is(":checked")) {
 	        console.log("체크함");
 	        myBoard();
+	        $('#marker_search').val('');
 	    } else {
 	        console.log("체크 안함");
 	        showBoard();
+	        $('#marker_search').val('');
 	    }
 	});
+	
+	$('#boardListContainer').on('click', '.delete-board', function(e) {
+        e.preventDefault();
+        const brdId = $(this).data('brd-id');
+        if (confirm('정말 삭제하시겠습니까?')) {
+            const isMyBoardChecked = $('#myBoard').is(':checked');
+            deleteBoard(brdId, isMyBoardChecked);
+        }
+    });
 	
 	
 	 $('#marker_search').on('keypress', function(e) {
@@ -880,15 +905,40 @@ function performSearch(keyWord, isMyBoardChecked) {
     });
 }
 
-
 function createBoardColumn(board) {
-    return '<td class="ms-5">' +
+    var editDeleteButtons = '';
+    var sessionMemId = '<c:out value="${sessionScope.login.memId}" />';
+
+    if (sessionMemId === board.memId) {
+        editDeleteButtons = 
+            '<div class="dropdown me-5 mb-2">' +
+            '<button class="btn" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" ' +
+            'style="font-size: 20px; appearance: none; -webkit-appearance: none;">' +
+            '&#8942;' +
+            '</button>' +
+            '<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
+            '<li><a class="dropdown-item edit-board" href="#" data-brd-id="' + board.brdId + '">수정</a></li>' +
+            '<li><a class="dropdown-item delete-board" href="#" data-brd-id="' + board.brdId + '">삭제</a></li>' +
+            '</ul>' +
+            '</div>';
+    } else {
+        editDeleteButtons = 
+            '<div class="me-5 mb-2" style="font-size: 20px; padding: 6px 12px; height:44px">' +
+            '<button class="btn" style="visibility: hidden; border: none; background: transparent;">' +
+            '&#8942;' +
+            '</button>' +
+            '</div>';
+    }
+
+    return '<td class="ms-5" style="width: 50%;">' +
            '<div style="width: 95%; margin: 0 auto">' +
-           '<div onclick="location.href=\'/getBoard?brdId=' + board.brdId + '\'"' + 
-           ' style="height: 260px; border-radius: 20px; background-color: rgb(248, 248, 248); width: 100%; margin: auto 0" class="d-flex align-items-center">' +
+           '<div style="height: 260px; border-radius: 20px; background-color: rgb(248, 248, 248); width: 100%; margin: auto 0" ' +
+           'class="d-flex align-items-center">' +
            '<div class="row d-flex align-items-center" style="width: 100%;">' +
            '<div class="col-5" style="text-align: center;">' +
-           '<img src="' + board.brdImg1 + '" style="width: 180px; height: 225px; object-fit: cover; border-radius: 10px;" alt="">' +
+           '<img onclick="location.href=\'/getBoard?brdId=' + board.brdId + '\'" ' +
+           'src="' + board.brdImg1 + '" ' +
+           'style="width: 180px; height: 225px; object-fit: cover; border-radius: 10px;" alt="">' +
            '</div>' +
            '<div class="col-7" style="padding: 0;">' +
            '<div>' +
@@ -896,13 +946,15 @@ function createBoardColumn(board) {
            '<h4 class="brdTt" style="margin: 0px; font-weight: bold;">' +
            '<span>[' + board.trvPlc + ']</span> ' + board.brdTt +
            '</h4>' +
+           editDeleteButtons +
            '</div>' +
            '<div class="mt-2 d-flex align-items-center">' +
            '<img src="resources/assets/img/board_map.png" width="7%" alt="">' +
            '<p class="trvPc ms-2">' + board.trvPc + '</p>' +
            '</div>' +
            '</div>' +
-           '<div class="me-5 d-flex flex-column align-items-end" style="color: rgb(107, 107, 107); margin-top: 80px;">' +
+           '<div class="me-5 d-flex flex-column align-items-end" ' +
+           'style="color: rgb(107, 107, 107); margin-top: 80px;">' +
            '<i class="fa-regular fa-heart" style="font-size: 20px"></i>' +
            '</div>' +
            '</div>' +
@@ -911,7 +963,6 @@ function createBoardColumn(board) {
            '</div>' +
            '</td>';
 }
-
 
 //Initialize the map
 function initializeMap() {
@@ -948,6 +999,26 @@ function updateIndexLabels() {
             indexLabel.text((orderIndex + 1) + '번째');
         } else {
             indexLabel.text('클릭하세요');
+        }
+    });
+}
+
+function deleteBoard(brdId, isMyBoardChecked) {
+	console.log("삭제");
+    $.ajax({
+        url: '/boardDel',
+        type: 'POST',
+        data: { brdId: brdId },
+        success: function(response) {
+            alert('여행 기록이 성공적으로 삭제되었습니다!');
+            if(isMyBoardChecked){
+            	myBoard();
+            }else{
+            	showBoard();
+            }
+        },
+        error: function(xhr, status, error) {
+            alert('여행 기록 삭제 중 오류가 발생했습니다.');
         }
     });
 }

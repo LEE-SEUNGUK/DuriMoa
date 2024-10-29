@@ -32,6 +32,9 @@ public interface IBoardDAO {
 	// 게시글 상세 조회
 	public BoardInfoVO getBoard(int brdId);
 	
+	// 게시글 삭제
+	public void boardDel(int brdId);
+	
 	// 댓글 작성
 	public int writeReply(ReplyVO vo);
 	

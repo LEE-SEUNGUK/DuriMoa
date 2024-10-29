@@ -83,6 +83,11 @@ public class BoardService {
 		}
 		return result;
 	};
+	
+	// 게시글 삭제
+	public void boardDel(int brdId) {
+		dao.boardDel(brdId);
+	};
 
 	// 댓글 작성
 	public int writeReply(ReplyVO vo) throws Exception {

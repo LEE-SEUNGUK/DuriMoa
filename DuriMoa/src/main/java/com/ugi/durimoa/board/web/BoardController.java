@@ -216,4 +216,16 @@ public class BoardController {
 		
 		return result;
 	}
+	
+	
+	@ResponseBody
+	@RequestMapping("/boardDel")
+	public String boardDel(@RequestParam("brdId") int brdId) throws Exception {
+
+		bimageService.deleteImagesByBrdId(brdId);
+
+		boardService.boardDel(brdId);
+		
+		return "success";
+	}
 }

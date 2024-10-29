@@ -25,4 +25,9 @@ public class BimageService {
 			}
 		}
 	}
+	
+	// 사진 삭제
+	public void deleteImagesByBrdId(int brdId) {
+		dao.deleteImagesByBrdId(brdId);
+	};
 }
