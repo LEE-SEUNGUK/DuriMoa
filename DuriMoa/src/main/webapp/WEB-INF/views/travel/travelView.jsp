@@ -874,7 +874,7 @@ function toggleMode() {
     if ($('#writeMode').is(':visible')) {
         buttonIcon
             .removeClass('fa-pen-to-square')
-            .addClass(' pt-1 fa-plus');
+            .addClass('pt-1 fa-plus');
         writeButton
             .addClass('close-mode')
             .removeAttr('data-bs-toggle data-bs-target');

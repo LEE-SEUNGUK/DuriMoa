@@ -390,7 +390,7 @@ label:hover::before, #myBoard:hover+label::before {
 							<div class="mb-3">
 								<label for="travelContent" class="form-label">해시태그</label> <input type="text" id="travelTag">
 							</div>
-							<input type="hidden" name="memId" value="${sessionScope.login.memId}"> <input type="hidden" name="trvId" value="">
+							<input type="hidden" name="memId" value="${sessionScope.login.memId}"> <input type="hidden" id="trvId" name="trvId" value="">
 							<button type="submit" class="btn travelBtn">등록하기</button>
 						</div>
 					</section>
@@ -462,6 +462,11 @@ $(document).ready(function() {
         }
     });
 	
+	$('#boardListContainer').on('click', '.edit-board', function(e) {
+        e.preventDefault();
+        const brdId = $(this).data('brd-id');
+        editBoard(brdId);
+    });
 	
 	 $('#marker_search').on('keypress', function(e) {
          if (e.keyCode === 13) {  // Enter key pressed
@@ -471,6 +476,21 @@ $(document).ready(function() {
              performSearch(keyWord, isMyBoardChecked);
          }
      });
+	 
+	// Add handler for image removal
+	 $(document).on('click', '.remove-img', function() {
+	     const imgWrap = $(this).closest('.img-wrap');
+	     if (imgWrap.attr('data-existing') === 'true') {
+	         imgWrap.hide();  // Hide instead of remove for existing images
+	     } else {
+	         imgWrap.remove();
+	     }
+	     
+	     if ($('#photoPreview .img-wrap:visible').length === 0) {
+	         $('#trvImgUpload').val('');
+	         clickOrder = [];
+	     }
+	 });
 	 
 	 
 	// 검색창에서 엔터키를 눌렀을 때만 검색 실행 모달
@@ -602,20 +622,19 @@ $(document).ready(function() {
         photoPreview.empty();
         clickOrder = []; // Reset click order
 
-        // Add clear button
+     // Add clear button if not exists
         if ($('#clearPhotosBtn').length === 0) {
             var clearBtn = $('<button>')
                 .attr('id', 'clearPhotosBtn')
                 .addClass('btn btn-danger btn-sm mb-2')
                 .text('지우기')
-                
-            clearBtn.on('click', function(e) {
-                e.preventDefault();
-                $('#trvImgUpload').val('');
-                $('#photoPreview').empty();
-                clickOrder = [];
-                $(this).remove();
-            });
+                .on('click', function(e) {
+                    e.preventDefault();
+                    $('#trvImgUpload').val('');
+                    photoPreview.empty();
+                    clickOrder = [];
+                    $(this).remove();
+                });
             
             var labelDiv = $('<div>').addClass('d-flex align-items-center gap-2');
             $('#photoDiv label').wrap(labelDiv);
@@ -632,7 +651,6 @@ $(document).ready(function() {
                     var imgWrap = $('<div class="img-wrap" data-index="' + index + '"></div>');
                     var img = $('<img>').attr('src', e.target.result).addClass('img-thumbnail');
                     
-                    // Add index display
                     var indexLabel = $('<div>')
                         .addClass('index-label')
                         .css({
@@ -649,28 +667,18 @@ $(document).ready(function() {
                     imgWrap.append(img, indexLabel);
                     photoPreview.append(imgWrap);
 
-                    // If only one image, automatically set it as first
                     if (files.length === 1) {
                         clickOrder = [0];
                         indexLabel.text('1번째');
                     } else {
-                        // For multiple images, make them clickable
                         indexLabel.text('클릭하세요');
-                        
-                        // Add click handler only for multiple images
                         imgWrap.on('click', function() {
                             var currentIndex = $(this).data('index');
-                            
-                            // Remove from clickOrder if already exists
                             var existingIndex = clickOrder.indexOf(currentIndex);
                             if (existingIndex !== -1) {
                                 clickOrder.splice(existingIndex, 1);
                             }
-                            
-                            // Add to clickOrder
                             clickOrder.push(currentIndex);
-                            
-                            // Update all index labels
                             updateIndexLabels();
                         });
                     }
@@ -690,68 +698,220 @@ $(document).ready(function() {
     $('#boardAddForm').submit(function(e) {
         e.preventDefault();
         
+        const form = e.target;  // or this
+        
         if(!$('#travelTitle').val()){
         	alert("제목을 입력하세요.");
         	return;
         }
-
         
         if(!$('#travelContent').val()){
         	alert("내용을 입력하세요.");
         	return;
         }
         
-     	// New image validation logic
-        var hasNewImages = $('#trvImgUpload').val() !== '';
-        var existingImagesCount = $('#photoPreview .img-wrap[data-existing="true"]').length;
-        
-        // Only check for new images if there are no existing images
-        if (!hasNewImages) {
-            alert("사진은 최소 1장 이상 선택해야 합니다.");
-            return;
-        }
-        
-        if (!hasNewImages && existingImagesCount === 0) {
-            alert("사진은 최소 1장 이상 선택해야 합니다.");
-            return;
-        }
-        
-        var formData = new FormData(e.target);
-        var files = $('#trvImgUpload')[0].files;
+        const formData = new FormData($('#boardAddForm form')[0]); 
 
-        if (files && files.length > 0) {
+        const files = $('#trvImgUpload')[0].files;
+        const isEdit = formData.has('brdId');
+        
+     // Image validation
+        if (!isEdit && !files.length) {
+            alert("사진은 최소 1장 이상 선택해야 합니다.");
+            return;
+        }
+        
+     // Handle images
+        if (isEdit) {
+            if (files.length > 0) {
+                // Remove existing files and add new ones
+                formData.delete('brdImgs');
+                if (files.length === 1) {
+                    formData.append('brdImgs', files[0]);
+                } else if (clickOrder.length > 0) {
+                    clickOrder.forEach((index) => {
+                        formData.append('brdImgs', files[index]);
+                    });
+                } else {
+                    for (let i = 0; i < files.length; i++) {
+                        formData.append('brdImgs', files[i]);
+                    }
+                }
+            } else {
+                // Keep existing images
+                formData.append('preserveImages', 'true');
+            }
+        } else {
+            // New board creation
             formData.delete('brdImgs');
-            
             if (files.length === 1) {
                 formData.append('brdImgs', files[0]);
             } else if (clickOrder.length > 0) {
-                clickOrder.forEach((index, orderIndex) => {
+                clickOrder.forEach((index) => {
                     formData.append('brdImgs', files[index]);
                 });
             } else {
-                for (var i = 0; i < files.length; i++) {
+                for (let i = 0; i < files.length; i++) {
                     formData.append('brdImgs', files[i]);
                 }
             }
         }
 
         $.ajax({
-            url: "/boardAdd",
+            url: isEdit ? '/boardUpdate' : '/boardAdd',
             type: 'POST',
             data: formData,
             processData: false,
             contentType: false,
             success: function(response) {
-                alert('여행 기록이 성공적으로 저장되었습니다!');
+                alert(isEdit ? '게시물이 성공적으로 수정되었습니다!' : '게시물이 성공적으로 저장되었습니다!');
                 location.reload();
             },
             error: function(xhr, status, error) {
                 console.error('Error:', error);
-                alert('여행 기록 저장 중 오류가 발생했습니다.');
+                alert('게시물 저장 중 오류가 발생했습니다.');
             }
         });
     });
 });
+
+function editBoard(brdId) {
+    $.ajax({
+        url: '/getBoardEdit',
+        type: 'GET',
+        data: { brdId: brdId },
+        success: function(board) {
+        	console.log(board);
+            // Switch to edit mode
+            $('#boardListContainer').hide();
+            $('#boardAddForm').show();
+            
+            // Change button to close mode
+            $('#writeButton')
+                .removeAttr('data-bs-toggle data-bs-target')
+                .addClass('close-mode')
+                .find('i')
+                .removeClass('fa-pen-to-square')
+                .addClass('fa-plus');
+
+            // Populate form with board data
+            $('#travelTitle').val(board.brdTt);
+            $('#travelDestination').val(board.trvPc);
+            $('#travelContent').val(board.brdCt);
+            $('#trvId').val(board.trvId);    
+            
+            // Add hidden input for brdId
+            if ($('input[name="brdId"]').length === 0) {
+                $('<input>')
+                    .attr('type', 'hidden')
+                    .attr('name', 'brdId')
+                    .val(brdId)
+                    .appendTo('#boardAddForm form');
+            } else {
+                $('input[name="brdId"]').val(brdId);
+            }
+
+            // Set form for editing
+            $('#boardAddForm form').attr('action', '/boardUpdate');
+
+            // Show map with location
+            if (board.trvPc) {
+                geocoder.addressSearch(board.trvPc, function(results, status) {
+                    if (status === kakao.maps.services.Status.OK) {
+                        var result = results[0];
+                        var coords = new kakao.maps.LatLng(result.y, result.x);
+                        $('#map').show();
+                        map.relayout();
+                        map.setCenter(coords);
+                        marker.setPosition(coords);
+                    }
+                });
+            }
+
+            // Handle existing images
+            var photoPreview = $('#photoPreview');
+            photoPreview.empty();
+
+            // Add clear button if not exists
+            if ($('#clearPhotosBtn').length === 0) {
+                var clearBtn = $('<button>')
+                    .attr('id', 'clearPhotosBtn')
+                    .addClass('btn btn-danger btn-sm mb-2')
+                    .text('지우기');
+                
+                clearBtn.on('click', function(e) {
+                    e.preventDefault();
+                    $('#trvImgUpload').val('');
+                    photoPreview.empty();
+                    clickOrder = [];
+                    $(this).remove();
+                });
+                
+                var labelDiv = $('<div>').addClass('d-flex align-items-center gap-2');
+                $('#photoDiv label').wrap(labelDiv);
+                $('#photoDiv label').after(clearBtn);
+            }
+
+         // Display existing images
+            if (board.brdImg1) addExistingImage(board.brdImg1, 1);
+            if (board.brdImg2) addExistingImage(board.brdImg2, 2);
+            if (board.brdImg3) addExistingImage(board.brdImg3, 3);
+            
+            $('#photoDiv').show();
+        },
+        error: function(xhr, status, error) {
+            console.error('Error:', error);
+            alert('게시물 정보를 불러오는 중 오류가 발생했습니다.');
+        }
+    });
+}
+
+function addExistingImage(imgSrc, index) {
+    var imgWrap = $('<div>')
+        .addClass('img-wrap')
+        .attr({
+            'data-existing': 'true',
+            'data-index': index
+        });
+    
+    var img = $('<img>')
+        .attr('src', imgSrc)
+        .addClass('img-thumbnail');
+    
+    // Add index label for order selection
+    var indexLabel = $('<div>')
+        .addClass('index-label')
+        .css({
+            'position': 'absolute',
+            'top': '5px',
+            'left': '5px',
+            'background': 'rgba(0, 0, 0, 0.7)',
+            'color': 'white',
+            'padding': '2px 6px',
+            'border-radius': '3px',
+            'font-size': '12px'
+        });
+    
+    imgWrap.append(img, indexLabel);
+    $('#photoPreview').append(imgWrap);
+    
+    // Make existing images clickable for reordering
+    if ($('#photoPreview .img-wrap').length > 1) {
+        indexLabel.text('클릭하세요');
+        imgWrap.on('click', function() {
+            var currentIndex = $(this).data('index');
+            var existingIndex = clickOrder.indexOf(currentIndex);
+            if (existingIndex !== -1) {
+                clickOrder.splice(existingIndex, 1);
+            }
+            clickOrder.push(currentIndex);
+            updateIndexLabels();
+        });
+    } else {
+        indexLabel.text('1번째');
+        clickOrder = [index];
+    }
+}
 
 function showBoard(){
 	console.log("전체 보기");

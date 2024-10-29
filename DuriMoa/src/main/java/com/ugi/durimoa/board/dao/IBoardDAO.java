@@ -23,6 +23,9 @@ public interface IBoardDAO {
 	// 게시글 검색
 	public ArrayList<BoardInfoVO> getBoardSearch(String kerWord);
 	
+	// 게시글 수정
+	public int boardUpdate(BoardVO vo);
+	
 	// 내 게시글 검색
 	public ArrayList<BoardInfoVO> getMyBoardSearch(SearchVO vo);
 	

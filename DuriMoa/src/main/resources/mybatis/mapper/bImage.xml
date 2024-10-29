@@ -8,6 +8,7 @@
 	</insert>
 	
 	<delete id="deleteImagesByBrdId" parameterType="int">
-        DELETE FROM BOARD_IMG WHERE brd_id = #{brdId}
+        DELETE FROM BOARD_IMG 
+        WHERE brd_id = #{brdId}
     </delete>
 </mapper>

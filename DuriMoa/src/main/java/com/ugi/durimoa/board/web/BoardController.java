@@ -33,21 +33,23 @@ import com.ugi.durimoa.board.vo.BoardVO;
 import com.ugi.durimoa.board.vo.ReplyVO;
 import com.ugi.durimoa.member.vo.MemberVO;
 import com.ugi.durimoa.travel.service.TravelService;
+import com.ugi.durimoa.travel.vo.ImageVO;
 import com.ugi.durimoa.travel.vo.SearchVO;
 import com.ugi.durimoa.travel.vo.TravelInfoVO;
+import com.ugi.durimoa.travel.vo.TravelVO;
 
 @Controller
 public class BoardController {
-	
+
 	@Autowired
 	BoardService boardService;
-	
+
 	@Autowired
 	TravelService travelService;
-	
+
 	@Autowired
 	BimageService bimageService;
-	
+
 	@Value("#{util['file.upload.path']}")
 	private String uploadPath;
 
@@ -64,69 +66,66 @@ public class BoardController {
 
 		model.addAttribute("travelList", travelList);
 		model.addAttribute("boardList", boardList);
-		
+
 		System.out.println(boardList);
 
 		return "/board/boardView";
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/getBoardSearch")
 	public ArrayList<BoardInfoVO> getBoardSearch(@RequestParam("keyWord") String keyWord) throws Exception {
-	
-	    ArrayList<BoardInfoVO> boardList = boardService.getBoardSearch(keyWord);
-	    
-	    System.out.println(boardList);
-	        
-	    return boardList;
+
+		ArrayList<BoardInfoVO> boardList = boardService.getBoardSearch(keyWord);
+
+		System.out.println(boardList);
+
+		return boardList;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/getMyBoardSearch")
 	public ArrayList<BoardInfoVO> getMyBoardSearch(@ModelAttribute SearchVO vo) throws Exception {
-		
+
 		System.out.println(vo);
 
-		
 		ArrayList<BoardInfoVO> boardList = boardService.getMyBoardSearch(vo);
-	    
-	    System.out.println(boardList);
-	        
-	    return boardList;
+
+		System.out.println(boardList);
+
+		return boardList;
 	}
-	
-	
-	
+
 	@ResponseBody
 	@RequestMapping("/myBoard")
 	public ArrayList<BoardInfoVO> myBoard(@RequestParam("memId") String memId) throws Exception {
-	
-	    ArrayList<BoardInfoVO> boardList = boardService.myBoard(memId);
-	    
-	    System.out.println(boardList);
-	        
-	    return boardList;
+
+		ArrayList<BoardInfoVO> boardList = boardService.myBoard(memId);
+
+		System.out.println(boardList);
+
+		return boardList;
 	}
-	
+
 	@ResponseBody
 	@RequestMapping("/showBoard")
-	public ArrayList<BoardInfoVO> showBoard() throws Exception{
+	public ArrayList<BoardInfoVO> showBoard() throws Exception {
 		ArrayList<BoardInfoVO> boardList = boardService.getBoardList();
 		System.out.println("전체 조회");
-		
-		return boardList;	
+
+		return boardList;
 	}
-	
+
 	@RequestMapping("/boardAdd")
 	@ResponseBody
 	public String travelAdd(@ModelAttribute BoardVO vo, @RequestParam("brdImgs") List<MultipartFile> files)
 			throws Exception {
 		System.out.println(vo);
 		try {
-			
+
 			vo.setBrdCt(vo.getBrdCt().replace("\r\n", "<br>"));
 			vo.setBrdCt(vo.getBrdCt().replace(" ", "&nbsp"));
-			
+
 			// Save TravelVO
 			boardService.boardAdd(vo);
 
@@ -165,59 +164,137 @@ public class BoardController {
 			return "Error: " + e.getMessage();
 		}
 	}
-	
-	@RequestMapping("/getBoard")
-	public String boardDetailView(Model model, int brdId) throws Exception {
-		
+
+	@RequestMapping("/boardUpdate")
+	@ResponseBody
+	public String boardUpdate(@ModelAttribute BoardVO vo,
+			@RequestParam(value = "brdImgs", required = false) List<MultipartFile> files,
+			@RequestParam(value = "preserveImages", required = false) String preserveImages) {
+
+		System.out.println(vo);
+		System.out.println(files);
+
+		try {
+			vo.setBrdCt(vo.getBrdCt().replace("\r\n", "<br>"));
+			vo.setBrdCt(vo.getBrdCt().replace(" ", "&nbsp"));
+
+			// Update travel information
+			boardService.boardUpdate(vo);
+
+			// Only delete and update images if new files are provided AND we're not
+			// preserving images
+			if (files != null && !files.isEmpty() && !"true".equals(preserveImages)) {
+				System.out.println("새로운 파일로 교체");
+				// Delete existing images
+				bimageService.deleteImagesByBrdId(vo.getBrdId());
+
+				// Handle new image files
+				List<BimageVO> images = new ArrayList<>();
+				for (int i = 0; i < files.size(); i++) {
+					MultipartFile file = files.get(i);
+					if (!file.isEmpty()) {
+						String fileName = UUID.randomUUID().toString() + "_" + file.getOriginalFilename();
+						String filePath = uploadPath + File.separator + fileName;
+
+						File dest = new File(filePath);
+						file.transferTo(dest);
+
+						BimageVO imageVO = new BimageVO();
+						imageVO.setBrdId(vo.getBrdId());
+						imageVO.setBrdImg(downloadPath + fileName);
+						imageVO.setBrdIdx(String.valueOf(i + 1));
+						images.add(imageVO);
+					}
+				}
+
+				if (!images.isEmpty()) {
+					bimageService.imagesAdd(images);
+				}
+			} else {
+				System.out.println("기존 파일 유지");
+			}
+
+			return "success";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "Error: " + e.getMessage();
+		}
+	}
+
+	@ResponseBody
+	@RequestMapping("/getBoardEdit")
+	public BoardInfoVO boardEditView(Model model, int brdId) throws Exception {
+		System.out.println("수정 컨트롤러");
 		System.out.println(brdId);
 		BoardInfoVO vo = boardService.getBoard(brdId);
+		vo.setBrdCt(vo.getBrdCt().replace("&nbsp", " "));
+		vo.setBrdCt(vo.getBrdCt().replace("<br>", "\r\n"));
+		
 		ArrayList<ReplyVO> replyList = boardService.getReplyList(brdId);
 
 		model.addAttribute("board", vo);
 		model.addAttribute("replyList", replyList);
-		
+
 		System.out.println(vo.toString());
 		System.out.println(replyList);
+
+		return vo;
+	}
+
+	@RequestMapping("/getBoard")
+	public String boardDetailView(Model model, int brdId) throws Exception {
+
+		System.out.println(brdId);
+		BoardInfoVO vo = boardService.getBoard(brdId);
+		vo.setBrdCt(vo.getBrdCt().replace("&nbsp", " "));
+		vo.setBrdCt(vo.getBrdCt().replace("<br>", "\r\n"));
 		
+		ArrayList<ReplyVO> replyList = boardService.getReplyList(brdId);
+
+		model.addAttribute("board", vo);
+		model.addAttribute("replyList", replyList);
+
+		System.out.println(vo.toString());
+		System.out.println(replyList);
+
 		return "board/boardDetailView";
 	}
-	
+
 	@ResponseBody
 	@PostMapping("/writeReply") // @RequestBody 문자열 json 데이터를 객체로 받음
 	public ReplyVO writeReply(@RequestBody ReplyVO vo) throws Exception {
-		
+
 		System.out.println(vo);
 		Date date = new Date();
 		SimpleDateFormat fdr = new SimpleDateFormat("yyMMddmmssSSS");
 		String uniquId = fdr.format(date);
-		
+
 		System.out.println(uniquId);
 		vo.setRpyId(uniquId);
-		
+
 		// 댓글 저장
 		boardService.writeReply(vo);
-		
+
 		// 저장된 댓글 조회
 		ReplyVO result = boardService.getReply(uniquId);
 		return result;
 	}
-	
+
 	@ResponseBody
 	@PostMapping("/delReply") // @RequestBody 문자열 json 데이터를 객체로 받음
 	public String delReplyDo(@RequestBody ReplyVO vo) {
 		String result = "success";
-		
+
 		try {
 			boardService.delReply(vo.getRpyId());
 		} catch (Exception e) {
 			e.printStackTrace();
 			result = "fail";
 		}
-		
+
 		return result;
 	}
-	
-	
+
 	@ResponseBody
 	@RequestMapping("/boardDel")
 	public String boardDel(@RequestParam("brdId") int brdId) throws Exception {
@@ -225,7 +302,7 @@ public class BoardController {
 		bimageService.deleteImagesByBrdId(brdId);
 
 		boardService.boardDel(brdId);
-		
+
 		return "success";
 	}
 }

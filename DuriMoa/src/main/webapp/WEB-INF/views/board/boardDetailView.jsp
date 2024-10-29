@@ -116,9 +116,7 @@
                 <div class="mt-3" style="text-align: center;">
                     <div id="map"></div>
                 </div>
-                <div class="mt-5 p-3" style="height: 340px;">
-                    ${board.brdCt}
-                </div>
+                <pre class="mt-5 p-3" style="height: 340px; font-size: 18px; font-family: 'Pretendard-Regular';">${board.brdCt}</pre>
             </section>
         </div>
     </div>

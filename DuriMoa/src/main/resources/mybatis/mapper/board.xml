@@ -7,6 +7,13 @@
 		VALUES (#{memId}, #{trvId}, #{brdTt}, #{brdCt})
 	</insert> 
 	
+	<update id="boardUpdate" parameterType="BoardVO">
+		UPDATE board
+		SET brd_tt = #{brdTt},
+			brd_ct = #{brdCt}
+		WHERE brd_id = #{brdId}
+	</update>
+	
 	<select id="getBoardList" resultType="BoardInfoVO">
 		SELECT a.*, SUBSTR(c.trv_pc, 0, 2) trv_plc, c.trv_pc, b.brd_img brdImg1
 		FROM board a, board_img b, travel c

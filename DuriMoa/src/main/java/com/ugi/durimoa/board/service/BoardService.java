@@ -10,6 +10,7 @@ import com.ugi.durimoa.board.vo.BoardInfoVO;
 import com.ugi.durimoa.board.vo.BoardVO;
 import com.ugi.durimoa.board.vo.ReplyVO;
 import com.ugi.durimoa.travel.vo.SearchVO;
+import com.ugi.durimoa.travel.vo.TravelVO;
 
 @Service
 public class BoardService {
@@ -49,6 +50,12 @@ public class BoardService {
 			throw new Exception();
 		}
 		return result;
+	};
+	
+	public void boardUpdate(BoardVO vo) {
+		System.out.println("여행 정보 수정");
+		
+		dao.boardUpdate(vo);
 	};
 	
 	// 게시글 검색
