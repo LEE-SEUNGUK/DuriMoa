@@ -381,14 +381,14 @@ label:hover::before, #trvOp:hover+label::before {
 														<div class="d-flex flex-column ">
 															<h4 style="font-weight: bold; font-size: 30px; font-family: LeeSeoyun;">
 																<span style="font-size: 28px;">[${travel.trvPlc }]</span>${travel.trvTt }
-															</h4>
-															<div class="dropdown position-absolute" style="left: 72%;">
+																<span class="dropdown" style="left: 72%;">
 																<button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 20px; appearance: none; -webkit-appearance: none;">&#8942;</button>
 																<ul class="dropdown-menu compact-menu">
 																	<li><a class="dropdown-item edit-travel" href="#" data-trv-id="${travel.trvId}">수정</a></li>
 																	<li><a class="dropdown-item delete-travel" href="#" data-trv-id="${travel.trvId}">삭제</a></li>
 																</ul>
-															</div>
+															</span>
+															</h4>
 															<div class="d-flex align-items-center" style="font-size: 18px;">
 																<img src="resources/assets/img/board_map.png" width="22px" alt="">
 																<p class="ms-2" style="color: #6a6a6a;">${travel.trvPc }</p>
