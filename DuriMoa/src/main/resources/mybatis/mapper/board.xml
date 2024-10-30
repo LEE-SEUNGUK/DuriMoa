@@ -14,40 +14,97 @@
 		WHERE brd_id = #{brdId}
 	</update>
 	
-	<select id="getBoardList" resultType="BoardInfoVO">
-		SELECT a.*, SUBSTR(c.trv_pc, 0, 2) trv_plc, c.trv_pc, b.brd_img brdImg1
-		FROM board a, board_img b, travel c
-		WHERE a.brd_id = b.brd_id
-		AND a.trv_id = c.trv_id
-		AND b.brd_idx = '1'
+	<select id="getBoardList" resultType="BoardInfoVO" parameterType="String">
+		SELECT 
+		    a.*, 
+		    SUBSTR(c.trv_pc, 0, 2) AS trv_plc, 
+		    c.trv_pc, 
+		    b.brd_img AS brdImg1,
+		    NVL(d.like_yn, 'N') AS likeYn,
+		    (SELECT COUNT(*) 
+		     FROM likes 
+		     WHERE likes.brd_id = a.brd_id 
+		     AND likes.like_yn = 'Y') AS cnt
+		FROM 
+		    board a
+		JOIN 
+		    board_img b ON a.brd_id = b.brd_id
+		JOIN 
+		    travel c ON a.trv_id = c.trv_id
+		LEFT JOIN 
+		    likes d ON a.brd_id = d.brd_id AND d.mem_id = #{memId}
+		WHERE 
+		    b.brd_idx = '1'
 	</select>
 	
-	<select id="getBoardSearch" resultType="BoardInfoVO" parameterType="String">
-		SELECT a.*, SUBSTR(c.trv_pc, 0, 2) AS trv_plc, c.trv_pc, b.brd_img AS brdImg1
-		FROM board a
-		JOIN board_img b ON a.brd_id = b.brd_id
-		JOIN travel c ON a.trv_id = c.trv_id
-		WHERE b.brd_idx = '1'
-		AND (#{keyWord} IS NULL OR a.brd_tt LIKE '%' || #{keyWord} || '%' OR c.trv_pc LIKE '%' || #{keyWord} || '%')
+	<select id="getBoardSearch" resultType="BoardInfoVO" parameterType="SearchVO">
+    SELECT 
+        a.*, 
+        SUBSTR(c.trv_pc, 0, 2) AS trv_plc, 
+        c.trv_pc, 
+        b.brd_img AS brdImg1,
+        NVL((SELECT d.like_yn 
+             FROM likes d 
+             WHERE d.brd_id = a.brd_id AND d.mem_id = #{memId}), 'N') AS likeYn,  -- 좋아요 여부
+        (SELECT COUNT(*) 
+         FROM likes 
+         WHERE likes.brd_id = a.brd_id AND likes.like_yn = 'Y') AS cnt  -- 전체 좋아요 수
+    FROM 
+        board a
+    JOIN 
+        board_img b ON a.brd_id = b.brd_id
+    JOIN 
+        travel c ON a.trv_id = c.trv_id
+    WHERE 
+        b.brd_idx = '1'
+        AND (#{keyWord} IS NULL OR a.brd_tt LIKE '%' || #{keyWord} || '%' OR c.trv_pc LIKE '%' || #{keyWord} || '%')
 	</select>
 	
 	<select id="getMyBoardSearch" resultType="BoardInfoVO" parameterType="SearchVO">
-		SELECT a.*, SUBSTR(c.trv_pc, 0, 2) AS trv_plc, c.trv_pc, b.brd_img AS brdImg1
-		FROM board a
-		JOIN board_img b ON a.brd_id = b.brd_id
-		JOIN travel c ON a.trv_id = c.trv_id
-		WHERE b.brd_idx = '1'
-		AND (#{keyWord} IS NULL OR a.brd_tt LIKE '%' || #{keyWord} || '%' OR c.trv_pc LIKE '%' || #{keyWord} || '%')
-		AND a.mem_id = #{memId}
+	    SELECT 
+	        a.*, 
+	        SUBSTR(c.trv_pc, 0, 2) AS trv_plc, 
+	        c.trv_pc, 
+	        b.brd_img AS brdImg1,
+	        NVL((SELECT d.like_yn 
+	             FROM likes d 
+	             WHERE d.brd_id = a.brd_id AND d.mem_id = #{memId}), 'N') AS likeYn,  -- 좋아요 여부
+	        (SELECT COUNT(*) 
+	         FROM likes 
+	         WHERE likes.brd_id = a.brd_id AND likes.like_yn = 'Y') AS cnt  -- 전체 좋아요 수
+	    FROM 
+	        board a
+	    JOIN 
+	        board_img b ON a.brd_id = b.brd_id
+	    JOIN 
+	        travel c ON a.trv_id = c.trv_id
+	    WHERE 
+	        b.brd_idx = '1'
+	        AND (#{keyWord} IS NULL OR a.brd_tt LIKE '%' || #{keyWord} || '%' OR c.trv_pc LIKE '%' || #{keyWord} || '%')
+	        AND a.mem_id = #{memId}
 	</select>
 	
 	<select id="myBoard" resultType="BoardInfoVO" parameterType="String">
-		SELECT a.*, SUBSTR(c.trv_pc, 0, 2) trv_plc, c.trv_pc, b.brd_img brdImg1
-		FROM board a, board_img b, travel c
-		WHERE a.brd_id = b.brd_id
-		AND a.trv_id = c.trv_id
-		AND b.brd_idx = '1'
-		AND a.mem_id = #{memId}
+		SELECT 
+		    a.*, 
+		    SUBSTR(c.trv_pc, 0, 2) AS trv_plc, 
+		    c.trv_pc, 
+		    b.brd_img AS brdImg1,
+		    NVL((SELECT d.like_yn 
+		         FROM likes d 
+		         WHERE d.brd_id = a.brd_id AND d.mem_id = #{memId}), 'N') AS likeYn,  -- 좋아요 여부
+		    (SELECT COUNT(*) 
+		     FROM likes 
+		     WHERE likes.brd_id = a.brd_id AND likes.like_yn = 'Y') AS cnt  -- 전체 좋아요 수
+		FROM 
+		    board a, 
+		    board_img b, 
+		    travel c
+		WHERE 
+		    a.brd_id = b.brd_id
+		    AND a.trv_id = c.trv_id
+		    AND b.brd_idx = '1'
+		    AND a.mem_id = #{memId}
 	</select>
 	
 	<select id="getBoard" resultType="BoardInfoVO" parameterType="int">
@@ -132,8 +189,8 @@
 	INSERT INTO LIKES(mem_id, brd_id, like_yn) VALUES(#{memId}, #{brdId}, 'Y')
 	</insert>
 	
-	<update id="likeDel" parameterType="LikeVO">
-	UPDATE LIKES SET like_yn = 'N' WHERE brd_id = #{brdId} AND mem_id = #{memId}
-	</update>
+	<delete id="likeDel" parameterType="LikeVO">
+	DELETE FROM likes WHERE brd_id = #{brdId} AND mem_id = #{memId}
+	</delete>
 	
 </mapper>

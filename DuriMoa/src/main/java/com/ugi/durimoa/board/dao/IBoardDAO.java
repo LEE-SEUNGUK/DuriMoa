@@ -19,10 +19,10 @@ public interface IBoardDAO {
 	public int boardAdd(BoardVO vo);
 	
 	// 게시글 전체 조회
-	public ArrayList<BoardInfoVO> getBoardList();
+	public ArrayList<BoardInfoVO> getBoardList(String memId);
 	
 	// 게시글 검색
-	public ArrayList<BoardInfoVO> getBoardSearch(String kerWord);
+	public ArrayList<BoardInfoVO> getBoardSearch(SearchVO vo);
 	
 	// 게시글 수정
 	public int boardUpdate(BoardVO vo);

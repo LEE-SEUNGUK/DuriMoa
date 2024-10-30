@@ -63,21 +63,21 @@ public class BoardController {
 		MemberVO login = (MemberVO) session.getAttribute("login");
 
 		ArrayList<TravelInfoVO> travelList = travelService.getTravelList(login);
-		ArrayList<BoardInfoVO> boardList = boardService.getBoardList();
+		ArrayList<BoardInfoVO> boardList = boardService.getBoardList(login.getMemId());
 
 		model.addAttribute("travelList", travelList);
 		model.addAttribute("boardList", boardList);
 
-		System.out.println(boardList);
+		System.out.println(boardList.toString());
 
 		return "/board/boardView";
 	}
 
 	@ResponseBody
 	@RequestMapping("/getBoardSearch")
-	public ArrayList<BoardInfoVO> getBoardSearch(@RequestParam("keyWord") String keyWord) throws Exception {
+	public ArrayList<BoardInfoVO> getBoardSearch(SearchVO vo) throws Exception {
 
-		ArrayList<BoardInfoVO> boardList = boardService.getBoardSearch(keyWord);
+		ArrayList<BoardInfoVO> boardList = boardService.getBoardSearch(vo);
 
 		System.out.println(boardList);
 
@@ -110,9 +110,10 @@ public class BoardController {
 
 	@ResponseBody
 	@RequestMapping("/showBoard")
-	public ArrayList<BoardInfoVO> showBoard() throws Exception {
-		ArrayList<BoardInfoVO> boardList = boardService.getBoardList();
-		System.out.println("전체 조회");
+	public ArrayList<BoardInfoVO> showBoard(HttpSession session) throws Exception {
+		MemberVO login = (MemberVO) session.getAttribute("login");
+		
+		ArrayList<BoardInfoVO> boardList = boardService.getBoardList(login.getMemId());
 
 		return boardList;
 	}

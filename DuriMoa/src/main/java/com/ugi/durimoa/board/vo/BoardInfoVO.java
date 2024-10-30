@@ -13,6 +13,8 @@ public class BoardInfoVO {
 	private String brdImg1; // 썸네일 정보
 	private String brdImg2;
 	private String brdImg3;
+	private String likeYn;
+	private int cnt;
 	
 	public String getTrvPc() {
 		return trvPc;
@@ -88,10 +90,26 @@ public class BoardInfoVO {
 	public void setBrdImg3(String brdImg3) {
 		this.brdImg3 = brdImg3;
 	}
+	
+	public String getLikeYn() {
+		return likeYn;
+	}
+	public void setLikeYn(String likeYn) {
+		this.likeYn = likeYn;
+	}
+	
+	public int getCnt() {
+		return cnt;
+	}
+	public void setCnt(int cnt) {
+		this.cnt = cnt;
+	}
+	
 	@Override
 	public String toString() {
 		return "BoardInfoVO [trvPc=" + trvPc + ", trvId=" + trvId + ", memId=" + memId + ", trvX=" + trvX + ", trvY="
 				+ trvY + ", trvPlc=" + trvPlc + ", brdId=" + brdId + ", brdTt=" + brdTt + ", brdCt=" + brdCt
-				+ ", brdImg1=" + brdImg1 + ", brdImg2=" + brdImg2 + ", brdImg3=" + brdImg3 + "]";
+				+ ", brdImg1=" + brdImg1 + ", brdImg2=" + brdImg2 + ", brdImg3=" + brdImg3 + ", likeYn=" + likeYn
+				+ ", cnt=" + cnt + "]";
 	}
 }

@@ -7,24 +7,24 @@
 <title>두리모아</title>
 <style>
 .writing-button.close-mode {
-    background-color: #ff6b6b;
+	background-color: #ff6b6b;
 }
 
 .writing-button.close-mode:hover {
-    background-color: #ff5252;
+	background-color: #ff5252;
 }
 
 .writing-button i {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.3s ease;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	transition: transform 0.3s ease;
 }
 
 .writing-button.close-mode i {
-    transform: rotate(45deg);
+	transform: rotate(45deg);
 }
 
 td {
@@ -32,15 +32,15 @@ td {
 	padding-right: 0px !important;
 }
 
-.travelBtn{
+.travelBtn {
 	background-color: #c4ddc0 !important;
-    height: 38px !important;
-    color: black !important;
-    border: none !important;
-    opacity: 0.9;
+	height: 38px !important;
+	color: black !important;
+	border: none !important;
+	opacity: 0.9;
 }
 
-.travelBtn:hover{
+.travelBtn:hover {
 	opacity: 1.0;
 	transition: 0.5s;
 }
@@ -252,7 +252,6 @@ td {
 	/* Reduce font size if needed */
 }
 
-
 #searchAddress {
 	opacity: 0.9;
 }
@@ -261,7 +260,6 @@ td {
 	opacity: 1.0;
 	transition: 0.5s;
 }
-
 
 #boardModal {
 	max-width: 650px !important;
@@ -367,7 +365,17 @@ label:hover::before, #myBoard:hover+label::before {
 													</div>
 												</div>
 												<div class="me-5 d-flex flex-column align-items-end" style="color: rgb(107, 107, 107); margin-top: 80px;">
-													<i class="fa-regular fa-heart" style="font-size: 20px"></i>
+													<div class="d-flex align-items-center">
+														<c:choose>
+															<c:when test="${board.likeYn eq 'Y'}">
+																<i class="fa-solid fa-heart" style="font-size: 20px; color: #ff6b81"></i>
+															</c:when>
+															<c:when test="${board.likeYn eq 'N'}">
+																<i class="fa-regular fa-heart" style="font-size: 20px"></i>
+															</c:when>
+														</c:choose>
+														<span class="ms-2">${board.cnt}</span>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -1000,6 +1008,7 @@ function performSearch(keyWord, isMyBoardChecked) {
 	
 	let url = '/getBoardSearch';
     let data = { keyWord: keyWord };
+    data.memId = '${sessionScope.login.memId}';
     
     // If viewing my posts, add memId to the search criteria
     if (isMyBoardChecked) {
@@ -1053,7 +1062,8 @@ function performSearch(keyWord, isMyBoardChecked) {
 function createBoardColumn(board) {
     var editDeleteButtons = '';
     var sessionMemId = '<c:out value="${sessionScope.login.memId}" />';
-
+    
+    // Edit/delete dropdown buttons
     if (sessionMemId === board.memId) {
         editDeleteButtons = 
             '<div class="dropdown me-5 mb-2">' +
@@ -1074,6 +1084,11 @@ function createBoardColumn(board) {
             '</button>' +
             '</div>';
     }
+
+    // Heart icon based on like status
+    var heartIcon = board.likeYn === 'Y' ? 
+        '<i class="fa-solid fa-heart" style="font-size: 20px; color: #ff6b81"></i>' :
+        '<i class="fa-regular fa-heart" style="font-size: 20px"></i>';
 
     return '<td class="ms-5" style="width: 50%;">' +
            '<div style="width: 95%; margin: 0 auto">' +
@@ -1100,7 +1115,10 @@ function createBoardColumn(board) {
            '</div>' +
            '<div class="me-5 d-flex flex-column align-items-end" ' +
            'style="color: rgb(107, 107, 107); margin-top: 80px;">' +
-           '<i class="fa-regular fa-heart" style="font-size: 20px"></i>' +
+           '<div class="d-flex align-items-center">' +
+           heartIcon +
+           '<span class="ms-2">' + board.cnt + '</span>' +
+           '</div>' +
            '</div>' +
            '</div>' +
            '</div>' +
