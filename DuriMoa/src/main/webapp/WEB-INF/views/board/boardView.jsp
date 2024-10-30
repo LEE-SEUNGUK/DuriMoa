@@ -727,15 +727,19 @@ $(document).ready(function() {
         const files = $('#trvImgUpload')[0].files;
         const isEdit = formData.has('brdId');
         
-     // Image validation
-        if (!isEdit && !files.length) {
+        // Image validation
+        const hasNewImages = files.length > 0;
+        const hasExistingImages = $('#photoPreview .img-wrap[data-existing="true"]:visible').length > 0;
+        
+        // Check if we have either new images or existing images
+        if (!hasNewImages && !hasExistingImages) {
             alert("사진은 최소 1장 이상 선택해야 합니다.");
             return;
         }
         
-     // Handle images
+        // Handle images for submission
         if (isEdit) {
-            if (files.length > 0) {
+            if (hasNewImages) {
                 // Remove existing files and add new ones
                 formData.delete('brdImgs');
                 if (files.length === 1) {
@@ -750,11 +754,20 @@ $(document).ready(function() {
                     }
                 }
             } else {
-                // Keep existing images
-                formData.append('preserveImages', 'true');
+                // Only keep existing images if they're still visible
+                if (hasExistingImages) {
+                    formData.append('preserveImages', 'true');
+                } else {
+                    alert("사진은 최소 1장 이상 선택해야 합니다.");
+                    return;
+                }
             }
         } else {
             // New board creation
+            if (!hasNewImages) {
+                alert("사진은 최소 1장 이상 선택해야 합니다.");
+                return;
+            }
             formData.delete('brdImgs');
             if (files.length === 1) {
                 formData.append('brdImgs', files[0]);
