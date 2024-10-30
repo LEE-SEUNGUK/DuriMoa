@@ -321,17 +321,16 @@ $(document).ready(function(){
 function toggleLike() {
     const checkbox = document.getElementById('checkbox');
     const countSpan = checkbox.parentElement.querySelector('span');
-    const initialCk = ${ck}; // Get the ck value from model
     const brdId = '${board.brdId}';
     const memId = '${sessionScope.login.memId}';
     
     let url;
-    if (initialCk === 1) {
-        // If ck is 1, we need to decrease
-        url = '<c:url value="/decreaseLike" />';
-    } else {
-        // If ck is 0, we need to increase
+    if (checkbox.checked) {
+        // If checkbox is now checked, we need to increase
         url = '<c:url value="/increaseLike" />';
+    } else {
+        // If checkbox is now unchecked, we need to decrease
+        url = '<c:url value="/decreaseLike" />';
     }
     
     $.ajax({
@@ -345,13 +344,11 @@ function toggleLike() {
         success: function(response) {
             // Update the count display
             const currentCount = parseInt(countSpan.textContent);
-            if (initialCk === 1) {
-                countSpan.textContent = currentCount - 1;
-            } else {
+            if (checkbox.checked) {
                 countSpan.textContent = currentCount + 1;
+            } else {
+                countSpan.textContent = currentCount - 1;
             }
-            // Reload page to update ck value
-            location.reload();
         },
         error: function(xhr, status, error) {
             console.error('Error:', error);
