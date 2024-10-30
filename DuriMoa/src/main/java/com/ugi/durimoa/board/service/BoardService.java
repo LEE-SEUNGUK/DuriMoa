@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.ugi.durimoa.board.dao.IBoardDAO;
 import com.ugi.durimoa.board.vo.BoardInfoVO;
 import com.ugi.durimoa.board.vo.BoardVO;
+import com.ugi.durimoa.board.vo.LikeVO;
 import com.ugi.durimoa.board.vo.ReplyVO;
 import com.ugi.durimoa.travel.vo.SearchVO;
 import com.ugi.durimoa.travel.vo.TravelVO;
@@ -125,12 +126,33 @@ public class BoardService {
 	}
 	
 	// 댓글 갯수 조회
-	public int cntReply(int brdId) throws Exception {
+	public int cntReply(int brdId) throws Exception  {
 		int result = dao.cntReply(brdId);
 		if (result == 0) {
 			throw new Exception();
 		}
-
 		return result;
 	}
+	
+	// 좋아요 갯수
+	public int likesCnt(int brdId)  {
+		int result = dao.likesCnt(brdId);
+
+		return result;
+	};
+	
+	// 좋아요 체크
+	public int likeCk(LikeVO vo) {
+		int result = dao.likeCk(vo);
+		
+		return result;
+	};
+	
+	public void likeAdd(LikeVO vo) {
+		dao.likeAdd(vo);
+	};
+	
+	public void likeDel(LikeVO vo) {
+		dao.likeDel(vo);
+	};
 }

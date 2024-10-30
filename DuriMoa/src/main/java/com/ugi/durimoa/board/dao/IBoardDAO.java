@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.ugi.durimoa.board.vo.BoardInfoVO;
 import com.ugi.durimoa.board.vo.BoardVO;
+import com.ugi.durimoa.board.vo.LikeVO;
 import com.ugi.durimoa.board.vo.ReplyVO;
 import com.ugi.durimoa.member.vo.MemberVO;
 import com.ugi.durimoa.travel.vo.SearchVO;
@@ -52,4 +53,14 @@ public interface IBoardDAO {
 	
 	// 댓글 갯수
 	public int cntReply(int brdId);
+	
+	// 좋아요 갯수
+	public int likesCnt(int brdId);
+	
+	// 좋아요 체크
+	public int likeCk(LikeVO vo);
+	
+	public void likeAdd(LikeVO vo);
+	
+	public void likeDel(LikeVO vo);
 }

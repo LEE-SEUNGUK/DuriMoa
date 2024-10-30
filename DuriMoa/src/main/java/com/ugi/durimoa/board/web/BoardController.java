@@ -30,6 +30,7 @@ import com.ugi.durimoa.board.service.BoardService;
 import com.ugi.durimoa.board.vo.BimageVO;
 import com.ugi.durimoa.board.vo.BoardInfoVO;
 import com.ugi.durimoa.board.vo.BoardVO;
+import com.ugi.durimoa.board.vo.LikeVO;
 import com.ugi.durimoa.board.vo.ReplyVO;
 import com.ugi.durimoa.member.vo.MemberVO;
 import com.ugi.durimoa.travel.service.TravelService;
@@ -242,7 +243,7 @@ public class BoardController {
 	}
 
 	@RequestMapping("/getBoard")
-	public String boardDetailView(Model model, int brdId) throws Exception {
+	public String boardDetailView(Model model, int brdId, HttpSession session) throws Exception {
 
 		System.out.println(brdId);
 		BoardInfoVO vo = boardService.getBoard(brdId);
@@ -250,7 +251,17 @@ public class BoardController {
 		vo.setBrdCt(vo.getBrdCt().replace("<br>", "\r\n"));
 		
 		ArrayList<ReplyVO> replyList = boardService.getReplyList(brdId);
-
+		MemberVO login = (MemberVO) session.getAttribute("login");
+		
+		LikeVO ckLick = new LikeVO();
+		ckLick.setBrdId(brdId);
+		ckLick.setMemId(login.getMemId());
+		 
+		int cnt = boardService.likesCnt(brdId);
+		int ck = boardService.likeCk(ckLick);
+		
+		model.addAttribute("ck", ck);
+		model.addAttribute("cnt", cnt);
 		model.addAttribute("board", vo);
 		model.addAttribute("replyList", replyList);
 
@@ -304,5 +315,21 @@ public class BoardController {
 		boardService.boardDel(brdId);
 
 		return "success";
+	}
+	
+	@RequestMapping("/increaseLike")
+	@ResponseBody
+	public String increaseLike(@RequestBody LikeVO vo) {
+	    boardService.likeAdd(vo);
+	
+	    return "success";
+	}
+	
+	@RequestMapping("/decreaseLike")
+	@ResponseBody
+	public String decreaseLike(@RequestBody LikeVO vo) {
+		boardService.likeDel(vo);
+	
+	    return "success";
 	}
 }

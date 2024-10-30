@@ -111,4 +111,29 @@
 	DELETE FROM board WHERE brd_id = #{brdId}
 	</delete>
 	
+	<select id="likesCnt" resultType="int" parameterType="int">
+	SELECT COUNT(*)
+	FROM board
+	LEFT JOIN likes ON board.brd_id = likes.brd_id
+	WHERE board.brd_id = #{brdId}
+	AND likes.like_yn = 'Y'
+	</select>
+	
+	<select id="likeCk" resultType="int" parameterType="LikeVO">
+	SELECT COUNT(*)
+	FROM board
+	LEFT JOIN likes ON board.brd_id = likes.brd_id
+	WHERE board.brd_id = #{brdId}
+	AND likes.mem_id = #{memId}
+	AND likes.like_yn = 'Y'
+	</select>
+	
+	<insert id="likeAdd" parameterType="LikeVO">
+	INSERT INTO LIKES(mem_id, brd_id, like_yn) VALUES(#{memId}, #{brdId}, 'Y')
+	</insert>
+	
+	<update id="likeDel" parameterType="LikeVO">
+	UPDATE LIKES SET like_yn = 'N' WHERE brd_id = #{brdId} AND mem_id = #{memId}
+	</update>
+	
 </mapper>
