@@ -12,9 +12,9 @@ td {
 }
 
 .writing-button {
-	position: fixed;
-	bottom: 15%;
-	right: 12%;
+	position: absolute;
+	bottom: 5%;
+	right: 5%;
 	width: 60px;
 	height: 60px;
 	background-color: #c4ddc0;
@@ -29,7 +29,6 @@ td {
 
 .writing-button:hover {
 	background-color: #a7cfa1;
-	transform: scale(1.05);
 }
 
 .writing-button.close-mode {
@@ -38,7 +37,6 @@ td {
 
 .writing-button.close-mode:hover {
 	background-color: #ff5252;
-	transform: scale(1.05);
 }
 
 .writing-button i {
@@ -235,10 +233,10 @@ td {
 }
 
 .speech-bubb {
-	width: 14%;
-	left: 76%;
-	margin-top: 18%;
-	position: relative;
+	width: 19%;
+	right: -35px;
+	margin-top: 14%;
+	position: absolute;
 	background: #c4ddc0;
 	border-radius: .4em;
 }
@@ -259,16 +257,15 @@ td {
 .speech-bubb:after {
 	content: '';
 	position: absolute;
-	bottom: 0;
-	left: 60%;
+	top: 0;
+	left: 50%;
 	width: 0;
 	height: 0;
-	border: 39px solid transparent;
-	border-top-color: #c4ddc0;
-	border-bottom: 0;
-	border-right: 0;
-	margin-left: -12px;
-	margin-bottom: -24px;
+	border: 20px solid transparent;
+	border-bottom-color: #c4ddc0;
+	border-top: 0;
+	margin-left: -20px;
+	margin-top: -20px;
 }
 
 #searchAddress {
@@ -359,7 +356,16 @@ label:hover::before, #trvOp:hover+label::before {
 </head>
 <body>
 	<jsp:include page="/WEB-INF/inc/header.jsp"></jsp:include>
-	<div class="container" style="padding: 0 !important;">
+	<div style="padding: 0 !important; width: 1920px; margin: 0 auto;">
+		<div style="width: 1420px; margin: 0 auto; position: relative;">
+		<c:if test="${empty travelList}">
+		<div class="speech-bubb" id="speechBubble">
+			<h5 class="p-3">버튼을 클릭하여 여행 기록을 작성해보세요!</h5>
+		</div>
+		</c:if>
+		<div id="writeButton" class="writing-button">
+			<i class="fa-regular fa-pen-to-square" style="padding-left: 3px; padding-bottom: 3px;"></i>
+		</div>
 		<div class="row">
 			<section class="mypage_side col-2 p-0" style="margin-top: 6%;">
 				<div class="mb-4">
@@ -467,14 +473,7 @@ label:hover::before, #trvOp:hover+label::before {
 				</div>
 			</section>
 		</div>
-	</div>
-	<c:if test="${empty travelList}">
-		<div class="speech-bubb" id="speechBubble">
-			<h5 class="p-3">버튼을 클릭하여 여행 기록을 작성해보세요!</h5>
 		</div>
-	</c:if>
-	<div id="writeButton" class="writing-button">
-		<i class="fa-regular fa-pen-to-square" style="padding-left: 3px; padding-bottom: 3px;"></i>
 	</div>
 
 	<script>

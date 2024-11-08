@@ -148,8 +148,8 @@ input[name='userId']:hover {
 .speech-bubble {
     position: absolute;
     visibility: hidden;
-    top: 30%;
-    left: 77%;
+    top: 120%;
+    left: 10%;
     opacity: 0;
     width: 240px;
     background: #c4ddc0;

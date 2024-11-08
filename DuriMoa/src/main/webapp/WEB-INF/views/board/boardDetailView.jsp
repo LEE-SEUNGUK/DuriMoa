@@ -159,10 +159,11 @@ label{
 </head>
 <body>
 <jsp:include page="/WEB-INF/inc/header.jsp"></jsp:include>
-	<div class="container" style="margin-top: 4%;">
-        <h3>[충남]${board.brdTt}</h3>
+	<div style="width: 1920px; margin: 0 auto;">
+		<div style="width: 1420px; margin: 0 auto;">
+        <h3 style="margin-top: 6%;">[${board.trvPlc}]${board.brdTt}</h3>
         <hr>
-        <div class="row">
+        <div class="row" style="margin: 0 auto;">
         	<header>
         		<div class="d-flex align-items-center" style="gap: 1rem;">
         		    <img alt="" src="${writer.memImg}" width="50px" height="50px" style="border-radius: 50%;">
@@ -230,6 +231,7 @@ label{
 				    </label>
             	</div>
             </section>
+            </div>
         </div>
     </div>
     <div class="container my-5">
@@ -286,6 +288,20 @@ label{
         </table>
     </div>
 <script>
+//페이지가 로드될 때 실행
+window.onload = function() {
+    // pushState를 사용하여 history 항목 추가
+    window.history.pushState(null, '', window.location.href);
+    
+    // popstate 이벤트 리스너 추가 (뒤로가기/앞으로가기 버튼 클릭 시 발생)
+    window.addEventListener('popstate', function() {
+        // 뒤로가기 했을 때 이전 페이지(boardView)로 이동하면서 새로고침
+        console.log("히얏!");
+        window.location.href = document.referrer;
+    });
+};
+
+
 $(document).ready(function(){
 	const $carousel = $('#imageCarousel');
     const $slides = $carousel.find('.carousel-item');

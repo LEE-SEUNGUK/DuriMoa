@@ -17,9 +17,9 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
-<div id="top">
+<div id="top" style="width: 1920px; margin: 0 auto; display: block;">
 <header>
-	<nav class="d-flex" style="height: 9vh; background-color: #ffefef;">
+	<nav class="d-flex" style="background-color: #ffefef;">
 		<div class="d-flex align-items-center justify-content-center" style="width: 33%;">
 			<div style="width: 80%; text-align: center;">
 				<a href="${pageContext.request.contextPath}/"> <img src="resources/assets/img/logo.png" style="width: 35%;">

@@ -46,9 +46,9 @@ td {
 }
 
 .writing-button {
-	position: fixed;
-	bottom: 15%;
-	right: 12%;
+	position: absolute;
+	bottom: 1%;
+	right: -8%;
 	width: 60px;
 	height: 60px;
 	background-color: #c4ddc0;
@@ -309,21 +309,25 @@ label:hover::before, #myBoard:hover+label::before {
 </head>
 <body>
 	<jsp:include page="/WEB-INF/inc/header.jsp"></jsp:include>
-	<div class="container" style="padding: 0 !important;">
+	<div style="padding: 0 !important; width: 1420px; margin: 0 auto; position: relative;">
+		<div id="writeButton" class="writing-button" data-bs-toggle="modal" data-bs-target="#boardWrite">
+			<i class="fa-regular fa-pen-to-square"></i>
+		</div>
 		<div class="row">
-			<div class="d-flex board-header justify-content-between" style="margin-top: 6%;">
+			<div class="d-flex board-header justify-content-between p-0" style="position: relative; margin-top: 6%;">
 				<div>
 					<h2>포토존</h2>
 					<p>다른 커플들의 사진을 보고 다음 여행지를 정해보세요!</p>
 				</div>
-				<div id="writeButton" class="writing-button" data-bs-toggle="modal" data-bs-target="#boardWrite">
-					<i class="fa-regular fa-pen-to-square"></i>
-				</div>
+				
 				<div style="margin-top: 50px; margin-right: 30px;">
-					<input type="checkbox" id="myBoard" id="remember" name="remember"> <label for="myBoard">내 게시물</label>
+					<input type="checkbox" id="myBoard"> <label for="myBoard">내 게시글</label>
 				</div>
+<!-- 				<div style="margin-right: 30px;"> -->
+<!-- 					<input type="checkbox" id="likeBoard"> <label for="myBoard">내 게시글</label> -->
+<!-- 				</div> -->
 			</div>
-			<div id="boardListContainer">
+			<div id="boardListContainer" style="margin: 0 auto; padding: 0 !important">
 				<table class="table" style="margin-top: 2% !important; margin: 0 auto; border-bottom: #ffffff;">
 					<tbody>
 						<c:forEach items="${boardList}" var="board" varStatus="status">
@@ -393,7 +397,7 @@ label:hover::before, #myBoard:hover+label::before {
 				</table>
 			</div>
 			<div id="boardAddForm" class="container mt-4" style="display: none;">
-				<form class="d-flex justify-content-center" action="">
+				<form class="d-flex justify-content-center" action="" style="width: 90%; margin: 0 auto;">
 					<section class="col-6">
 						<div class="travel-form">
 							<div class="mb-3">
@@ -439,7 +443,7 @@ label:hover::before, #myBoard:hover+label::before {
 								<tr class="travel-item" data-title="${travel.trvTt}" data-id="${travel.trvId}" data-place="${travel.trvPc}" data-x="${travel.trvX}" data-y="${travel.trvY}">
 									<td class="d-flex">
 										<div class="col-5">
-											<img class="p-2" alt="" src="${travel.trvImg1}" width='240px' height='300px'>
+											<img class="p-2" alt="" src="${travel.trvImg1}" width='240px' height='300px' style="object-fit: cover;">
 										</div>
 										<div class="col-7 d-flex flex-column justify-content-center">
 											<h5>제목: ${travel.trvTt}</h5>
@@ -454,8 +458,8 @@ label:hover::before, #myBoard:hover+label::before {
 			</div>
 		</div>
 	</div>
+<script>
 
-	<script>
 $(document).ready(function() {
 	initializeMap();
 	
@@ -797,7 +801,7 @@ $(document).ready(function() {
             processData: false,
             contentType: false,
             success: function(response) {
-                alert(isEdit ? '게시물이 성공적으로 수정되었습니다!' : '게시물이 성공적으로 저장되었습니다!');
+                alert(isEdit ? '게시글이 성공적으로 수정되었습니다!' : '게시글이 성공적으로 저장되었습니다!');
                 location.reload();
             },
             error: function(xhr, status, error) {
@@ -991,7 +995,7 @@ function myBoard(){
                 // Show no results message
                 $('#boardListContainer table tbody').html(
                     '<tr><td colspan="2" class="text-center p-5">' +
-                    '<h4>검색 결과가 없습니다.</h4></td></tr>'
+                    '<h4>게시글이 없습니다.</h4></td></tr>'
                 );
             }
 			
@@ -1012,7 +1016,6 @@ function performSearch(keyWord, isMyBoardChecked) {
     
     // If viewing my posts, add memId to the search criteria
     if (isMyBoardChecked) {
-    	console.log("체크 체크");
         data.memId = '${sessionScope.login.memId}';
         url = '/getMyBoardSearch'; // New endpoint for searching my posts
     }
@@ -1048,7 +1051,7 @@ function performSearch(keyWord, isMyBoardChecked) {
                 // Show no results message
                 $('#boardListContainer table tbody').html(
                     '<tr><td colspan="2" class="text-center p-5">' +
-                    '<h4>게시물이 없습니다.</h4></td></tr>'
+                    '<h4>게시글이 없습니다.</h4></td></tr>'
                 );
             }
         },

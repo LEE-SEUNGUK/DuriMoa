@@ -179,7 +179,7 @@
 <body>
 <jsp:include page="/WEB-INF/inc/header.jsp"></jsp:include>
 <c:if test="${empty sessionScope.login}">
-	<main id="firstMain" class="d-flex align-items-center bg-dark text-white" style="height: 91vh">
+	<main id="firstMain" class="d-flex align-items-center bg-dark text-white" style="width: 1920px; height:868px; margin: 0 auto;">
 		<div class="d-flex w-100">
 			<section class="w-50" style="text-align: center;">
 				<div class="position-relative">
@@ -199,7 +199,7 @@
 	</main>
 </c:if>
 <c:if test="${not empty sessionScope.login}">
-	<main style="height: 91vh; text-align: center;">
+	<main style="height:867px; width: 1920px; margin: 0 auto;">
 		<div id="map" style="width: 850px; height: 100%; margin: 0 auto;">
 			<button id="resetMapBtn" class="btn">
 		    </button>
@@ -462,15 +462,23 @@
     searchInput.addEventListener('input', filterMarkers);
 
     function filterMarkers() {
-        const searchTerm = searchInput.value.toLowerCase();
+        const searchTerm = searchInput.value.toLowerCase().trim();
         
+     	// Clear existing clusters
+        clusterer.clear();
         // Hide all markers initially
         markers.forEach(marker => {
             marker.setMap(null);
         });
         
-        // Clear existing clusters
-        clusterer.clear();
+        // If search term is empty, restore all markers with clustering
+        if (searchTerm === '') {
+            markers.forEach(marker => {
+                marker.setMap(map);
+            });
+            clusterer.addMarkers(markers);
+            return;
+        }
         
         // Filter markers based on search term
         const filteredMarkers = positions.reduce((acc, position, index) => {
@@ -478,7 +486,6 @@
             const placeMatch = position.place.toLowerCase().includes(searchTerm);
             
             if (titleMatch || placeMatch) {
-                // Show matching markers
                 markers[index].setMap(map);
                 acc.push(markers[index]);
             }
@@ -490,22 +497,16 @@
         if (filteredMarkers.length > 0) {
             clusterer.addMarkers(filteredMarkers);
         }
-        
-        // If search is empty, show all markers
-        if (searchTerm === '') {
-            markers.forEach(marker => {
-                marker.setMap(map);
-            });
-            clusterer.addMarkers(markers);
-        }
     }
 
     // Add submit prevention to the search form
     const searchForm = document.querySelector('form[role="search"]');
-    searchForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        filterMarkers();
-    });
+	if (searchForm) {
+	    searchForm.addEventListener('submit', (e) => {
+	        e.preventDefault();
+	        filterMarkers();
+	    });
+	}
 </script>
 </body>
 </html>

@@ -3,6 +3,20 @@
 	font-family: 'Pretendard-Regular';
 }
 
+/* 윈도우 크기에 따라 zoom 적용 */
+@media (max-width: 1200px) {
+    body {
+        zoom: 0.9;
+    }
+}
+
+@media (max-width: 992px) {
+    body {
+        zoom: 0.8;
+    }
+}
+
+
 @font-face {
 	font-family: 'Pretendard-Regular';
 	src:

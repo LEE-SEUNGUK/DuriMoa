@@ -35,6 +35,9 @@
 		    likes d ON a.brd_id = d.brd_id AND d.mem_id = #{memId}
 		WHERE 
 		    b.brd_idx = '1'
+		ORDER BY
+			brdDt
+		
 	</select>
 	
 	<select id="getBoardSearch" resultType="BoardInfoVO" parameterType="SearchVO">
@@ -111,6 +114,7 @@
 		SELECT 
 		T.mem_id,
 	    T.trv_pc,
+	    SUBSTR(t.trv_pc, 0, 2) AS trv_plc, 
 	    T.trv_id,
 	    T.trv_x,
 	    T.trv_y,

@@ -9,7 +9,8 @@
 </head>
 <body>
 <jsp:include page="/WEB-INF/inc/header.jsp"></jsp:include>
-<div class="container" style="padding: 0 !important;">
+<div style="width: 1920px; padding: 0 !important; margin: 0 auto;">
+	<div style="width: 1420px; margin: 0 auto;">
 	<div class="row">
 		<section class="mypage_side col-3" style="margin-top: 6%;">
 			<h2 class="mb-5">마이 페이지</h2>
@@ -282,7 +283,7 @@
 						</div>
 					</div>
 					<div class="col-2">
-						<div>
+						<div style="position: relative;">
 							<img class="mb-3" src="resources/assets/img/question.png" alt=""
 								width="40px" id="couple_info">
 							<div class="speech-bubble">
@@ -324,6 +325,7 @@
 				</div>
 			</div>
 		</section>
+		</div>
 	</div>
 </div>
 
