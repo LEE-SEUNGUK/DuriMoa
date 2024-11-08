@@ -163,6 +163,15 @@ label{
         <h3>[충남]${board.brdTt}</h3>
         <hr>
         <div class="row">
+        	<header>
+        		<div class="d-flex align-items-center" style="gap: 1rem;">
+        		    <img alt="" src="${writer.memImg}" width="50px" height="50px" style="border-radius: 50%;">
+       				<div style="display: flex; flex-direction: column;">
+					    <span>${writer.memNm}</span>
+					    <span>${board.brdDt}</span>
+					</div>
+        		</div>
+        	</header>
             <section class="col-6 p-0">
                  <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-indicators">
@@ -209,8 +218,8 @@ label{
                 <div class="mt-3" style="text-align: center;">
                     <div id="map"></div>
                 </div>
-                <pre class="mt-5 p-3" style="background-color: #ececec; 
-				border-radius: 15px;   height: 340px; font-size: 18px; font-family: 'Pretendard-Regular';">${board.brdCt}</pre>
+                <textarea class="mt-5 p-3" style="background-color: #f8f9fa; border: 1px #f8f9fa; width: 100%;
+				border-radius: 15px;   height: 340px; font-size: 18px; font-family: 'Pretendard-Regular'; resize: none;" readonly="readonly">${board.brdCt}</textarea>
             </section>
             <section>
             	<div style="margin: 0 auto; width:5%;">
@@ -269,7 +278,7 @@ label{
                     </td>
                     <td class="col-10">
                         <input class="ps-4" id="replyInput"  type="text" style="width: 80%; height: 70px; 
-                        background-color: rgb(233, 233, 233); border: none; border-radius: 10px;"
+                        background-color: #f8f9fa; border: none; border-radius: 10px;"
                         placeholder="댓글을 입력하세요" onkeypress="replyWrite(event)">
                     </td>
                 </tr>

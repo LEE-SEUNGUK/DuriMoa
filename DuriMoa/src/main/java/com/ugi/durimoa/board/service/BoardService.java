@@ -10,6 +10,7 @@ import com.ugi.durimoa.board.vo.BoardInfoVO;
 import com.ugi.durimoa.board.vo.BoardVO;
 import com.ugi.durimoa.board.vo.LikeVO;
 import com.ugi.durimoa.board.vo.ReplyVO;
+import com.ugi.durimoa.member.vo.MemberVO;
 import com.ugi.durimoa.travel.vo.SearchVO;
 import com.ugi.durimoa.travel.vo.TravelVO;
 
@@ -154,5 +155,9 @@ public class BoardService {
 	
 	public void likeDel(LikeVO vo) {
 		dao.likeDel(vo);
+	};
+	
+	public MemberVO boardWriter(String memId) {
+		return dao.boardWriter(memId);
 	};
 }

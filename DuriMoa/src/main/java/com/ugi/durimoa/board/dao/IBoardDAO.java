@@ -63,4 +63,7 @@ public interface IBoardDAO {
 	public void likeAdd(LikeVO vo);
 	
 	public void likeDel(LikeVO vo);
+	
+	// 게시글 작성자 정보
+	public MemberVO boardWriter(String memId);
 }

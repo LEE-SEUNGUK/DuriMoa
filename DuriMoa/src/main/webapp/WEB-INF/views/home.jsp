@@ -251,9 +251,9 @@
 							<img src="resources/assets/img/date.png" width="30px" alt="">
 							<p class="ms-4" id="modalDates" style="font-size: 20px;"></p>
 						</div>
-						<pre class="travelContet mx-4 p-3" id="modalContent" style="font-size: 18px; height: 40%; 
-						background-color: #ececec; font-family: 'Pretendard-Regular';
-						border-radius: 15px; margin-top: 20%;"></pre>
+						<textarea class="travelContet ms-4 p-3" id="modalContent" style="font-size: 18px; height: 40%; 
+						background-color: #f8f9fa; font-family: 'Pretendard-Regular';
+						border-radius: 15px; margin-top: 20%; width: 92%; resize: none; border: none;" readonly="readonly"></textarea>
 					</div>
 				</div>
 			</div>

@@ -76,7 +76,7 @@
 							</div>
 							<div class="d-flex justify-content-between align-items-center"
 								style="margin-bottom: 24px;">
-								<label for="">이름</label> <input class="form-control" id="memNm"
+								<label for="">닉네임</label> <input class="form-control" id="memNm"
 									name="memNm" type="text" value="${sessionScope.login.memNm}">
 							</div>
 						</div>
@@ -270,7 +270,7 @@
 							                </button>
 							                <button type="submit" class="mt-4 btn btn-danger"
 							                onclick="document.getElementById('coupleUpdate').action='coupleDelete';"
-							                style="height: 45px; color: black; border: none;">
+							                style="height: 45px; color: white; border: none;">
 							                   삭제
 							                </button>
 							                </div>

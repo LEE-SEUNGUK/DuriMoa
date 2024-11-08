@@ -125,9 +125,6 @@ public class BoardController {
 		System.out.println(vo);
 		try {
 
-			vo.setBrdCt(vo.getBrdCt().replace("\r\n", "<br>"));
-			vo.setBrdCt(vo.getBrdCt().replace(" ", "&nbsp"));
-
 			// Save TravelVO
 			boardService.boardAdd(vo);
 
@@ -177,8 +174,6 @@ public class BoardController {
 		System.out.println(files);
 
 		try {
-			vo.setBrdCt(vo.getBrdCt().replace("\r\n", "<br>"));
-			vo.setBrdCt(vo.getBrdCt().replace(" ", "&nbsp"));
 
 			// Update travel information
 			boardService.boardUpdate(vo);
@@ -229,8 +224,6 @@ public class BoardController {
 		System.out.println("수정 컨트롤러");
 		System.out.println(brdId);
 		BoardInfoVO vo = boardService.getBoard(brdId);
-		vo.setBrdCt(vo.getBrdCt().replace("&nbsp", " "));
-		vo.setBrdCt(vo.getBrdCt().replace("<br>", "\r\n"));
 		
 		ArrayList<ReplyVO> replyList = boardService.getReplyList(brdId);
 
@@ -248,11 +241,10 @@ public class BoardController {
 
 		System.out.println(brdId);
 		BoardInfoVO vo = boardService.getBoard(brdId);
-		vo.setBrdCt(vo.getBrdCt().replace("&nbsp", " "));
-		vo.setBrdCt(vo.getBrdCt().replace("<br>", "\r\n"));
 		
 		ArrayList<ReplyVO> replyList = boardService.getReplyList(brdId);
 		MemberVO login = (MemberVO) session.getAttribute("login");
+		MemberVO writer = (MemberVO) boardService.boardWriter(vo.getMemId());
 		
 		LikeVO ckLick = new LikeVO();
 		ckLick.setBrdId(brdId);
@@ -261,6 +253,7 @@ public class BoardController {
 		int cnt = boardService.likesCnt(brdId);
 		int ck = boardService.likeCk(ckLick);
 		
+		model.addAttribute("writer", writer);
 		model.addAttribute("ck", ck);
 		model.addAttribute("cnt", cnt);
 		model.addAttribute("board", vo);

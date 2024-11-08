@@ -168,9 +168,9 @@
 									<input class="mt-1 form-control memPw" type="password" id="signPw_ck" name="memPw_ck" style="background-image: none;" placeholder="비밀번호를 다시 입력해주세요" autocomplete="off">
 									<span class="mt-1" id="pw_mismatch" style="margin-right: 34%; display: none; color: #dc3545;">비밀번호가 일치하지 않습니다.</span>
 									<div class="mt-3 mb-1 w-100 d-flex justify-content-start">
-										<label for="memNm">이름</label>
+										<label for="memNm">닉네임</label>
 									</div>
-									<input class="form-control memNm" type="text" id="signNm" name="memNm" placeholder="이름을 입력해주세요" autocomplete="off">
+									<input class="form-control memNm" type="text" id="signNm" name="memNm" placeholder="닉네임을 입력해주세요" autocomplete="off">
 									<button type="submit" id="signUp" class="my-4 btn btn-primary rounded-pill w-50">완료</button>
 								</form>
 							</div>
@@ -290,16 +290,13 @@
 		  const images = document.querySelectorAll(".login-image");
 		  const totalImages = images.length;
 
-		  console.log("이미지 슬라이드 초기화"); // 초기화 확인용 콘솔 출력
-
 		  function showNextImage() {
 		    images[currentImageIndex].classList.remove("active");
 		    currentImageIndex = (currentImageIndex + 1) % totalImages;
 		    images[currentImageIndex].classList.add("active");
-		    console.log(`현재 이미지 인덱스: ${currentImageIndex}`); // 현재 이미지 인덱스 확인용 콘솔 출력
 		  }
 
-		  setInterval(showNextImage, 3000);
+		  setInterval(showNextImage, 4500);
 		  images[currentImageIndex].classList.add("active");
 		});
 

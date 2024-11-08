@@ -109,12 +109,14 @@
 	
 	<select id="getBoard" resultType="BoardInfoVO" parameterType="int">
 		SELECT 
+		T.mem_id,
 	    T.trv_pc,
 	    T.trv_id,
 	    T.trv_x,
 	    T.trv_y,
 	    B.brd_id,
 	    B.brd_tt,
+	    B.brdDt,
 	    DBMS_LOB.SUBSTR(B.brd_ct, 4000, 1) brd_ct,
 	    MAX(CASE WHEN I.brd_idx = '1' THEN I.brd_img END) AS brd_img1,
 	    MAX(CASE WHEN I.brd_idx = '2' THEN I.brd_img END) AS brd_img2,
@@ -126,7 +128,17 @@
 	LEFT JOIN 
 	    BOARD_IMG I ON B.brd_id = I.brd_id
 	WHERE B.brd_id = #{brdId}
-	GROUP BY T.mem_id, T.trv_id, T.trv_pc, T.trv_x, T.trv_y, B.brd_id, B.brd_tt, DBMS_LOB.SUBSTR(B.brd_ct, 4000, 1)
+	GROUP BY T.mem_id, T.trv_id, T.trv_pc, T.trv_x, T.trv_y, B.brd_id, B.brd_tt, B.brdDt, DBMS_LOB.SUBSTR(B.brd_ct, 4000, 1)
+	</select>
+	
+	<select id="boardWriter" resultType="MemberVO" parameterType="String">
+	SELECT a.mem_id, a.mem_nm, a.mem_img
+	FROM (
+	    SELECT a.mem_id, a.mem_nm, a.mem_img
+	    FROM member a, board b
+	    WHERE a.mem_id = #{memId}
+	) a
+	WHERE ROWNUM = 1
 	</select>
 	
 	<insert id="writeReply" parameterType="ReplyVO">
