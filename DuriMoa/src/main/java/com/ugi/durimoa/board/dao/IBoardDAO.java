@@ -30,8 +30,14 @@ public interface IBoardDAO {
 	// 내 게시글 검색
 	public ArrayList<BoardInfoVO> getMyBoardSearch(SearchVO vo);
 	
+	// 좋아요 게시글 검색
+	public ArrayList<BoardInfoVO> getLikeBoardSearch(SearchVO vo);
+	
 	// 내 게시글 조회
 	public ArrayList<BoardInfoVO> myBoard(String memId);
+	
+	// 좋아요 게시글 조회
+	public ArrayList<BoardInfoVO> likeBoard(String memId);
 	
 	// 게시글 상세 조회
 	public BoardInfoVO getBoard(int brdId);

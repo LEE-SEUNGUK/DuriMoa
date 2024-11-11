@@ -54,6 +54,18 @@ public class BoardService {
 		return result;
 	};
 	
+	// 좋아요 게시글 조회
+	public ArrayList<BoardInfoVO> likeBoard(String memId) throws Exception{
+		System.out.println("좋아요 게시글 조회");
+		
+		ArrayList<BoardInfoVO> result = dao.likeBoard(memId);
+		
+		if (result == null) {
+			throw new Exception();
+		}
+		return result;
+	};
+	
 	public void boardUpdate(BoardVO vo) {
 		System.out.println("여행 정보 수정");
 		
@@ -75,6 +87,16 @@ public class BoardService {
 	// 내 게시글 검색
 	public ArrayList<BoardInfoVO> getMyBoardSearch(SearchVO vo) throws Exception{
 		ArrayList<BoardInfoVO> result = dao.getMyBoardSearch(vo);
+
+		if (result == null) {
+			throw new Exception();
+		}
+		return result;
+	};
+	
+	// 좋아요 게시글 검색
+	public ArrayList<BoardInfoVO> getLikeBoardSearch(SearchVO vo) throws Exception{
+		ArrayList<BoardInfoVO> result = dao.getLikeBoardSearch(vo);
 
 		if (result == null) {
 			throw new Exception();

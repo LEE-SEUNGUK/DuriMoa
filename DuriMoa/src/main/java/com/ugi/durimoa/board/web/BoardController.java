@@ -96,6 +96,19 @@ public class BoardController {
 
 		return boardList;
 	}
+	
+	@ResponseBody
+	@RequestMapping("/getLikeBoardSearch")
+	public ArrayList<BoardInfoVO> getLikeBoardSearch(@ModelAttribute SearchVO vo) throws Exception {
+
+		System.out.println(vo);
+
+		ArrayList<BoardInfoVO> boardList = boardService.getLikeBoardSearch(vo);
+
+		System.out.println(boardList);
+
+		return boardList;
+	}
 
 	@ResponseBody
 	@RequestMapping("/myBoard")
@@ -107,12 +120,24 @@ public class BoardController {
 
 		return boardList;
 	}
+	
+	@ResponseBody
+	@RequestMapping("/likeBoard")
+	public ArrayList<BoardInfoVO> likeBoard(@RequestParam("memId") String memId) throws Exception {
+
+		ArrayList<BoardInfoVO> boardList = boardService.likeBoard(memId);
+
+		System.out.println(boardList);
+
+		return boardList;
+	}
 
 	@ResponseBody
 	@RequestMapping("/showBoard")
 	public ArrayList<BoardInfoVO> showBoard(HttpSession session) throws Exception {
 		MemberVO login = (MemberVO) session.getAttribute("login");
 		
+		System.out.println(login.getMemId());
 		ArrayList<BoardInfoVO> boardList = boardService.getBoardList(login.getMemId());
 
 		return boardList;

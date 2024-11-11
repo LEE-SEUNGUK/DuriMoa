@@ -12,9 +12,9 @@ td {
 }
 
 .writing-button {
-	position: absolute;
-	bottom: 5%;
-	right: 5%;
+	position: fixed;
+	bottom: 18%;
+	right: 10%;
 	width: 60px;
 	height: 60px;
 	background-color: #c4ddc0;
@@ -233,12 +233,18 @@ td {
 }
 
 .speech-bubb {
-	width: 19%;
-	right: -35px;
-	margin-top: 14%;
+	top: -130px; /* 버튼 기준 위쪽으로 위치 조정 */
+    left: -175px; /* 버튼 기준 왼쪽으로 위치 조정 */
+	width: 270px;
 	position: absolute;
 	background: #c4ddc0;
 	border-radius: .4em;
+	cursor: default;
+}
+
+.speech-bubb h5 {
+	margin-bottom: 0px !important;
+	line-height: 30px !important;
 }
 
 .travelBtn {
@@ -257,15 +263,17 @@ td {
 .speech-bubb:after {
 	content: '';
 	position: absolute;
-	top: 0;
-	left: 50%;
+	top: 99%;
+	left: 70%;
 	width: 0;
 	height: 0;
-	border: 20px solid transparent;
-	border-bottom-color: #c4ddc0;
-	border-top: 0;
-	margin-left: -20px;
-	margin-top: -20px;
+	border: 31px solid transparent;
+	border-top-color: #c4ddc0;
+	border-bottom: 0;
+	border-right: 0;
+	margin-left: -20.5px;
+	margin-bottom: -41px;
+}
 }
 
 #searchAddress {
@@ -358,13 +366,13 @@ label:hover::before, #trvOp:hover+label::before {
 	<jsp:include page="/WEB-INF/inc/header.jsp"></jsp:include>
 	<div style="padding: 0 !important; width: 1920px; margin: 0 auto;">
 		<div style="width: 1420px; margin: 0 auto; position: relative;">
-		<c:if test="${empty travelList}">
-		<div class="speech-bubb" id="speechBubble">
-			<h5 class="p-3">버튼을 클릭하여 여행 기록을 작성해보세요!</h5>
-		</div>
-		</c:if>
 		<div id="writeButton" class="writing-button">
 			<i class="fa-regular fa-pen-to-square" style="padding-left: 3px; padding-bottom: 3px;"></i>
+			<c:if test="${empty travelList}">
+			<div class="speech-bubb" id="speechBubble">
+				<h5 class="p-3">버튼을 클릭하여 여행 기록을 작성해보세요!</h5>
+			</div>
+			</c:if>
 		</div>
 		<div class="row">
 			<section class="mypage_side col-2 p-0" style="margin-top: 6%;">
@@ -478,6 +486,12 @@ label:hover::before, #trvOp:hover+label::before {
 
 	<script>
 $(document).ready(function() {
+	window.onload = function() {
+	    if (window.location.pathname !== "/boardDetailView") {
+	        sessionStorage.removeItem("selectedValue");
+	    }
+	};
+	
     initializeMap();
     
     $('#travelDestination').click(function(){
@@ -533,6 +547,10 @@ $(document).ready(function() {
         }
         toggleMode();
     });
+    
+    $('#speechBubble').click(function(e){
+    	e.stopPropagation();
+    })
 
     $('.edit-travel').click(function(e) {
         e.preventDefault();

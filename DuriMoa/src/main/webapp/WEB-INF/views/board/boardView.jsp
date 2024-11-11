@@ -46,9 +46,9 @@ td {
 }
 
 .writing-button {
-	position: absolute;
-	bottom: 1%;
-	right: -8%;
+	position: fixed;
+	bottom: 15%;
+	right: 7%;
 	width: 60px;
 	height: 60px;
 	background-color: #c4ddc0;
@@ -272,39 +272,6 @@ td {
 	transform: translate(-50%, -50%);
 }
 
-#myBoard {
-	display: none;
-}
-
-#myBoard ~label:before {
-	/* display: inline-block; */
-	content: "✔";
-	display: inline-block;
-	vertical-align: middle;
-	text-align: center;
-	width: 21px;
-	height: 21px;
-	line-height: 21px;
-	border-radius: 5px;
-	border: 1px solid #ccc;
-	color: transparent;
-	transition: 0.2s;
-	font-size: 14px !important;
-	margin-right: 8px;
-	margin-bottom: 2px;
-}
-
-#myBoard:checked+label::before {
-	background-color: #c4ddc0;
-	color: #000000;
-	outline: none;
-	border-color: transparent;
-}
-
-label:hover::before, #myBoard:hover+label::before {
-	border-color: #0000006c;
-	transition: all 0.3s;
-}
 </style>
 </head>
 <body>
@@ -319,13 +286,13 @@ label:hover::before, #myBoard:hover+label::before {
 					<h2>포토존</h2>
 					<p>다른 커플들의 사진을 보고 다음 여행지를 정해보세요!</p>
 				</div>
-				
-				<div style="margin-top: 50px; margin-right: 30px;">
-					<input type="checkbox" id="myBoard"> <label for="myBoard">내 게시글</label>
+				<div style="margin-top: 15px; margin-right: 30px;">
+					<select class="h-50" id="postSelect">
+						<option value="all">전체 게시글</option>
+					    <option value="myPosts">내 게시글</option>
+					    <option value="likedPosts">좋아요한 게시글</option>
+					</select>
 				</div>
-<!-- 				<div style="margin-right: 30px;"> -->
-<!-- 					<input type="checkbox" id="likeBoard"> <label for="myBoard">내 게시글</label> -->
-<!-- 				</div> -->
 			</div>
 			<div id="boardListContainer" style="margin: 0 auto; padding: 0 !important">
 				<table class="table" style="margin-top: 2% !important; margin: 0 auto; border-bottom: #ffffff;">
@@ -349,7 +316,7 @@ label:hover::before, #myBoard:hover+label::before {
 															<span>[${board.trvPlc}]</span> ${board.brdTt}
 														</h4>
 														<c:if test="${sessionScope.login.memId == board.memId}">
-															<div class="dropdown me-5 mb-2">
+															<div class="dropdown me-4 mb-2">
 																<button class="btn" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 20px; appearance: none; -webkit-appearance: none;">&#8942;</button>
 																<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 																	<li><a class="dropdown-item edit-board" href="#" data-brd-id="${board.brdId}">수정</a></li>
@@ -358,7 +325,7 @@ label:hover::before, #myBoard:hover+label::before {
 															</div>
 														</c:if>
 														<c:if test="${sessionScope.login.memId != board.memId}">
-															<div class="me-5 mb-2" style="font-size: 20px; padding: 6px 12px; height: 44px">
+															<div class="mb-2" style="font-size: 20px; padding: 6px 12px; height: 44px">
 																<button class="btn" style="visibility: hidden; border: none; background: transparent;">&#8942;</button>
 															</div>
 														</c:if>
@@ -458,29 +425,44 @@ label:hover::before, #myBoard:hover+label::before {
 			</div>
 		</div>
 	</div>
-<script>
+	<script>
 
 $(document).ready(function() {
+	window.onload = function() {
+	    const selectedValue = sessionStorage.getItem("selectedValue") || "all";
+	    document.getElementById("postSelect").value = selectedValue;
+	    loadPostsBySelection(selectedValue);
+	};
+	
 	initializeMap();
 	
-	$('#myBoard').change(function() {
-	    if ($(this).is(":checked")) {
-	        console.log("체크함");
-	        myBoard();
-	        $('#marker_search').val('');
-	    } else {
-	        console.log("체크 안함");
-	        showBoard();
-	        $('#marker_search').val('');
-	    }
-	});
+	 $('#postSelect').change(function() {
+	        var selectedValue = $(this).val();
+        	sessionStorage.setItem("selectedValue", selectedValue);
+
+	        switch (selectedValue) {
+	            case 'all':
+	                // 전체 게시글을 불러오는 함수 호출
+	                loadAllPosts();
+	                break;
+	            case 'myPosts':
+	                // 내 게시글을 불러오는 함수 호출
+	                loadMyPosts();
+	                break;
+	            case 'likedPosts':
+	                // 좋아요한 게시글을 불러오는 함수 호출
+	                loadLikedPosts();
+	                break;
+	            default:
+	                break;
+	        }
+	    });
 	
 	$('#boardListContainer').on('click', '.delete-board', function(e) {
         e.preventDefault();
         const brdId = $(this).data('brd-id');
         if (confirm('정말 삭제하시겠습니까?')) {
-            const isMyBoardChecked = $('#myBoard').is(':checked');
-            deleteBoard(brdId, isMyBoardChecked);
+            deleteBoard(brdId);
         }
     });
 	
@@ -494,8 +476,7 @@ $(document).ready(function() {
          if (e.keyCode === 13) {  // Enter key pressed
         	 e.preventDefault(); // Prevent form submission
              const keyWord = $('#marker_search').val().trim();
-             const isMyBoardChecked = $('#myBoard').is(':checked');
-             performSearch(keyWord, isMyBoardChecked);
+             performSearch(keyWord);
          }
      });
 	 
@@ -802,7 +783,29 @@ $(document).ready(function() {
             contentType: false,
             success: function(response) {
                 alert(isEdit ? '게시글이 성공적으로 수정되었습니다!' : '게시글이 성공적으로 저장되었습니다!');
-                location.reload();
+
+             // Reset form and return to list view
+                $('#boardAddForm').hide();
+                $('#boardListContainer').show();
+                $('#boardAddForm form')[0].reset();
+                $('#photoPreview').empty();
+                $('#map').hide();
+                
+                // Reset write button
+                $('#writeButton')
+                    .removeClass('close-mode')
+                    .attr({
+                        'data-bs-toggle': 'modal',
+                        'data-bs-target': '#boardWrite'
+                    })
+                    .find('i')
+                    .removeClass('fa-plus')
+                    .addClass('fa-pen-to-square');
+
+                // Load appropriate posts based on current selection
+                const selectedValue = $('#postSelect').val();
+                loadPostsBySelection(selectedValue);
+                
             },
             error: function(xhr, status, error) {
                 console.error('Error:', error);
@@ -811,6 +814,133 @@ $(document).ready(function() {
         });
     });
 });
+function loadAllPosts() {
+    // AJAX 요청 또는 다른 로직을 추가하세요.
+    console.log("전체 게시글 불러오기");
+    console.log("전체 보기");
+	$.ajax({
+		url: '/showBoard',
+		type: 'GET',
+		success: function(res){
+			console.log(res);
+			$('#boardListContainer table tbody').empty();
+            
+            if (res && res.length > 0) {
+                let html = '';
+                
+                for (let i = 0; i < res.length; i += 2) {
+                    html += '<tr>';
+                    
+                    // Add first column
+                    html += createBoardColumn(res[i]);
+                    
+                    // Add second column if it exists
+                    if (i + 1 < res.length) {
+                        html += createBoardColumn(res[i + 1]);
+                    }
+                    
+                    html += '</tr>';
+                }
+                
+                $('#boardListContainer table tbody').html(html);
+            } 
+			
+		},
+		error: function(e){
+			console.log(e);
+		}
+	})
+}
+
+function loadMyPosts() {
+    // AJAX 요청 또는 다른 로직을 추가하세요.
+    console.log("내 게시글 불러오기");
+	let memId = '${sessionScope.login.memId}';
+	
+	$.ajax({
+		url: '/myBoard',
+		type: 'GET',
+		data: {memId: memId},
+		success: function(res){
+			$('#boardListContainer table tbody').empty();
+            
+            if (res && res.length > 0) {
+                let html = '';
+                
+                for (let i = 0; i < res.length; i += 2) {
+                    html += '<tr>';
+                    
+                    // Add first column
+                    html += createBoardColumn(res[i]);
+                    
+                    // Add second column if it exists
+                    if (i + 1 < res.length) {
+                        html += createBoardColumn(res[i + 1]);
+                    }
+                    
+                    html += '</tr>';
+                }
+                
+                $('#boardListContainer table tbody').html(html);
+            } else {
+                // Show no results message
+                $('#boardListContainer table tbody').html(
+                    '<tr><td colspan="2" class="text-center p-5">' +
+                    '<h4>작성한 게시글이 없습니다.</h4></td></tr>'
+                );
+            }
+			
+		},
+		error: function(e){
+			console.log(e);
+		}
+	})
+}
+
+function loadLikedPosts() {
+    // AJAX 요청 또는 다른 로직을 추가하세요.
+    console.log("좋아요한 게시글 불러오기");
+	let memId = '${sessionScope.login.memId}';
+	
+	$.ajax({
+		url: '/likeBoard',
+		type: 'GET',
+		data: {memId: memId},
+		success: function(res){
+			$('#boardListContainer table tbody').empty();
+            
+            if (res && res.length > 0) {
+                let html = '';
+                
+                for (let i = 0; i < res.length; i += 2) {
+                    html += '<tr>';
+                    
+                    // Add first column
+                    html += createBoardColumn(res[i]);
+                    
+                    // Add second column if it exists
+                    if (i + 1 < res.length) {
+                        html += createBoardColumn(res[i + 1]);
+                    }
+                    
+                    html += '</tr>';
+                }
+                
+                $('#boardListContainer table tbody').html(html);
+            } else {
+                // Show no results message
+                $('#boardListContainer table tbody').html(
+                    '<tr><td colspan="2" class="text-center p-5">' +
+                    '<h4>좋아요한 게시글이 없습니다.</h4></td></tr>'
+                );
+            }
+			
+		},
+		error: function(e){
+			console.log(e);
+		}
+	})
+}
 
 function editBoard(brdId) {
     $.ajax({
@@ -818,7 +948,7 @@ function editBoard(brdId) {
         type: 'GET',
         data: { brdId: brdId },
         success: function(board) {
-        	console.log(board);
+            console.log(board);
             // Switch to edit mode
             $('#boardListContainer').hide();
             $('#boardAddForm').show();
@@ -889,7 +1019,7 @@ function editBoard(brdId) {
                 $('#photoDiv label').after(clearBtn);
             }
 
-         // Display existing images
+            // Display existing images
             if (board.brdImg1) addExistingImage(board.brdImg1, 1);
             if (board.brdImg2) addExistingImage(board.brdImg2, 2);
             if (board.brdImg3) addExistingImage(board.brdImg3, 3);
@@ -924,103 +1054,30 @@ function addExistingImage(imgSrc, index) {
     }
 }
 
-function showBoard(){
-	console.log("전체 보기");
-	$.ajax({
-		url: '/showBoard',
-		type: 'GET',
-		success: function(res){
-			console.log(res);
-			$('#boardListContainer table tbody').empty();
-            
-            if (res && res.length > 0) {
-                let html = '';
-                
-                for (let i = 0; i < res.length; i += 2) {
-                    html += '<tr>';
-                    
-                    // Add first column
-                    html += createBoardColumn(res[i]);
-                    
-                    // Add second column if it exists
-                    if (i + 1 < res.length) {
-                        html += createBoardColumn(res[i + 1]);
-                    }
-                    
-                    html += '</tr>';
-                }
-                
-                $('#boardListContainer table tbody').html(html);
-            } 
-			
-		},
-		error: function(e){
-			console.log(e);
-		}
-	})
-}
-
-
-// 내 여행 보기
-function myBoard(){
-	console.log("내꺼 보기");
-	let memId = '${sessionScope.login.memId}';
-	
-	$.ajax({
-		url: '/myBoard',
-		type: 'GET',
-		data: {memId: memId},
-		success: function(res){
-			$('#boardListContainer table tbody').empty();
-            
-            if (res && res.length > 0) {
-                let html = '';
-                
-                for (let i = 0; i < res.length; i += 2) {
-                    html += '<tr>';
-                    
-                    // Add first column
-                    html += createBoardColumn(res[i]);
-                    
-                    // Add second column if it exists
-                    if (i + 1 < res.length) {
-                        html += createBoardColumn(res[i + 1]);
-                    }
-                    
-                    html += '</tr>';
-                }
-                
-                $('#boardListContainer table tbody').html(html);
-            } else {
-                // Show no results message
-                $('#boardListContainer table tbody').html(
-                    '<tr><td colspan="2" class="text-center p-5">' +
-                    '<h4>게시글이 없습니다.</h4></td></tr>'
-                );
-            }
-			
-		},
-		error: function(e){
-			console.log(e);
-		}
-	})
-}
-
 
 //여행 정보 검색
-function performSearch(keyWord, isMyBoardChecked) {
+function performSearch(keyWord) {
+	let url = '';
+    let data = { keyWord: keyWord,
+    			 memId: '${sessionScope.login.memId}'};
 	
-	let url = '/getBoardSearch';
-    let data = { keyWord: keyWord };
-    data.memId = '${sessionScope.login.memId}';
-    
-    // If viewing my posts, add memId to the search criteria
-    if (isMyBoardChecked) {
-        data.memId = '${sessionScope.login.memId}';
-        url = '/getMyBoardSearch'; // New endpoint for searching my posts
-    }
+	const selectedValue = $('#postSelect').val();
 	
-	
+	switch (selectedValue) {
+	    case 'all':
+	    	url = '/getBoardSearch';
+	        break;
+	    case 'myPosts':
+	    	url = '/getMyBoardSearch';
+	        break;
+	    case 'likedPosts':
+	    	url = '/getLikeBoardSearch';
+	        break;
+	    default:
+	    	url = '/getBoardSearch';
+	        break;
+		}
+   
     $.ajax({
         url: url,  // You'll need to create this endpoint
         type: 'GET',
@@ -1051,7 +1108,7 @@ function performSearch(keyWord, isMyBoardChecked) {
                 // Show no results message
                 $('#boardListContainer table tbody').html(
                     '<tr><td colspan="2" class="text-center p-5">' +
-                    '<h4>게시글이 없습니다.</h4></td></tr>'
+                    '<h4>검색 결과가 없습니다.</h4></td></tr>'
                 );
             }
         },
@@ -1069,7 +1126,7 @@ function createBoardColumn(board) {
     // Edit/delete dropdown buttons
     if (sessionMemId === board.memId) {
         editDeleteButtons = 
-            '<div class="dropdown me-5 mb-2">' +
+            '<div class="dropdown me-4 mb-2">' +
             '<button class="btn" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" ' +
             'style="font-size: 20px; appearance: none; -webkit-appearance: none;">' +
             '&#8942;' +
@@ -1081,7 +1138,7 @@ function createBoardColumn(board) {
             '</div>';
     } else {
         editDeleteButtons = 
-            '<div class="me-5 mb-2" style="font-size: 20px; padding: 6px 12px; height:44px">' +
+            '<div class="me-4 mb-2" style="font-size: 20px; padding: 6px 12px; height:44px">' +
             '<button class="btn" style="visibility: hidden; border: none; background: transparent;">' +
             '&#8942;' +
             '</button>' +
@@ -1169,24 +1226,39 @@ function updateIndexLabels() {
     });
 }
 
-function deleteBoard(brdId, isMyBoardChecked) {
-	console.log("삭제");
+function deleteBoard(brdId) {
     $.ajax({
         url: '/boardDel',
         type: 'POST',
         data: { brdId: brdId },
         success: function(response) {
             alert('여행 기록이 성공적으로 삭제되었습니다!');
-            if(isMyBoardChecked){
-            	myBoard();
-            }else{
-            	showBoard();
-            }
+            const selectedValue = $('#postSelect').val();
+            console.log(selectedValue);
+            loadPostsBySelection(selectedValue);
         },
         error: function(xhr, status, error) {
             alert('여행 기록 삭제 중 오류가 발생했습니다.');
         }
     });
+}
+
+//Helper function to load posts based on selection
+function loadPostsBySelection(selectedValue) {
+    switch (selectedValue) {
+        case 'all':
+            loadAllPosts();
+            break;
+        case 'myPosts':
+            loadMyPosts();
+            break;
+        case 'likedPosts':
+            loadLikedPosts();
+            break;
+        default:
+            loadAllPosts();
+            break;
+    }
 }
 
 </script>

@@ -289,8 +289,8 @@
 							<div class="speech-bubble">
 								<h5>
 									커플은 왜 설정하나요?
-									</h1>
-									<p>커플을 설정하게 되면 여행기록을 함께 관리할 수 있습니다</p>
+								</h5>
+								<p>커플을 설정하게 되면 여행기록을 함께 관리할 수 있습니다</p>
 							</div>
 						</div>
 					</div>
@@ -331,6 +331,12 @@
 
 <script>
 $(document).ready(function() {
+	window.onload = function() {
+	    if (window.location.pathname !== "/boardDetailView") {
+	        sessionStorage.removeItem("selectedValue");
+	    }
+	};
+	
 	$('#memPw_ck').on('blur', function() {
 	    let password = $('#memNpw').val();
 	    let confirmPassword = $(this).val();
