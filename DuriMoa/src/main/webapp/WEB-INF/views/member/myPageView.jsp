@@ -309,6 +309,7 @@
 				<h4>회원 탈퇴</h4>
 				<hr class="bg-dark mypage_hr">
 				<div class="container">
+					<c:if test="${sessionScope.login.kkoYn == 'N'}">
 					<form action ="/exit" style="border: none;" onsubmit="return checkPassword()">
 						<div style="width: 41%; margin: 0 auto;">
 							<div
@@ -331,6 +332,14 @@
 								탈퇴</button>
 						</div>
 					</form>
+					</c:if>
+					<c:if test="${sessionScope.login.kkoYn == 'Y'}">
+						<div style="text-align: center;">
+					        <a class="ps-4 mt-5 btn btn-primary" id="kakao_exit" style="width: 250px; padding-top: 10px"
+					        href="/unlinkKakao" onclick="return confirm('정말 카카오 계정 연결을 끊으시겠습니까?')"
+					        >회원 탈퇴</a>
+					    </div>
+					</c:if>
 				</div>
 			</div>
 		</section>

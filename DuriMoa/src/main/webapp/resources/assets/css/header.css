@@ -283,7 +283,7 @@ nav #header_menu {
 	margin: 0px 16px;
 }
 
-#kakao_login {
+#kakao_login, #kakao_exit {
 	background: url(/resources/assets/img/kakao-talk.png) no-repeat left
 		center;
 	background-size: 42px;
@@ -296,6 +296,11 @@ nav #header_menu {
 }
 
 #kakao_login:hover {
+	opacity: 1;
+	transition: 0.5s ease;
+}
+
+#kakao_exit:hover{
 	opacity: 1;
 	transition: 0.5s ease;
 }

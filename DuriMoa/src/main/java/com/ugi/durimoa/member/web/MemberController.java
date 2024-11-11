@@ -405,8 +405,8 @@ public class MemberController {
 		    memberService.registMember(vo);
 	    }	    
 	    
+	    memberService.useKakao((String) userInfo.get("email"));
 	    MemberVO login = memberService.loginMember(vo);
-	    memberService.useKakao(login.getMemId());
 	    
 	    int req_cnt = memberService.ReqWait(login.getMemId());
 
@@ -448,6 +448,61 @@ public class MemberController {
 	    // 카카오 계정 로그아웃 처리 후 리다이렉트
 	    return "redirect:https://kauth.kakao.com/oauth/logout?client_id=" + client_id + 
 	           "&logout_redirect_uri=" + logout_redirect_uri;
+	}
+	
+	@RequestMapping("/unlinkKakao")
+	public String unlinkKakao(HttpSession session) {
+	    String reqURL = "https://kapi.kakao.com/v1/user/unlink";
+	    String access_Token = (String) session.getAttribute("token");
+	    
+	    try {
+	        // 카카오 연결끊기 API 호출
+	        URL url = new URL(reqURL);
+	        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	        conn.setRequestMethod("POST");
+	        conn.setRequestProperty("Authorization", "Bearer " + access_Token);
+
+	        int responseCode = conn.getResponseCode();
+	        System.out.println("responseCode : " + responseCode);
+
+	        if(responseCode == 200) {
+	        	MemberVO vo = (MemberVO) session.getAttribute("login");
+	    		CoupleInfoVO cop = (CoupleInfoVO) session.getAttribute("couple");
+
+	    		if (cop != null) {
+	    			session.removeAttribute("couple");
+	    			int copId = cop.getCopId();
+	    			memberService.removeReq(copId);
+	    			memberService.memCoupleDel(copId);
+	    			memberService.delCouple(copId);
+	    		} else {
+	    			memberService.exitCopReq(vo.getMemId());
+	    		}
+
+	    		memberService.exit(vo.getMemId());
+	    		session.removeAttribute("login");
+	            
+	            return "redirect:/";
+	        }
+	        
+	        // 응답 확인을 위한 로그
+	        BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	        String line = "";
+	        StringBuilder result = new StringBuilder();
+	        while ((line = br.readLine()) != null) {
+	            result.append(line);
+	        }
+	        System.out.println("response body : " + result.toString());
+	        
+	        br.close();
+	        conn.disconnect();
+	        
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	    
+	    // 실패시 에러페이지로 이동
+	    return "redirect: /error";
 	}
 
 	// 토큰발급
