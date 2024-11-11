@@ -149,11 +149,10 @@ public class BoardService {
 	}
 	
 	// 댓글 갯수 조회
-	public int cntReply(int brdId) throws Exception  {
-		int result = dao.cntReply(brdId);
-		if (result == 0) {
-			throw new Exception();
-		}
+	public int rpyCnt(int brdId) {
+		int result = dao.rpyCnt(brdId);
+
+		System.out.println(result);
 		return result;
 	}
 	
@@ -181,5 +180,10 @@ public class BoardService {
 	
 	public MemberVO boardWriter(String memId) {
 		return dao.boardWriter(memId);
+	};
+	
+	// 조회수 증가
+	public void countUp(int brdId) {
+		dao.countUp(brdId);
 	};
 }

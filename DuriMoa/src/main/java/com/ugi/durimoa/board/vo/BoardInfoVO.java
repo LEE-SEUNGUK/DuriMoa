@@ -15,7 +15,9 @@ public class BoardInfoVO {
 	private String brdImg2;
 	private String brdImg3;
 	private String likeYn;
+	private int rpycnt;
 	private int cnt;
+	private int count; // 조회수
 	
 	public String getTrvPc() {
 		return trvPc;
@@ -99,6 +101,12 @@ public class BoardInfoVO {
 		this.likeYn = likeYn;
 	}
 	
+	public int getRpycnt() {
+		return rpycnt;
+	}
+	public void setRpycnt(int rpycnt) {
+		this.rpycnt = rpycnt;
+	}
 	public int getCnt() {
 		return cnt;
 	}
@@ -111,11 +119,17 @@ public class BoardInfoVO {
 	public void setBrdDt(String brdDt) {
 		this.brdDt = brdDt;
 	}
+	public int getCount() {
+		return count;
+	}
+	public void setCount(int count) {
+		this.count = count;
+	}
 	@Override
 	public String toString() {
 		return "BoardInfoVO [trvPc=" + trvPc + ", trvId=" + trvId + ", memId=" + memId + ", trvX=" + trvX + ", trvY="
 				+ trvY + ", trvPlc=" + trvPlc + ", brdId=" + brdId + ", brdTt=" + brdTt + ", brdDt=" + brdDt
 				+ ", brdCt=" + brdCt + ", brdImg1=" + brdImg1 + ", brdImg2=" + brdImg2 + ", brdImg3=" + brdImg3
-				+ ", likeYn=" + likeYn + ", cnt=" + cnt + "]";
+				+ ", likeYn=" + likeYn + ", rpycnt=" + rpycnt + ", cnt=" + cnt + ", count=" + count + "]";
 	}
 }

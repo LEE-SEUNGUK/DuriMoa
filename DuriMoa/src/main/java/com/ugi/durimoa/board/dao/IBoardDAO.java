@@ -72,4 +72,10 @@ public interface IBoardDAO {
 	
 	// 게시글 작성자 정보
 	public MemberVO boardWriter(String memId);
+	
+	// 댓글 갯수
+	public int rpyCnt(int brdId);
+	
+	// 조회수 증가
+	public void countUp(int brdId);
 }

@@ -264,7 +264,8 @@ public class BoardController {
 	@RequestMapping("/getBoard")
 	public String boardDetailView(Model model, int brdId, HttpSession session) throws Exception {
 
-		System.out.println(brdId);
+		boardService.countUp(brdId);
+		
 		BoardInfoVO vo = boardService.getBoard(brdId);
 		
 		ArrayList<ReplyVO> replyList = boardService.getReplyList(brdId);
@@ -275,15 +276,18 @@ public class BoardController {
 		ckLick.setBrdId(brdId);
 		ckLick.setMemId(login.getMemId());
 		 
+		int rpyCnt = boardService.rpyCnt(brdId);
 		int cnt = boardService.likesCnt(brdId);
 		int ck = boardService.likeCk(ckLick);
 		
+		model.addAttribute("rpyCnt",rpyCnt);
 		model.addAttribute("writer", writer);
 		model.addAttribute("ck", ck);
 		model.addAttribute("cnt", cnt);
 		model.addAttribute("board", vo);
 		model.addAttribute("replyList", replyList);
 
+		System.out.println(rpyCnt);
 		System.out.println(vo.toString());
 		System.out.println(replyList);
 
@@ -304,25 +308,29 @@ public class BoardController {
 
 		// 댓글 저장
 		boardService.writeReply(vo);
+		
+		int rpyCnt = boardService.rpyCnt(vo.getBrdId());
 
 		// 저장된 댓글 조회
 		ReplyVO result = boardService.getReply(uniquId);
+		result.setRpyCnt(rpyCnt);
+		
 		return result;
 	}
 
 	@ResponseBody
 	@PostMapping("/delReply") // @RequestBody 문자열 json 데이터를 객체로 받음
-	public String delReplyDo(@RequestBody ReplyVO vo) {
-		String result = "success";
-
+	public int delReplyDo(@RequestBody ReplyVO vo) {
 		try {
 			boardService.delReply(vo.getRpyId());
 		} catch (Exception e) {
 			e.printStackTrace();
-			result = "fail";
 		}
+		
+		int rpyCnt = boardService.rpyCnt(vo.getBrdId());
+		System.out.println(rpyCnt);
 
-		return result;
+		return rpyCnt;
 	}
 
 	@ResponseBody

@@ -179,6 +179,7 @@
 	    T.trv_id,
 	    T.trv_x,
 	    T.trv_y,
+	    B.count,
 	    B.brd_id,
 	    B.brd_tt,
 	    B.brdDt,
@@ -193,7 +194,7 @@
 	LEFT JOIN 
 	    BOARD_IMG I ON B.brd_id = I.brd_id
 	WHERE B.brd_id = #{brdId}
-	GROUP BY T.mem_id, T.trv_id, T.trv_pc, T.trv_x, T.trv_y, B.brd_id, B.brd_tt, B.brdDt, DBMS_LOB.SUBSTR(B.brd_ct, 4000, 1)
+	GROUP BY T.mem_id, T.trv_id, T.trv_pc, T.trv_x, T.trv_y, B.count, B.brd_id, B.brd_tt, B.brdDt, DBMS_LOB.SUBSTR(B.brd_ct, 4000, 1)
 	</select>
 	
 	<select id="boardWriter" resultType="MemberVO" parameterType="String">
@@ -269,5 +270,22 @@
 	<delete id="likeDel" parameterType="LikeVO">
 	DELETE FROM likes WHERE brd_id = #{brdId} AND mem_id = #{memId}
 	</delete>
+	
+	<select id="rpyCnt" resultType="int" parameterType="int">
+	SELECT 
+	    COUNT(r.rpy_id) AS rpycnt
+	FROM 
+	    BOARD b
+	LEFT JOIN 
+	    REPLY r ON b.brd_id = r.brd_id
+	WHERE 
+	    b.brd_id = #{brdId}  -- 여기에 특정 게시글 ID를 바인딩
+	GROUP BY 
+	    b.brd_id, b.brd_tt	
+	</select>
+	
+	<update id="countUp" parameterType="int">
+	UPDATE board set count = count + 1 WHERE brd_id = #{brdId}
+	</update>
 	
 </mapper>

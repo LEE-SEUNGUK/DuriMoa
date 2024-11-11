@@ -155,13 +155,21 @@ label{
         transform: scale(1);
     }
 }
+
+#brdContent:focus{
+	border: none;
+	outline: none;
+}
 </style>
 </head>
 <body>
 <jsp:include page="/WEB-INF/inc/header.jsp"></jsp:include>
 	<div style="width: 1920px; margin: 0 auto;">
 		<div style="width: 1420px; margin: 0 auto;">
-        <h3 style="margin-top: 6%;">[${board.trvPlc}]${board.brdTt}</h3>
+		<div class="d-flex justify-content-between">
+		 	<h3 style="margin-top: 6%;">[${board.trvPlc}]${board.brdTt}</h3>
+		 	<div style="margin-top: 6%; padding-top: 15px">조회 수: <span>${board.count }</span></div>
+		</div>
         <hr>
         <div class="row" style="margin: 0 auto;">
         	<header>
@@ -219,7 +227,7 @@ label{
                 <div class="mt-3" style="text-align: center;">
                     <div id="map"></div>
                 </div>
-                <textarea class="mt-5 p-3" style="background-color: #f8f9fa; border: 1px #f8f9fa; width: 100%;
+                <textarea class="mt-5 p-3" id="brdContent" style="background-color: #f8f9fa; border: 1px #f8f9fa; width: 100%;
 				border-radius: 15px;   height: 340px; font-size: 18px; font-family: 'Pretendard-Regular'; resize: none;" readonly="readonly">${board.brdCt}</textarea>
             </section>
             <section>
@@ -235,6 +243,9 @@ label{
         </div>
     </div>
     <div class="container my-5">
+    	<div>
+        	전체 댓글 <span id="rpyCnt">${rpyCnt }</span>개
+        </div>
         <hr>
         <div>
             <table style="width: 90%; margin: 0 auto;">
@@ -430,6 +441,7 @@ function replyWrite(e){
 				str += "<tr><td colspan='4'><hr class='rpyHr my-3' style='width: 88%; margin: 0 auto;'></td></tr>";				
 				$("#replyBody").append(str);
 				$("#replyInput").val('');
+				$("#rpyCnt").text(res.rpyCnt);
 			},
 			error : function(e) {
 				console.log(e);
@@ -442,38 +454,22 @@ function replyDel(rpyId) {
 	$.ajax({
 		url: '<c:url value = "/delReply" />',
 		type: 'POST',
-		data: JSON.stringify({"rpyId": rpyId}),
+		data: JSON.stringify(
+				{"rpyId": rpyId
+				,"brdId": '${board.brdId}'}),
 		contentType: 'application/json',
 		dataType: "text",
 		success: function(res){
-			if(res == 'success'){
-				$('#' + rpyId).next('tr').remove();  // Remove hr row
-                $('#' + rpyId).remove();             // Remove comment row
-   
-			}
+			console.log(res);
+			$('#' + rpyId).next('tr').remove();  // Remove hr row
+            $('#' + rpyId).remove();             // Remove comment row
+			$("#rpyCnt").text(res);
 		}, error: function(e){
 			console.log(e);
 		} 
 	})
 }
 
-function replyCount(rpyId){
-	$.ajax({
-		url: '<c:url value = "/delReply" />',
-		type: 'POST',
-		data: JSON.stringify({"rpyId": rpyId}),
-		contentType: 'application/json',
-		dataType: "text",
-		success: function(res){
-			if(res == 'success'){
-				$('#' + rpyId).next('tr').remove();  // Remove hr row
-                $('#' + rpyId).remove();             // Remove comment row
-			}
-		}, error: function(e){
-			console.log(e);
-		} 
-	})
-}
 
 //Initialize the map
 function initializeMap() {

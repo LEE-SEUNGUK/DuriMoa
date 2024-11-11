@@ -173,6 +173,10 @@
 	position: absolute;
 }
 
+#modalContent:focus{
+	border: none;
+	outline: none;
+}
 </style>
 </head>
 

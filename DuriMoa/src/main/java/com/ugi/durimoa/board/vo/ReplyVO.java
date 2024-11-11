@@ -9,6 +9,7 @@ public class ReplyVO {
 	private String memImg;
 	private String rpyCt;
 	private String rpyDt;
+	private int rpyCnt;
 	
 	public int getBrdId() {
 		return brdId;
@@ -52,10 +53,15 @@ public class ReplyVO {
 	public void setRpyDt(String rpyDt) {
 		this.rpyDt = rpyDt;
 	}
-	
+	public int getRpyCnt() {
+		return rpyCnt;
+	}
+	public void setRpyCnt(int rpyCnt) {
+		this.rpyCnt = rpyCnt;
+	}
 	@Override
 	public String toString() {
 		return "ReplyVO [brdId=" + brdId + ", rpyId=" + rpyId + ", memId=" + memId + ", memNm=" + memNm + ", memImg="
-				+ memImg + ", rpyCt=" + rpyCt + ", rpyDt=" + rpyDt + "]";
+				+ memImg + ", rpyCt=" + rpyCt + ", rpyDt=" + rpyDt + ", rpyCnt=" + rpyCnt + "]";
 	}
 }
