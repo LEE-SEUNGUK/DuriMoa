@@ -186,4 +186,8 @@ public class BoardService {
 	public void countUp(int brdId) {
 		dao.countUp(brdId);
 	};
+	
+	public void tagUpdate(BoardVO vo) {
+		dao.tagUpdate(vo);
+	};
 }

@@ -7,6 +7,7 @@ public class BoardVO {
 	private int trvId;
 	private String brdTt;
 	private String brdCt;
+	private String tag;
 	
 	public int getBrdId() {
 		return brdId;
@@ -37,6 +38,13 @@ public class BoardVO {
 	}
 	public void setBrdCt(String brdCt) {
 		this.brdCt = brdCt;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+	public void setTag(String tag) {
+		this.tag = tag;
 	}
 	
 	@Override

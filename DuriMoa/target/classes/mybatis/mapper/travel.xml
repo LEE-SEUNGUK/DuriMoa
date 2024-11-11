@@ -75,8 +75,8 @@
 		FROM travel a
 		LEFT JOIN images b ON a.trv_id = b.trv_id
 		JOIN couple_members cm ON a.mem_id = cm.mem_id
-		GROUP BY a.trv_id, a.mem_id, a.trv_Tt, a.trv_Pc, a.trv_X, a.trv_Y, a.trv_Sdt, a.trv_Edt, DBMS_LOB.SUBSTR(a.trv_Ct, 4000, 1), a.trv_Op
-		ORDER BY a.trv_sdt DESC
+		GROUP BY a.trv_id, a.mem_id, a.trv_Tt, a.trv_Pc, a.trv_X, a.trv_Y, a.trv_Sdt, a.trv_Edt, DBMS_LOB.SUBSTR(a.trv_Ct, 4000, 1), a.trv_Op, a.trvDt
+		ORDER BY a.trvdt
 	</select>
 	
 	<select id="getTravelSearch" resultType="TravelInfoVO" parameterType="SearchVO">

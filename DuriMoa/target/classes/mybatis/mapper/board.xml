@@ -59,7 +59,7 @@
         travel c ON a.trv_id = c.trv_id
     WHERE 
         b.brd_idx = '1'
-        AND (#{keyWord} IS NULL OR a.brd_tt LIKE '%' || #{keyWord} || '%' OR c.trv_pc LIKE '%' || #{keyWord} || '%')
+        AND (#{keyWord} IS NULL OR a.brd_tt LIKE '%' || #{keyWord} || '%' OR c.trv_pc LIKE '%' || #{keyWord} || '%' OR a.tag LIKE '%' || #{keyWord} || '%')
     ORDER BY
 			brdDt
 	</select>
@@ -84,7 +84,7 @@
 	        travel c ON a.trv_id = c.trv_id
 	    WHERE 
 	        b.brd_idx = '1'
-	        AND (#{keyWord} IS NULL OR a.brd_tt LIKE '%' || #{keyWord} || '%' OR c.trv_pc LIKE '%' || #{keyWord} || '%')
+	        AND (#{keyWord} IS NULL OR a.brd_tt LIKE '%' || #{keyWord} || '%' OR c.trv_pc LIKE '%' || #{keyWord} || '%' OR a.tag LIKE '%' || #{keyWord} || '%')
 	        AND a.mem_id = #{memId}
 	    ORDER BY
 			brdDt
@@ -114,7 +114,7 @@
 	    b.brd_idx = '1'
 	    AND l.like_yn = 'Y' -- 좋아요가 'Y'인 게시물만 선택
 	    AND l.mem_id = #{memId}-- 특정 사용자가 좋아요를 누른 게시물 필터
-	    AND (#{keyWord} IS NULL OR a.brd_tt LIKE '%' || #{keyWord} || '%' OR c.trv_pc LIKE '%' || #{keyWord} || '%')
+	    AND (#{keyWord} IS NULL OR a.brd_tt LIKE '%' || #{keyWord} || '%' OR c.trv_pc LIKE '%' || #{keyWord} || '%' OR a.tag LIKE '%' || #{keyWord} || '%')
 	ORDER BY
 	    a.brdDt
 	</select>
@@ -288,4 +288,7 @@
 	UPDATE board set count = count + 1 WHERE brd_id = #{brdId}
 	</update>
 	
+	<update id="tagUpdate" parameterType="BoardVO">
+		UPDATE board SET tag = #{tag} WHERE brd_id = #{brdId}
+	</update>
 </mapper>

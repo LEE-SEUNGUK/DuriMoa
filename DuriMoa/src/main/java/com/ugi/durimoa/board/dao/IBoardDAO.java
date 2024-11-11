@@ -78,4 +78,7 @@ public interface IBoardDAO {
 	
 	// 조회수 증가
 	public void countUp(int brdId);
+	
+	// 태그 업뎃
+	public void tagUpdate(BoardVO vo);
 }
