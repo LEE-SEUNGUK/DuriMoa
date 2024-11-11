@@ -164,4 +164,9 @@ public class MemberService {
 	public void exit(String memId) {
 		dao.exit(memId);
 	}
+	
+	// 카카오 사용 여부
+	public void useKakao(String memId) {
+		dao.useKakao(memId);
+	}
 }

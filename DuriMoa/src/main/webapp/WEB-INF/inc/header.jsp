@@ -10,7 +10,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script src="//dapi.kakao.com/v2/maps/sdk.js?appkey=9d407e93fbddd6bd9146ab8e8274441c&libraries=services,clusterer"></script>
-
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 
 <!-- css -->
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
@@ -124,7 +124,7 @@
 								<div class="social-login w-75">
 									<p class="mb-4 hr-sect ">or</p>
 								</div>
-								<button class="mt-3 mb-5 btn btn-primary w-75 ps-4" id="kakao_login" type="button">카카오 로그인</button>
+								<button class="mt-3 mb-5 btn btn-primary w-75 ps-4" id="kakao_login" type="button" onclick="kakaoLogin()">카카오 로그인</button>
 							</div>
 						</div>
 					</div>
@@ -284,6 +284,20 @@
 			}
 		});
 	});
+	
+	function kakaoLogin() {
+
+	    $.ajax({
+	        url: '/login/getKakaoAuthUrl',
+	        type: 'get',
+	        async: false,
+	        dataType: 'text',
+	        success: function (res) {
+	            location.href = res;
+	        }
+	    });
+
+	  }
 	
 	document.addEventListener("DOMContentLoaded", function () {
 		  let currentImageIndex = 0;

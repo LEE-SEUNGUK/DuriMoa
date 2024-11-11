@@ -77,4 +77,7 @@ public interface IMemberDAO {
 	
 	// 회원 탈퇴
 	public void exit(String memId);
+	
+	// 카카오 사용 여부
+	public void useKakao(String memId);
 }

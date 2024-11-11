@@ -176,7 +176,7 @@
 	WHERE req_mid = #{memId}
 	</delete>
 	
-<!-- 회원 탈퇴 시 요청 삭제 처리 -->
+	<!-- 회원 탈퇴 시 요청 삭제 처리 -->
 	<update id="exitCopReq" parameterType="String">
 	UPDATE request 
 	SET req_yn = 'N', 
@@ -187,6 +187,12 @@
 	
 	<update id="exit" parameterType="String">
 	UPDATE member SET mem_yse = 'N'
+	WHERE mem_id = #{memId}
+	</update>
+	
+	<!-- 카카오 로그인 -->
+	<update id="useKakao" parameterType="String">
+	UPDATE member SET kko_yn = 'Y'
 	WHERE mem_id = #{memId}
 	</update>
 </mapper>

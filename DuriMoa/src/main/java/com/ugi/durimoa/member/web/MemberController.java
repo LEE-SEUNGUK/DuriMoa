@@ -1,9 +1,15 @@
 package com.ugi.durimoa.member.web;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -12,8 +18,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.support.DaoSupport;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -28,6 +36,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.ugi.durimoa.member.service.MemberService;
 import com.ugi.durimoa.member.vo.MemberVO;
 import com.ugi.durimoa.member.vo.RequestVO;
@@ -95,21 +106,21 @@ public class MemberController {
 		MemberVO login = memberService.loginMember(vo);
 
 		int req_cnt = memberService.ReqWait(login.getMemId());
-		
-		if(req_cnt == 1) {
+
+		if (req_cnt == 1) {
 			System.out.println("커플 요청 대기 세션");
 			RequestVO req = memberService.reqInfo(login.getMemId());
 			session.setAttribute("req", req);
 		}
-		
+
 		int res_cnt = memberService.ResWait(login.getMemId());
-		if(res_cnt == 1) {
+		if (res_cnt == 1) {
 			System.out.println("커플 요청 응답 세션");
 			RequestVO res = memberService.reqInfo(login.getMemId());
 			session.setAttribute("res", res);
 			System.out.println("요청응답 있음");
 		}
-		
+
 		System.out.println(login.getCopYn());
 		if ("Y".equals(login.getCopYn())) {
 			CoupleInfoVO couple = memberService.copSession(login);
@@ -142,70 +153,69 @@ public class MemberController {
 
 	@ResponseBody
 	@RequestMapping("/coupleAdd")
-	public ResponseEntity<?> updateCop(@RequestBody CoupleVO vo, HttpSession session, @RequestParam("memId") String cop_memId,
-			HttpServletResponse response) throws Exception {
+	public ResponseEntity<?> updateCop(@RequestBody CoupleVO vo, HttpSession session,
+			@RequestParam("memId") String cop_memId, HttpServletResponse response) throws Exception {
 		// 세션에 있는 값을 가져올땐 객체에 담아서 메소드로 가져온다.
 		MemberVO login = (MemberVO) session.getAttribute("login");
 		String login_memId = login.getMemId();
-		
+
 		MemberVO mem = memberService.coupleck(cop_memId);
-		if("Y".equals(mem.getCopYn())) {
+		if ("Y".equals(mem.getCopYn())) {
 			return new ResponseEntity<>("success", HttpStatus.OK);
 		}
-		
+
 		int req_num = memberService.ResWait(cop_memId);
-		if(req_num == 1) {
+		if (req_num == 1) {
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
-		
+
 		memberService.coupleAdd(vo); // 자동 생성된 copId 반환
 		System.out.println("커플 ID: " + vo.getCopId());
-			
+
 		RequestVO req_send = new RequestVO();
 		req_send.setReqCid(vo.getCopId());
 		req_send.setReqMid(login_memId);
 		req_send.setResMid(cop_memId);
-		
+
 		// 요청 보내기! 잘 가는지 확인
 		memberService.coupleReq(req_send);
-		
+
 		RequestVO req = memberService.reqInfo(login.getMemId());
 		session.setAttribute("req", req);
 
 		return new ResponseEntity<>(vo, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping("/allowReq")
 	public String allowReq(HttpSession session) {
 		MemberVO login = (MemberVO) session.getAttribute("login");
 		String login_memId = login.getMemId();
 		memberService.allowReq(login_memId);
-		
+
 		System.out.println("요청 수락 컨트롤러");
-		
+
 		memberService.allowCouple(login_memId);
 		memberService.memCouple(login_memId);
 		CoupleInfoVO couple = memberService.copSession(login);
 		System.out.println("커플 세션 등록");
 		session.setAttribute("couple", couple);
 		session.removeAttribute("res");
-		
+
 		return "/member/myPageView";
 	}
-	
+
 	@RequestMapping("/opposeReq")
 	public String opposeReq(HttpSession session) {
 		MemberVO login = (MemberVO) session.getAttribute("login");
 		String login_memId = login.getMemId();
 		memberService.opposeReq(login_memId);
-		
+
 		System.out.println("요청 거절 컨트롤러");
-		
+
 		session.removeAttribute("res");
-		
+
 		return "/member/myPageView";
 	};
-
 
 	@RequestMapping("/coupleUpdate")
 	@ResponseBody
@@ -227,30 +237,30 @@ public class MemberController {
 
 		return cop;
 	}
-	
+
 	@RequestMapping("/coupleDelete")
 	public String copDelete(HttpSession session) {
 		System.out.println("커플 삭제 컨트롤러");
-			
+
 		CoupleInfoVO cop = (CoupleInfoVO) session.getAttribute("couple");
 		int copId = cop.getCopId();
-		
+
 		memberService.removeReq(copId);
 		memberService.memCoupleDel(copId);
 		memberService.delCouple(copId);
-		
+
 		session.removeAttribute("couple");
 		return "/member/myPageView";
 	}
-	
+
 	@RequestMapping("/delReqCop")
 	public String delReqCop(HttpSession session) {
-		
+
 		MemberVO vo = (MemberVO) session.getAttribute("login");
-		
+
 		memberService.delReqCop(vo.getMemId());
 		session.removeAttribute("req");
-		
+
 		return "/member/myPageView";
 	}
 
@@ -261,25 +271,25 @@ public class MemberController {
 
 		return "redirect:/";
 	}
-	
+
 	@RequestMapping("/exit")
 	public String exit(HttpSession session) {
 		MemberVO vo = (MemberVO) session.getAttribute("login");
 		CoupleInfoVO cop = (CoupleInfoVO) session.getAttribute("couple");
-		
-		if(cop != null) {
+
+		if (cop != null) {
 			session.removeAttribute("couple");
 			int copId = cop.getCopId();
 			memberService.removeReq(copId);
 			memberService.memCoupleDel(copId);
 			memberService.delCouple(copId);
-		}else {
+		} else {
 			memberService.exitCopReq(vo.getMemId());
 		}
-		
+
 		memberService.exit(vo.getMemId());
 		session.removeAttribute("login");
-	
+
 		return "redirect:/";
 	}
 
@@ -336,19 +346,19 @@ public class MemberController {
 			file.transferTo(dest);
 			vo.setMemImg(downloadPath + fileName);
 		}
-		
+
 		MemberVO mem = (MemberVO) session.getAttribute("login");
-		
+
 		System.out.println(vo);
 
-		
-		if("Y".equals(mem.getCopYn())) {
+		if ("Y".equals(mem.getCopYn())) {
 			vo.setCopId(mem.getCopId());
 			vo.setCopYn("Y");
-		};
+		}
+		;
 
 		memberService.updateMember(vo);
-		
+
 		session.setAttribute("login", vo);
 
 		return vo;
@@ -359,5 +369,194 @@ public class MemberController {
 
 		return "/member/myPageView";
 	}
+
+	@RequestMapping(value = "/login/getKakaoAuthUrl")
+	public @ResponseBody String getKakaoAuthUrl(HttpServletRequest request) throws Exception {
+		String reqUrl = "https://kauth.kakao.com/oauth/authorize" + "?client_id=9d407e93fbddd6bd9146ab8e8274441c"
+				+ "&redirect_uri=http://localhost:8080/login/oauth_kakao" + "&response_type=code";
+
+		return reqUrl;
+	}
+
+	// 카카오 연동정보 조회
+	@RequestMapping(value = "/login/oauth_kakao")
+	public String oauthKakao(@RequestParam(value = "code", required = false) String code, Model model, HttpSession session)
+			throws Exception {
+
+		System.out.println("#########" + code);
+		String access_Token = getAccessToken(code);
+		System.out.println("###access_Token#### : " + access_Token);
+
+		HashMap<String, Object> userInfo = getUserInfo(access_Token);
+		System.out.println("###access_Token#### : " + access_Token);
+		System.out.println("userInfo: " + userInfo.get("email"));
+		System.out.println("nickname: " + userInfo.get("nickname"));
+		System.out.println("profile_Img: " + userInfo.get("profileImg"));
+
+		// 카카오 로그인 정보 MemberVO에 매핑
+	    MemberVO vo = new MemberVO();
+	    vo.setMemId((String) userInfo.get("email"));
+	    vo.setMemPw((String) userInfo.get("email"));
+	    vo.setMemNm((String) userInfo.get("nickname"));
+	    vo.setMemImg((String) userInfo.get("profileImg"));
+
+	    // 회원가입 서비스 호출
+	    if(memberService.idCheck(vo.getMemId()) == 0) {
+		    memberService.registMember(vo);
+	    }	    
+	    
+	    MemberVO login = memberService.loginMember(vo);
+	    memberService.useKakao(login.getMemId());
+	    
+	    int req_cnt = memberService.ReqWait(login.getMemId());
+
+		if (req_cnt == 1) {
+			System.out.println("커플 요청 대기 세션");
+			RequestVO req = memberService.reqInfo(login.getMemId());
+			session.setAttribute("req", req);
+		}
+
+		int res_cnt = memberService.ResWait(login.getMemId());
+		if (res_cnt == 1) {
+			System.out.println("커플 요청 응답 세션");
+			RequestVO res = memberService.reqInfo(login.getMemId());
+			session.setAttribute("res", res);
+			System.out.println("요청응답 있음");
+		}
+
+		System.out.println(login.getCopYn());
+		if ("Y".equals(login.getCopYn())) {
+			CoupleInfoVO couple = memberService.copSession(login);
+			System.out.println("커플 세션 등록");
+			session.setAttribute("couple", couple);
+		}
+	    
+	    session.setAttribute("login", login);
+	    session.setAttribute("token", access_Token);
+	    
+		return "redirect: /"; // 본인 원하는 경로 설정
+	}
 	
+	@RequestMapping("/logoutKko")
+	public String logoutKko(HttpSession session){
+		String client_id = "9d407e93fbddd6bd9146ab8e8274441c";  // 앱 키
+	    String logout_redirect_uri = "http://localhost:8080/";    // 로그아웃 후 리다이렉트할 URI
+	    
+	    // 세션 정리
+	    session.invalidate();
+	    
+	    // 카카오 계정 로그아웃 처리 후 리다이렉트
+	    return "redirect:https://kauth.kakao.com/oauth/logout?client_id=" + client_id + 
+	           "&logout_redirect_uri=" + logout_redirect_uri;
+	}
+
+	// 토큰발급
+	public String getAccessToken(String authorize_code) {
+		String access_Token = "";
+		String refresh_Token = "";
+		String reqURL = "https://kauth.kakao.com/oauth/token";
+
+		try {
+			URL url = new URL(reqURL);
+
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+			// URL연결은 입출력에 사용 될 수 있고, POST 혹은 PUT 요청을 하려면 setDoOutput을 true로 설정해야함.
+			conn.setRequestMethod("POST");
+			conn.setDoOutput(true);
+
+			// POST 요청에 필요로 요구하는 파라미터 스트림을 통해 전송
+			BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(conn.getOutputStream()));
+			StringBuilder sb = new StringBuilder();
+			sb.append("grant_type=authorization_code");
+			sb.append("&client_id=9d407e93fbddd6bd9146ab8e8274441c"); // 본인이 발급받은 key
+			sb.append("&redirect_uri=http://localhost:8080/login/oauth_kakao"); // 본인이 설정해 놓은 경로
+			sb.append("&code=" + authorize_code);
+			bw.write(sb.toString());
+			bw.flush();
+
+			// 결과 코드가 200이라면 성공
+			int responseCode = conn.getResponseCode();
+			System.out.println("responseCode : " + responseCode);
+
+			// 요청을 통해 얻은 JSON타입의 Response 메세지 읽어오기
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+			String line = "";
+			String result = "";
+
+			while ((line = br.readLine()) != null) {
+				result += line;
+			}
+			System.out.println("response body : " + result);
+
+			// Gson 라이브러리에 포함된 클래스로 JSON파싱 객체 생성
+			JsonParser parser = new JsonParser();
+			JsonElement element = parser.parse(result);
+
+			access_Token = element.getAsJsonObject().get("access_token").getAsString();
+			refresh_Token = element.getAsJsonObject().get("refresh_token").getAsString();
+
+			System.out.println("access_token : " + access_Token);
+			System.out.println("refresh_token : " + refresh_Token);
+
+			br.close();
+			bw.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return access_Token;
+	}
+
+	// 유저정보조회
+	public HashMap<String, Object> getUserInfo(String access_Token) {
+
+		// 요청하는 클라이언트마다 가진 정보가 다를 수 있기에 HashMap타입으로 선언
+		HashMap<String, Object> userInfo = new HashMap<String, Object>();
+		String reqURL = "https://kapi.kakao.com/v2/user/me";
+		try {
+			URL url = new URL(reqURL);
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+
+			// 요청에 필요한 Header에 포함될 내용
+			conn.setRequestProperty("Authorization", "Bearer " + access_Token);
+
+			int responseCode = conn.getResponseCode();
+			System.out.println("responseCode : " + responseCode);
+
+			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+			String line = "";
+			String result = "";
+
+			while ((line = br.readLine()) != null) {
+				result += line;
+			}
+			System.out.println("response body : " + result);
+
+			JsonParser parser = new JsonParser();
+			JsonElement element = parser.parse(result);
+
+			JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
+			JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
+
+			String nickname = properties.getAsJsonObject().get("nickname").getAsString();
+			String email = kakao_account.getAsJsonObject().get("email").getAsString();
+			String profileImageUrl = properties.get("profile_image").getAsString();
+
+			userInfo.put("accessToken", access_Token);
+			userInfo.put("nickname", nickname);
+			userInfo.put("email", email);
+			userInfo.put("profileImg", profileImageUrl);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return userInfo;
+	}
+
 }

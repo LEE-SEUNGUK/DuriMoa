@@ -18,12 +18,21 @@
 				<li class="my-page-item" data-target="couple"><a href="#">커플
 						설정</a></li>
 				<hr>
+				<c:if test="${sessionScope.login.kkoYn == 'N'}">
 				<li class="my-page-item" data-target="userUpdate"><a href="#">개인정보
 						수정</a></li>
 				<hr>
+				</c:if>
+				<c:if test="${sessionScope.login.kkoYn == 'N'}">
 				<li class="my-page-item" data-target="#"><a
 					href="${pageContext.request.contextPath}/logoutDo"> 로그아웃</a></li>
 				<hr>
+				</c:if>
+				<c:if test="${sessionScope.login.kkoYn == 'Y'}">
+				<li class="my-page-item" data-target="#"><a
+					href="${pageContext.request.contextPath}/logoutKko"> 로그아웃</a></li>
+				<hr>
+				</c:if>
 				<li class="my-page-item" data-target="exit"><a href="#">회원
 						탈퇴</a></li>
 				<hr>
