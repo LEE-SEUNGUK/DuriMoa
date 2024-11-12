@@ -17,6 +17,10 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
+<!-- 날짜 -->
+<script src='resources/fullcalendar-scheduler-6.1.15/dist/index.global.js'></script>
+
+
 <div id="top" style="width: 1920px; margin: 0 auto; display: block;">
 <header>
 	<nav class="d-flex" style="background-color: #ffefef;">
@@ -45,8 +49,8 @@
 				<button class="search_btn"></button>
 			</form>
 		</div>
-		<div class="d-flex align-items-center justify-content-center" style="width: 33%;">
-			<ul class="h-100 d-flex justify-content-between" id="header_menu" style="width: 60%;">
+		<div class="d-flex align-items-center justify-content-end" style="width: 33%; padding-right: 80px;">
+			<ul class="h-100 d-flex justify-content-between" id="header_menu" style="width: 80%;">
 				<li class="menu_option h-100">
 					<div>
 					<c:if test="${sessionScope.login == null}">
@@ -60,7 +64,7 @@
 					</div>
 				</li>
 				<li class="menu_option h-100">
-					<div class="ms-3">
+					<div style="margin-left: 40px;">
 					<c:if test="${sessionScope.login == null}">
 						<a class="nav_page d-flex flex-column align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><img src="resources/assets/img/diary.png" alt="" style="width: 36px; padding-top: 2px;">
 							<p class="pt-1 nav_text">우리의 추억</p> </a>
@@ -72,7 +76,19 @@
 					</div>
 				</li>
 				<li class="menu_option h-100">
-					<div>
+					<div class="ms-4">
+					<c:if test="${sessionScope.login == null}">
+						<a class="nav_page d-flex flex-column align-items-center" href="#" data-bs-toggle="modal" data-bs-target="#loginModal"><img src="resources/assets/img/date.png" alt="" style="width: 36px; padding-top: 2px;">
+							<p class="pt-1 nav_text">여행 일정</p> </a>
+					</c:if>
+					<c:if test="${sessionScope.login != null}">
+						<a class="nav_page d-flex flex-column align-items-center" href="${pageContext.request.contextPath}/calender"><img src="resources/assets/img/date.png" alt="" style="width: 36px; padding-top: 2px;">
+							<p class="pt-1 nav_text">여행 일정</p> </a>
+					</c:if>
+					</div>
+				</li>
+				<li class="menu_option h-100">
+					<div class="ms-4">
 						<c:if test="${sessionScope.login == null}">
 							<a class="nav_page d-flex flex-column align-items-center" href="#" id="mypage" data-bs-toggle="modal" data-bs-target="#loginModal"> <img src="resources/assets/img/user.png" alt="" style="width: 42px;">
 								<p class="nav_text">마이 페이지</p>

@@ -378,7 +378,7 @@ label:hover::before, #trvOp:hover+label::before {
 			<section class="mypage_side col-2 p-0" style="margin-top: 6%;">
 				<div class="mb-4">
 					<h2>우리의 추억</h2>
-					<p>여행기록을 추가하고 관리하세요</p>
+					<p>여행기록을 추가하고 관리해보세요</p>
 				</div>
 			</section>
 			<section class="col-9" style="margin-top: 4%; margin-left: 100px" id="viewMode">
@@ -513,16 +513,16 @@ $(document).ready(function() {
         startDate: moment()
     });
     
- // 체크박스 변경 이벤트
+ 	// 체크박스 변경 이벤트
     $('#singleDayTrip').change(function() {
         let isSingleDay = $(this).is(':checked');
         let picker = $('#travelDate').data('daterangepicker');
 
         if (isSingleDay) {
             // 당일 여행 모드일 때
+            picker.singleDatePicker = true; // 단일 날짜 선택 모드
             picker.setStartDate(moment());  // 오늘 날짜로 설정
             picker.setEndDate(moment());    // 오늘 날짜로 종료일 설정
-            picker.singleDatePicker = true; // 단일 날짜 선택 모드
         } else {
             picker.singleDatePicker = false;
         }

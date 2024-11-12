@@ -12,7 +12,7 @@
 <div style="width: 1920px; padding: 0 !important; margin: 0 auto;">
 	<div style="width: 1420px; margin: 0 auto;">
 	<div class="row">
-		<section class="mypage_side col-3" style="margin-top: 6%;">
+		<section class="mypage_side col-3 p-0" style="margin-top: 6%;">
 			<h2 class="mb-5">마이 페이지</h2>
 			<ul class="w-75" style="font-size: 20px;">
 				<li class="my-page-item" data-target="couple"><a href="#">커플

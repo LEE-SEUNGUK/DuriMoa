@@ -23,5 +23,6 @@
       <typeAlias type="com.ugi.durimoa.board.vo.BoardInfoVO" alias="BoardInfoVO" />
       <typeAlias type="com.ugi.durimoa.board.vo.ReplyVO" alias="ReplyVO" />
       <typeAlias type="com.ugi.durimoa.board.vo.LikeVO" alias="LikeVO" />
+      <typeAlias type="com.ugi.durimoa.calender.vo.CalenderVO" alias="CalenderVO" />
    </typeAliases>
 </configuration>

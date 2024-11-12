@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org/DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ugi.durimoa.calender.dao.ICalenderDAO">
+
+	<insert id="calenderAdd" parameterType="CalenderVO" useGeneratedKeys="true" keyProperty="calId" keyColumn="cal_id">
+		INSERT INTO CALENDER(mem_id, cal_tt, cal_pc, cal_x, cal_y, cal_sdt, cal_edt) 
+		VALUES (#{memId}, #{calTt}, #{calPc}, #{calX}, #{calY}, #{calSdt}, #{calEdt})
+	</insert>
+	
+	<select id="calenderShow" resultType="CalenderVO" parameterType="String">
+		SELECT * 
+		FROM calender a, member b
+		WHERE a.mem_id = b.mem_id
+		AND b.mem_id = #{memId}
+	</select>
+	
+</mapper>

@@ -1,0 +1,445 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>두리모아</title>
+<style>
+td {
+	padding-left: 0px !important;
+	padding-right: 0px !important;
+}
+
+#map {
+	width: 300px;
+	height: 300px;
+	display: none;
+}
+
+#travelAddForm {
+	max-height: 1300px; /* Adjust this value as needed */
+	margin: 0 auto;
+}
+
+#travelTitle, #travelDestination, #travelDate {
+	height: 38px;
+	border: none;
+	outline: 1px solid #8989896c;
+	box-shadow: none !important;
+}
+
+#travelDestination {
+	cursor: pointer;
+}
+
+#travelTitle:hover {
+	outline: 1px solid #0000009e;
+	transition: outline 0.5s;
+}
+
+#travelDestination:hover {
+	outline: 1px solid #0000009e;
+	transition: outline 0.5s;
+}
+
+#travelDate:hover {
+	outline: 1px solid #0000009e;
+	transition: outline 0.5s;
+}
+
+#travelTitle:focus {
+	transition: all 0.01s;
+	outline: 2px solid #0000009e !important;
+}
+
+#travelDestination:focus {
+	transition: all 0.01s;
+	outline: 2px solid #0000009e !important;
+}
+
+#travelDate:focus {
+	transition: all 0.01s;
+	outline: 2px solid #0000009e !important;
+}
+
+#searchAddress {
+	background: #c4ddc0;
+	border: none;
+	outline: 1px solid #8989896c;
+	color: black;
+}
+
+.trvTitle {
+	font-weight: bold;
+	font-size: 30px;
+	font-family: LeeSeoyun;
+}
+
+.content {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	line-clamp: 2;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+}
+
+.compact-menu {
+	min-width: 50px !important;
+	/* Adjust this value as needed */
+	width: auto;
+	white-space: nowrap;
+}
+
+.compact-menu .dropdown-item {
+	padding: 0.25rem 0.5rem;
+	/* Reduce padding */
+	font-size: 16px;
+	/* Reduce font size if needed */
+}
+
+.travelBtn {
+	background-color: #c4ddc0 !important;
+	height: 38px !important;
+	color: black !important;
+	border: none !important;
+	opacity: 0.9;
+}
+
+.travelBtn:hover {
+	opacity: 1.0;
+	transition: 0.5s;
+}
+
+#searchAddress {
+	opacity: 0.9;
+}
+
+#searchAddress:hover {
+	opacity: 1.0;
+	transition: 0.5s;
+}
+
+#singleDayTrip {
+	display: none;
+}
+
+#singleDayTrip ~label:before {
+	/* display: inline-block; */
+	content: "✔";
+	display: inline-block;
+	vertical-align: middle;
+	text-align: center;
+	width: 18px;
+	height: 18px;
+	line-height: 18px;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	color: transparent;
+	transition: 0.2s;
+	font-size: 14px !important;
+	margin-right: 8px;
+	margin-bottom: 2px;
+}
+
+#singleDayTrip:checked+label::before {
+	background-color: #c4ddc0;
+	color: #000000;
+	outline: none;
+	border-color: transparent;
+}
+
+label:hover::before, #singleDayTrip:hover+label::before {
+	border-color: #0000006c;
+	transition: all 0.3s;
+}
+
+.fc-day-sun .fc-col-header-cell-cushion, .fc-day-sun a {
+	color: red !important;
+}
+
+.fc-day-sat .fc-col-header-cell-cushion, .fc-day-sat a {
+	color: blue !important;
+}
+</style>
+</head>
+<body>
+	<jsp:include page="/WEB-INF/inc/header.jsp"></jsp:include>
+	<div style="padding: 0 !important; width: 1920px; margin: 0 auto;">
+		<div style="width: 1420px; margin: 0 auto; position: relative;">
+			<div class="row">
+				<section class="mypage_side col-2 p-0" style="margin-top: 6%;">
+					<div class="mb-4">
+						<h2>여행 일정</h2>
+						<p>여행 일정을 관리해보세요</p>
+					</div>
+				</section>
+				<section class="col-9" style="margin-top: 4%; margin-left: 100px;" id="viewMode">
+					<div id='calendar' style="width: 90%; height: 90%;"></div>
+				</section>
+			</div>
+		</div>
+	</div>
+	<!-- 모달 -->
+	<div class="modal fade" id="addEventModal" tabindex="-1" aria-labelledby="addEventModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content p-4">
+				<div class="modal-header pt-0">
+					<h5 class="modal-title" id="addEventModalLabel" style="padding-top: 0px !important;">일정 추가</h5>
+				</div>
+				<div class="modal-body p-1">
+					<form id="scheduleAdd">
+						<div class="mb-3">
+							<label for="travelTitle" class="form-label">제목</label> <input type="text" name="trvTt" class="form-control" id="travelTitle" placeholder="여행 제목을 입력하세요">
+						</div>
+						<div class="mb-3">
+							<label for="travelDestination" class="form-label">장소</label>
+							<div class="input-group">
+								<input type="text" name="trvPc" class="form-control" id="travelDestination" placeholder="여행지를 검색하세요" readonly>
+								<button class="btn btn-outline-secondary" type="button" id="searchAddress" style="margin-left: 1px">검색</button>
+							</div>
+						</div>
+						<div class="my-4" id="map" style="margin: 0 auto;"></div>
+						<input type="hidden" id="coordinateX" name="trvX"> <input type="hidden" id="coordinateY" name="trvY">
+						<div class="mb-3">
+							<label for="travelDate" class="form-label">날짜</label> <input type="text" name="trvDt" class="form-control" id="travelDate" placeholder="여행 날짜를 선택하세요">
+							<div class="form-check mt-2" style="padding-left: 0px">
+								<input class="form-check-input" type="checkbox" id="singleDayTrip" checked> <label class="form-check-label" for="singleDayTrip"> 당일 여행 </label>
+							</div>
+						</div>
+						<div class="d-flex justify-content-end">
+							<input type="hidden" name="memId" id="memId">
+							<button type="submit" class="btn btn-primary">저장</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		let calendar, map, marker, geocoder, selectedDate;
+		
+		$(document).ready(function(){
+	
+			initializeMap();
+				
+			$('#travelDestination').click(function(){
+			    $('#searchAddress').click();
+			})
+			
+			$('#searchAddress').click(execDaumPostcode);
+			
+			// 모달이 닫힐 때 폼 초기화
+		    $('#addEventModal').on('hidden.bs.modal', function () {
+		        // 폼 초기화
+		        $('#scheduleAdd')[0].reset(); // 폼 필드 초기화
+		        $('#map').hide();
+		    });
+			
+		    $('#scheduleAdd').submit(function(e) {
+		        e.preventDefault();
+		        var datevalue = $('#travelDate').val();
+		       
+		        if (!$('#singleDayTrip').is(':checked') && datevalue.includes('~')) {
+		            var dates = datevalue.split('~').map(date => date.trim());
+		            calSdt = dates[0];
+		            calEdt = dates[1];
+		        } else {
+		            // Single date
+		            calSdt = datevalue;
+		            calEdt = datevalue;
+		        }
+		        
+		        var data = {
+		        		calTt: $('#travelTitle').val(),
+		        		calPc: $('#travelDestination').val(),
+		        		calX: $('#coordinateX').val(),
+		        		calY: $('#coordinateY').val(),
+		                memId: '${sessionScope.login.memId}',
+		                calSdt: calSdt,
+		                calEdt: calEdt
+		            };
+		        
+		        console.log(data);
+		        
+		        $.ajax({
+		            url: '/calenderAdd',
+		            type: 'POST',
+		            contentType: 'application/json', // JSON 형식으로 전송
+		            data: JSON.stringify(data), // 객체를 JSON 문자열로 변환
+		            dataType: 'json',
+		            success: function(response) {
+		            	console.log('Success:', response);
+		                alert('일정이 성공적으로 저장되었습니다!');
+		                addEventToCalendar(response);
+		                $('#addEventModal').modal('hide'); // 모달 닫기
+		                
+		            },
+		            error: function(xhr, status, error) {
+		                console.error('Error:', error);
+		                alert('일정 저장 중 오류가 발생했습니다.');
+		            }
+		        });
+		    });
+		    
+		    $('#travelDate').daterangepicker({
+		    	singleDatePicker: true, // Start with single date picker
+		        autoApply: true,
+		        showDropdowns: true,
+		        locale: {
+		            format: 'YYYY-MM-DD',
+		            separator: ' ~ ',
+		            daysOfWeek: ['일', '월', '화', '수', '목', '금', '토'],
+		            monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+		        },
+		        showCustomRangeLabel: false,
+		        linkedCalendars: false, 
+		    });
+		    
+		 	// 체크박스 변경 이벤트
+		    $('#singleDayTrip').change(function() {
+		        let isSingleDay = $(this).is(':checked');
+		        let picker = $('#travelDate').data('daterangepicker');
+
+		        if (isSingleDay) {
+		            // 당일 여행 모드일 때
+		            picker.singleDatePicker = true; // 단일 날짜 선택 모드
+		            picker.minDate = moment(selectedDate);  // 선택된 날짜로 minDate 설정
+		            picker.maxDate = moment(selectedDate);  // 선택된 날짜로 maxDate 설정
+		            picker.setStartDate(moment(selectedDate));  // 오늘 날짜로 설정
+		            picker.setEndDate(moment(selectedDate));    // 오늘 날짜로 종료일 설정
+		        } else {
+		            picker.singleDatePicker = false;
+		            picker.minDate = moment(selectedDate);  // 선택된 날짜로 minDate 설정
+		            picker.maxDate = null; 
+		            picker.setStartDate(moment(selectedDate));  // 오늘 날짜로 설정
+		        }
+		        // 기존 달력 다시 보여주기
+		        picker.updateView();
+		        picker.showCalendars();
+		    });
+		 	
+		    $('#travelDate').data('daterangepicker').setStartDate(selectedDate);
+		})
+		
+		
+		document.addEventListener('DOMContentLoaded', function () {
+			
+			// JSON 문자열을 JavaScript 객체로 파싱
+		    const calendarData = ${calendarList};
+	
+		    const calendarEvents = calendarData.map(event => {
+		        // 날짜 형식 변환 (2024-11-12 00:00:00 -> 2024-11-12)
+		        const startDate = event.calSdt.split(' ')[0];
+		        const endDate = event.calEdt.split(' ')[0];
+		        
+		        return {
+		            title: event.calTt,
+		            start: startDate,
+		            end: moment(endDate).add(1, 'days').format('YYYY-MM-DD'), // 종료일을 하루 더해서 표시
+		            extendedProps: {
+		                location: event.calPc,
+		                coordinateX: event.calX,
+		                coordinateY: event.calY
+		            }
+		        };
+		    });
+		    
+		    console.log("변환된 캘린더 이벤트:", calendarEvents);
+		    
+				var calendarEl = document.getElementById('calendar');
+					calendar = new FullCalendar.Calendar(calendarEl, {
+					initialView: 'dayGridMonth',
+					selectable: true,
+					select: function (info) {
+						$('#travelDate').val(info.startStr); // 선택한 날짜를 travelDate 필드에 입력
+						selectedDate = info.startStr;
+						var picker = $('#travelDate').data('daterangepicker');
+						picker.singleDatePicker = true; // 단일 날짜 선택 모드
+						picker.minDate = moment(info.startStr);  // 선택된 날짜로 minDate 설정
+			            picker.maxDate = moment(info.startStr);  // 선택된 날짜로 maxDate 설정
+			            picker.setStartDate(moment(info.startStr)); // startDate 업데이트
+			            picker.setEndDate(moment(info.startStr)); // startDate 업데이트
+						$('#addEventModal').modal('show');
+					},
+					events: calendarEvents,
+					locale: 'ko',
+					dayCellContent: function (arg) {
+						return arg.date.getDate();
+					},
+				});
+			calendar.render();
+		});
+		
+		// 새 일정 추가
+		function addEventToCalendar(eventData) {
+		    const startDate = eventData.calSdt.split(' ')[0];
+		    const endDate = eventData.calEdt.split(' ')[0];
+		    
+		    const newEvent = {
+		        title: eventData.calTt,
+		        start: startDate,
+		        end: moment(endDate).add(1, 'days').format('YYYY-MM-DD'),
+		        extendedProps: {
+		            location: eventData.calPc,
+		            coordinateX: eventData.calX,
+		            coordinateY: eventData.calY
+		        }
+		    };
+		    
+		    calendar.addEvent(newEvent);
+		}
+		
+				// Execute Daum Postcode function
+		function execDaumPostcode() {
+		    new daum.Postcode({
+		        oncomplete: function(data) {
+		            var addr = data.address;
+		            $('#travelDestination').val(addr);
+		
+		            geocoder.addressSearch(data.address, function(results, status) {
+		                if (status === kakao.maps.services.Status.OK) {
+		                    var result = results[0];
+		                    var coords = new kakao.maps.LatLng(result.y, result.x);
+		
+		                    $('#coordinateX').val(result.x);
+		                    $('#coordinateY').val(result.y);
+		
+		                    $('#map').show();
+		                    $('#photoDiv').show();
+		                    map.relayout();
+		                    map.setCenter(coords);
+		                    marker.setPosition(coords);
+		                }
+		            });
+		        }
+		    }).open();
+		}
+				
+		function initializeMap() {
+		    var mapContainer = document.getElementById('map');
+		    var mapOption = {
+		        center: new kakao.maps.LatLng(37.537187, 127.005476),
+		        level: 4
+		    };
+
+		    map = new kakao.maps.Map(mapContainer, mapOption);
+		    geocoder = new kakao.maps.services.Geocoder();
+
+		    var imageSrc = 'resources/assets/img/marker.png',
+		        imageSize = new kakao.maps.Size(70, 53),
+		        imageOption = { offset: new kakao.maps.Point(33, 45) };
+
+		    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
+		    marker = new kakao.maps.Marker({
+		        position: new kakao.maps.LatLng(37.537187, 127.005476),
+		        map: map,
+		        image: markerImage
+		    });
+		}
+	</script>
+</body>
+</html>
