@@ -162,6 +162,7 @@ label:hover::before, #singleDayTrip:hover+label::before {
 .fc-day-sat .fc-col-header-cell-cushion, .fc-day-sat a {
 	color: blue !important;
 }
+
 </style>
 </head>
 <body>
@@ -300,21 +301,36 @@ label:hover::before, #singleDayTrip:hover+label::before {
 		    
 		 	// 체크박스 변경 이벤트
 		    $('#singleDayTrip').change(function() {
-		        let isSingleDay = $(this).is(':checked');
+		    	let isSingleDay = $(this).is(':checked');
 		        let picker = $('#travelDate').data('daterangepicker');
-
+		        let currentStartDate = picker.startDate;
+		        let currentEndDate = picker.endDate;
+		        
 		        if (isSingleDay) {
-		            // 당일 여행 모드일 때
-		            picker.singleDatePicker = true; // 단일 날짜 선택 모드
-		            picker.minDate = moment(selectedDate);  // 선택된 날짜로 minDate 설정
-		            picker.maxDate = moment(selectedDate);  // 선택된 날짜로 maxDate 설정
-		            picker.setStartDate(moment(selectedDate));  // 오늘 날짜로 설정
-		            picker.setEndDate(moment(selectedDate));    // 오늘 날짜로 종료일 설정
+		            // Single day trip mode - keep the start date only
+		            picker.singleDatePicker = true;
+		            picker.minDate = moment(currentStartDate);
+		            picker.maxDate = moment(currentStartDate);
+		            picker.setStartDate(currentStartDate);
+		            picker.setEndDate(currentStartDate);
+		            $('#travelDate').val(currentStartDate.format('YYYY-MM-DD'));
 		        } else {
+		            // Multi-day trip mode - restore the date range if existed, otherwise use start date
 		            picker.singleDatePicker = false;
-		            picker.minDate = moment(selectedDate);  // 선택된 날짜로 minDate 설정
-		            picker.maxDate = null; 
-		            picker.setStartDate(moment(selectedDate));  // 오늘 날짜로 설정
+		            picker.minDate = moment(currentStartDate);
+		            picker.maxDate = null;
+		            
+		            // If we already had a date range, restore it
+		            if (currentStartDate.format('YYYY-MM-DD') !== currentEndDate.format('YYYY-MM-DD')) {
+		                picker.setStartDate(currentStartDate);
+		                picker.setEndDate(currentEndDate);
+		                $('#travelDate').val(currentStartDate.format('YYYY-MM-DD') + ' ~ ' + currentEndDate.format('YYYY-MM-DD'));
+		            } else {
+		                // If it was a single day, keep that date as the start date
+		                picker.setStartDate(currentStartDate);
+		                picker.setEndDate(currentStartDate);
+		                $('#travelDate').val(currentStartDate.format('YYYY-MM-DD') + ' ~ ' + currentStartDate.format('YYYY-MM-DD'));
+		            }
 		        }
 		        // 기존 달력 다시 보여주기
 		        picker.updateView();
@@ -336,6 +352,7 @@ label:hover::before, #singleDayTrip:hover+label::before {
 		        const endDate = event.calEdt.split(' ')[0];
 		        
 		        return {
+		        	calId: event.calId,
 		            title: event.calTt,
 		            start: startDate,
 		            end: moment(endDate).add(1, 'days').format('YYYY-MM-DD'), // 종료일을 하루 더해서 표시
@@ -346,23 +363,92 @@ label:hover::before, #singleDayTrip:hover+label::before {
 		            }
 		        };
 		    });
-		    
-		    console.log("변환된 캘린더 이벤트:", calendarEvents);
-		    
+		    		    
 				var calendarEl = document.getElementById('calendar');
 					calendar = new FullCalendar.Calendar(calendarEl, {
 					initialView: 'dayGridMonth',
 					selectable: true,
 					select: function (info) {
-						$('#travelDate').val(info.startStr); // 선택한 날짜를 travelDate 필드에 입력
-						selectedDate = info.startStr;
-						var picker = $('#travelDate').data('daterangepicker');
-						picker.singleDatePicker = true; // 단일 날짜 선택 모드
-						picker.minDate = moment(info.startStr);  // 선택된 날짜로 minDate 설정
-			            picker.maxDate = moment(info.startStr);  // 선택된 날짜로 maxDate 설정
-			            picker.setStartDate(moment(info.startStr)); // startDate 업데이트
-			            picker.setEndDate(moment(info.startStr)); // startDate 업데이트
-						$('#addEventModal').modal('show');
+						clearModal();
+				        $('#travelDate').val(info.startStr);
+				        selectedDate = info.startStr;
+				        var picker = $('#travelDate').data('daterangepicker');
+				        picker.singleDatePicker = true;
+				        picker.minDate = moment(info.startStr);
+				        picker.maxDate = moment(info.startStr);
+				        picker.setStartDate(moment(info.startStr));
+				        picker.setEndDate(moment(info.startStr));
+				        $('#addEventModalLabel').text('일정 추가');
+				        $('#scheduleAdd button[type="submit"]').show();
+				        $('#searchAddress').show();
+				        $('#addEventModal').modal('show');
+					},
+					eventClick: function(info){
+						clearModal();
+				        const event = info.event;
+				        
+				        // Update modal title
+				        $('#addEventModalLabel').text('일정 상세');
+				        
+				     	// Get date range picker instance
+				        var picker = $('#travelDate').data('daterangepicker');
+				     	
+				     	// Format date range
+				        const startDate = moment(event.start).format('YYYY-MM-DD');
+				        const endDate = moment(event.end).subtract(1, 'days').format('YYYY-MM-DD');
+				        console.log(startDate);
+				        
+				     // Check if it's a single day event
+				        if (startDate === endDate) {
+				            // Single day event
+				            $('#singleDayTrip').prop('checked', true);
+				            picker.singleDatePicker = true;
+				            picker.minDate = moment(startDate);
+				            picker.maxDate = moment(startDate);
+				            picker.setStartDate(moment(startDate));
+				            picker.setEndDate(moment(startDate));
+				            $('#travelDate').val(startDate);
+				        } else {
+				            // Multi-day event
+				            $('#singleDayTrip').prop('checked', false);
+				            picker.singleDatePicker = false;
+				            picker.minDate = moment(startDate);
+				            picker.maxDate = null;
+				            picker.setStartDate(moment(startDate));
+				            picker.setEndDate(moment(startDate));
+				            $('#travelDate').val(startDate + ' ~ ' + endDate);
+				        }
+				        
+				        // Fill in event details
+				        $('#travelTitle').val(event.title);
+				        $('#travelDestination').val(event.extendedProps.location);
+				        
+				        
+				        if (startDate === endDate) {
+				            $('#travelDate').val(startDate);
+				            $('#singleDayTrip').prop('checked', true);
+				        } else {
+				            $('#travelDate').val(startDate + ' ~ ' + endDate);
+				            $('#singleDayTrip').prop('checked', false);
+				        }
+				        
+				        // Update map if coordinates exist
+				        if (event.extendedProps.coordinateX && event.extendedProps.coordinateY) {
+				            $('#coordinateX').val(event.extendedProps.coordinateX);
+				            $('#coordinateY').val(event.extendedProps.coordinateY);
+				            
+				            const coords = new kakao.maps.LatLng(
+				                event.extendedProps.coordinateY, 
+				                event.extendedProps.coordinateX
+				            );
+				            
+				            setTimeout(function(){ map.relayout();}, 200);
+				            setTimeout(function(){ map.setCenter(coords);}, 200);
+				            setTimeout(function(){ marker.setPosition(coords);}, 200);
+				            $('#map').show();
+				        }
+				        
+				        $('#addEventModal').modal('show');
 					},
 					events: calendarEvents,
 					locale: 'ko',
@@ -439,6 +525,13 @@ label:hover::before, #singleDayTrip:hover+label::before {
 		        map: map,
 		        image: markerImage
 		    });
+		}
+		
+		function clearModal() {
+		    $('#scheduleAdd')[0].reset();
+		    $('#map').hide();
+		    $('#coordinateX').val('');
+		    $('#coordinateY').val('');
 		}
 	</script>
 </body>

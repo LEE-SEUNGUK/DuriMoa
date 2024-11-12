@@ -18,7 +18,7 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
 <!-- 날짜 -->
-<script src='resources/fullcalendar-scheduler-6.1.15/dist/index.global.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
 
 
 <div id="top" style="width: 1920px; margin: 0 auto; display: block;">
