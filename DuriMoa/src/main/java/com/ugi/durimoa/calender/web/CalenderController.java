@@ -40,6 +40,7 @@ public class CalenderController {
 	    ObjectMapper mapper = new ObjectMapper();
 	    String calendarJsonList = mapper.writeValueAsString(calenderList);
 	    model.addAttribute("calendarList", calendarJsonList);
+	    System.out.println(calendarJsonList);
 		
 		return "/calender/calenderView";
 	}
@@ -51,6 +52,27 @@ public class CalenderController {
 		System.out.println(vo);
 		
 		calenderService.calenderAdd(vo);
+		
+		return vo;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/calenderUpdate")
+	public CalenderVO calenderUpdate(@RequestBody CalenderVO vo) throws Exception {
+		
+		System.out.println(vo);
+		
+		calenderService.calenderUpdate(vo);
+		
+		return vo;
+	}
+	
+	@ResponseBody
+	@RequestMapping("/calenderDel")
+	public CalenderVO calenderDel(@RequestBody CalenderVO vo) throws Exception {
+		System.out.println(vo);
+		
+		calenderService.calenderDel(vo);
 		
 		return vo;
 	}

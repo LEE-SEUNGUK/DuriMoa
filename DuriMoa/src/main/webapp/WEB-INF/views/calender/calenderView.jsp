@@ -162,7 +162,6 @@ label:hover::before, #singleDayTrip:hover+label::before {
 .fc-day-sat .fc-col-header-cell-cushion, .fc-day-sat a {
 	color: blue !important;
 }
-
 </style>
 </head>
 <body>
@@ -345,24 +344,26 @@ label:hover::before, #singleDayTrip:hover+label::before {
 			
 			// JSON 문자열을 JavaScript 객체로 파싱
 		    const calendarData = ${calendarList};
-	
 		    const calendarEvents = calendarData.map(event => {
 		        // 날짜 형식 변환 (2024-11-12 00:00:00 -> 2024-11-12)
 		        const startDate = event.calSdt.split(' ')[0];
 		        const endDate = event.calEdt.split(' ')[0];
 		        
 		        return {
-		        	calId: event.calId,
 		            title: event.calTt,
 		            start: startDate,
 		            end: moment(endDate).add(1, 'days').format('YYYY-MM-DD'), // 종료일을 하루 더해서 표시
 		            extendedProps: {
+		            	calId: event.calId,
 		                location: event.calPc,
 		                coordinateX: event.calX,
 		                coordinateY: event.calY
-		            }
-		        };
-		    });
+			            }
+			        };
+			    });
+		    
+		    	console.log(calendarEvents);
+		    
 		    		    
 				var calendarEl = document.getElementById('calendar');
 					calendar = new FullCalendar.Calendar(calendarEl, {
@@ -379,7 +380,6 @@ label:hover::before, #singleDayTrip:hover+label::before {
 				        picker.setStartDate(moment(info.startStr));
 				        picker.setEndDate(moment(info.startStr));
 				        $('#addEventModalLabel').text('일정 추가');
-				        $('#scheduleAdd button[type="submit"]').show();
 				        $('#searchAddress').show();
 				        $('#addEventModal').modal('show');
 					},
@@ -389,6 +389,15 @@ label:hover::before, #singleDayTrip:hover+label::before {
 				        
 				        // Update modal title
 				        $('#addEventModalLabel').text('일정 상세');
+				        
+				        $('#scheduleAdd button[type="submit"]').hide();
+				        
+				        const modalFooter = $('.modal-body .d-flex.justify-content-end');
+				        modalFooter.empty().append(
+				        	    '<button type="button" class="btn btn-secondary me-2" onclick="editEvent(' + event.extendedProps.calId + ')">수정</button>' +
+				        	    '<button type="button" class="btn btn-danger" onclick="deleteEvent(' + event.extendedProps.calId + ')">삭제</button>'
+				        );
+
 				        
 				     	// Get date range picker instance
 				        var picker = $('#travelDate').data('daterangepicker');
@@ -469,6 +478,7 @@ label:hover::before, #singleDayTrip:hover+label::before {
 		        start: startDate,
 		        end: moment(endDate).add(1, 'days').format('YYYY-MM-DD'),
 		        extendedProps: {
+		        	calId: eventData.calId,
 		            location: eventData.calPc,
 		            coordinateX: eventData.calX,
 		            coordinateY: eventData.calY
@@ -532,6 +542,77 @@ label:hover::before, #singleDayTrip:hover+label::before {
 		    $('#map').hide();
 		    $('#coordinateX').val('');
 		    $('#coordinateY').val('');
+		}
+		
+		function editEvent(calId) {
+		    var datevalue = $('#travelDate').val();
+		    var calSdt, calEdt;
+		    
+		    if (!$('#singleDayTrip').is(':checked') && datevalue.includes('~')) {
+		        var dates = datevalue.split('~').map(date => date.trim());
+		        calSdt = dates[0];
+		        calEdt = dates[1];
+		    } else {
+		        calSdt = datevalue;
+		        calEdt = datevalue;
+		    }
+		    
+		    var data = {
+		        calId: calId,
+		        calTt: $('#travelTitle').val(),
+		        calPc: $('#travelDestination').val(),
+		        calX: $('#coordinateX').val(),
+		        calY: $('#coordinateY').val(),
+		        calSdt: calSdt,
+		        calEdt: calEdt
+		    };
+		    
+		    $.ajax({
+		        url: '/calenderUpdate',
+		        type: 'POST',
+		        contentType: 'application/json',
+		        data: JSON.stringify(data),
+		        dataType: 'json',
+		        success: function(response) {
+		            alert('일정이 성공적으로 수정되었습니다!');
+		            calendar.getEvents().forEach(event => {
+	                if (event.extendedProps.calId == calId) {
+	                    event.remove();
+		                }
+		            });
+		            addEventToCalendar(response);
+		            $('#addEventModal').modal('hide');
+		        },
+		        error: function(xhr, status, error) {
+		            console.error('Error:', error);
+		            alert('일정 수정 중 오류가 발생했습니다.');
+		        }
+		    });
+		}
+
+		function deleteEvent(calId) {
+		    if (confirm('일정을 삭제하시겠습니까?')) {
+		        $.ajax({
+		            url: '/calenderDel',
+		            type: 'POST',
+		            contentType: 'application/json',
+		            data: JSON.stringify({ calId: calId }),
+		            dataType: 'json',
+		            success: function(response) {
+		                alert('일정이 성공적으로 삭제되었습니다!');
+		                calendar.getEvents().forEach(event => {
+		                if (event.extendedProps.calId == calId) {
+		                    event.remove();
+			                }
+			            });
+			            $('#addEventModal').modal('hide');
+		            },
+		            error: function(xhr, status, error) {
+		                console.error('Error:', error);
+		                alert('일정 삭제 중 오류가 발생했습니다.');
+		            }
+		        });
+		    }
 		}
 	</script>
 </body>

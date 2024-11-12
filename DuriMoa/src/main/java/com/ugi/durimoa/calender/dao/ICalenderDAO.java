@@ -13,4 +13,10 @@ public interface ICalenderDAO {
 	
 	// 전체 일정 조회
 	public ArrayList<CalenderVO> calenderShow(String memId);
+	
+	// 일정 수정
+	public void calenderUpdate(CalenderVO vo);
+	
+	// 일정 삭제
+	public void calenderDel(CalenderVO vo);
 }

@@ -29,4 +29,18 @@ public class CalenderService {
 
 		return vo;
 	};
+	
+	// 일정 수정
+	public void calenderUpdate(CalenderVO vo) {
+		System.out.println("일정 수정");
+		
+		dao.calenderUpdate(vo);
+	};
+	
+	// 일정 삭제
+	public void calenderDel(CalenderVO vo) {
+		System.out.println("일정 삭제");
+		
+		dao.calenderDel(vo);
+	};
 }

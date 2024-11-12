@@ -12,6 +12,22 @@
 		FROM calender a, member b
 		WHERE a.mem_id = b.mem_id
 		AND b.mem_id = #{memId}
+		AND a.yse_yn = 'Y'
 	</select>
+	
+	<update id="calenderUpdate" parameterType="CalenderVO">
+	UPDATE calender 
+	SET cal_tt = #{calTt}
+	   ,cal_pc = #{calPc}
+	   ,cal_x = #{calX}
+	   ,cal_y = #{calY}
+	   ,cal_sdt = #{calSdt}
+	   ,cal_edt = #{calEdt}
+	WHERE cal_id = #{calId}
+	</update>
+	
+	<update id="calenderDel" parameterType="CalenderVO">
+	UPDATE calender SET yse_yn = 'N' WHERE cal_id=#{calId}
+	</update>
 	
 </mapper>
