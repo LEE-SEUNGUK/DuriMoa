@@ -303,7 +303,7 @@ public class BoardController {
 						        System.out.println("Predicted Class: " + predictedClass);
 						        System.out.println("Confidence: " + confidence);
 						        
-						        if(confidence > 50) {
+						        if(confidence > 80) {
 						        	switch (predictedClass) {
 									case "sea":
 										vo.setTag("바다");

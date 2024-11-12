@@ -825,25 +825,13 @@ function loadAllPosts() {
 			console.log(res);
 			$('#boardListContainer table tbody').empty();
             
-            if (res && res.length > 0) {
-                let html = '';
-                
-                for (let i = 0; i < res.length; i += 2) {
-                    html += '<tr>';
-                    
-                    // Add first column
-                    html += createBoardColumn(res[i]);
-                    
-                    // Add second column if it exists
-                    if (i + 1 < res.length) {
-                        html += createBoardColumn(res[i + 1]);
-                    }
-                    
-                    html += '</tr>';
-                }
-                
-                $('#boardListContainer table tbody').html(html);
-            } 
+			if (res && res.length > 0) {
+			    let html = '';
+			    for (let i = 0; i < res.length; i += 2) {
+			        html += createBoardRow(res, i);
+			    }
+			    $('#boardListContainer table tbody').html(html);
+			}
 			
 		},
 		error: function(e){
@@ -864,25 +852,13 @@ function loadMyPosts() {
 		success: function(res){
 			$('#boardListContainer table tbody').empty();
             
-            if (res && res.length > 0) {
-                let html = '';
-                
-                for (let i = 0; i < res.length; i += 2) {
-                    html += '<tr>';
-                    
-                    // Add first column
-                    html += createBoardColumn(res[i]);
-                    
-                    // Add second column if it exists
-                    if (i + 1 < res.length) {
-                        html += createBoardColumn(res[i + 1]);
-                    }
-                    
-                    html += '</tr>';
-                }
-                
-                $('#boardListContainer table tbody').html(html);
-            } else {
+			if (res && res.length > 0) {
+			    let html = '';
+			    for (let i = 0; i < res.length; i += 2) {
+			        html += createBoardRow(res, i);
+			    }
+			    $('#boardListContainer table tbody').html(html);
+			} else {
                 // Show no results message
                 $('#boardListContainer table tbody').html(
                     '<tr><td colspan="2" class="text-center p-5">' +
@@ -909,25 +885,13 @@ function loadLikedPosts() {
 		success: function(res){
 			$('#boardListContainer table tbody').empty();
             
-            if (res && res.length > 0) {
-                let html = '';
-                
-                for (let i = 0; i < res.length; i += 2) {
-                    html += '<tr>';
-                    
-                    // Add first column
-                    html += createBoardColumn(res[i]);
-                    
-                    // Add second column if it exists
-                    if (i + 1 < res.length) {
-                        html += createBoardColumn(res[i + 1]);
-                    }
-                    
-                    html += '</tr>';
-                }
-                
-                $('#boardListContainer table tbody').html(html);
-            } else {
+			if (res && res.length > 0) {
+			    let html = '';
+			    for (let i = 0; i < res.length; i += 2) {
+			        html += createBoardRow(res, i);
+			    }
+			    $('#boardListContainer table tbody').html(html);
+			} else {
                 // Show no results message
                 $('#boardListContainer table tbody').html(
                     '<tr><td colspan="2" class="text-center p-5">' +
@@ -1088,21 +1052,9 @@ function performSearch(keyWord) {
             
             if (response && response.length > 0) {
                 let html = '';
-                
                 for (let i = 0; i < response.length; i += 2) {
-                    html += '<tr>';
-                    
-                    // Add first column
-                    html += createBoardColumn(response[i]);
-                    
-                    // Add second column if it exists
-                    if (i + 1 < response.length) {
-                        html += createBoardColumn(response[i + 1]);
-                    }
-                    
-                    html += '</tr>';
+                    html += createBoardRow(response, i);
                 }
-                
                 $('#boardListContainer table tbody').html(html);
             } else {
                 // Show no results message
@@ -1118,6 +1070,29 @@ function performSearch(keyWord) {
         }
     });
 }
+
+//Helper function to create table row with columns
+function createBoardRow(posts, startIndex) {
+    let html = '<tr>';
+    
+    // Always add the first column if there's a post
+    if (startIndex < posts.length) {
+        html += createBoardColumn(posts[startIndex]);
+    }
+    
+    // Add second column only if there's a second post
+    // This ensures single posts stay on the left with empty right column
+    if (startIndex + 1 < posts.length) {
+        html += createBoardColumn(posts[startIndex + 1]);
+    } else {
+        // Add empty column to maintain layout when there's only one post
+        html += '<td style="width: 50%;"></td>';
+    }
+    
+    html += '</tr>';
+    return html;
+}
+
 
 function createBoardColumn(board) {
     var editDeleteButtons = '';
