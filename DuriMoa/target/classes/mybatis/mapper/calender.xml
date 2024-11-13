@@ -8,11 +8,18 @@
 	</insert>
 	
 	<select id="calenderShow" resultType="CalenderVO" parameterType="String">
-		SELECT * 
-		FROM calender a, member b
-		WHERE a.mem_id = b.mem_id
-		AND b.mem_id = #{memId}
-		AND a.yse_yn = 'Y'
+		SELECT cal.*, m.*
+		FROM CALENDER cal
+		JOIN member m ON cal.mem_id = m.mem_id
+		WHERE (
+		    m.mem_id = #{memId}  -- 조건1: 내 일정
+		    OR (
+		        m.cop_id IN (SELECT cop_id FROM member WHERE mem_id = #{memId})  -- 조건2: 커플 확인
+		        AND m.cop_id IS NOT NULL  -- 조건3: cop_id가 있는 경우만
+		        AND m.mem_id != #{memId}  -- 조건4: 자신 제외
+		    )
+		)
+		AND cal.yse_yn = 'Y'
 	</select>
 	
 	<update id="calenderUpdate" parameterType="CalenderVO">

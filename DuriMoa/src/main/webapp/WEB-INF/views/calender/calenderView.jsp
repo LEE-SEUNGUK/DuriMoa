@@ -156,11 +156,48 @@ label:hover::before, #singleDayTrip:hover+label::before {
 }
 
 .fc-day-sun .fc-col-header-cell-cushion, .fc-day-sun a {
-	color: red !important;
+	color: #ff4a4a !important;
 }
 
 .fc-day-sat .fc-col-header-cell-cushion, .fc-day-sat a {
-	color: blue !important;
+	color: #ff6b6b !important;
+}
+
+.fc-today-button {
+	background-color: #ff6b6b !important;
+}
+
+.fc .fc-button-primary{
+	outline: none;
+	border: none !important;
+}
+
+.fc-event{
+	padding-left: 20px;
+	border: none;
+	outline: none;
+	box-shadow: none;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+	padding: 10px 20px;
+	font-size: 12px;
+	font-weight: 500;
+	background-color: #ffdbdb !important;
+	border-radius: 20px;
+}
+
+.fc-prev-button, .fc-next-button{
+	background-color: transparent !important;
+	color: #ff6b6b !important;
+}
+
+.fc-button:focus{
+	box-shadow: none !important;
+}
+
+.fc-button-primary:focus{
+	box-shadow: none !important;
 }
 </style>
 </head>
@@ -210,7 +247,9 @@ label:hover::before, #singleDayTrip:hover+label::before {
 						</div>
 						<div class="d-flex justify-content-end">
 							<input type="hidden" name="memId" id="memId">
-							<button type="submit" class="btn btn-primary">저장</button>
+							<button type="submit" class="btn btn-primary" id="save">저장</button>
+							<button type="button" class="btn btn-secondary" id="edit" data-cal-id="" style="display:none;">수정</button>
+							<button type="button" class="btn btn-danger ms-2" id="del" data-cal-id="" style="display:none;">삭제</button>
 						</div>
 					</form>
 				</div>
@@ -349,10 +388,20 @@ label:hover::before, #singleDayTrip:hover+label::before {
 		        const startDate = event.calSdt.split(' ')[0];
 		        const endDate = event.calEdt.split(' ')[0];
 		        
+		        const duration = moment(endDate).diff(moment(startDate), 'days'); // 지속 시간 계산
+		        
+		        let backgroundColor;
+		        if (duration < 1) {
+		            backgroundColor = '#ff9f9f'; // 1일 미만
+		        } else {
+		            backgroundColor = '#fc8888'; // 1일 이상 2일 미만
+		        }
+		        
 		        return {
 		            title: event.calTt,
 		            start: startDate,
 		            end: moment(endDate).add(1, 'days').format('YYYY-MM-DD'), // 종료일을 하루 더해서 표시
+		            backgroundColor: backgroundColor, // 색상 추가
 		            extendedProps: {
 		            	calId: event.calId,
 		                location: event.calPc,
@@ -361,9 +410,6 @@ label:hover::before, #singleDayTrip:hover+label::before {
 			            }
 			        };
 			    });
-		    
-		    	console.log(calendarEvents);
-		    
 		    		    
 				var calendarEl = document.getElementById('calendar');
 					calendar = new FullCalendar.Calendar(calendarEl, {
@@ -380,6 +426,9 @@ label:hover::before, #singleDayTrip:hover+label::before {
 				        picker.setStartDate(moment(info.startStr));
 				        picker.setEndDate(moment(info.startStr));
 				        $('#addEventModalLabel').text('일정 추가');
+				        $('#save').show();
+				        $('#edit').hide();
+				        $('#del').hide();
 				        $('#searchAddress').show();
 				        $('#addEventModal').modal('show');
 					},
@@ -390,15 +439,13 @@ label:hover::before, #singleDayTrip:hover+label::before {
 				        // Update modal title
 				        $('#addEventModalLabel').text('일정 상세');
 				        
-				        $('#scheduleAdd button[type="submit"]').hide();
+				        $('#save').hide();
+				        $('#edit').show(); // 수정 버튼 보이기
+				        $('#del').show(); // 삭제 버튼 보이기
 				        
-				        const modalFooter = $('.modal-body .d-flex.justify-content-end');
-				        modalFooter.empty().append(
-				        	    '<button type="button" class="btn btn-secondary me-2" onclick="editEvent(' + event.extendedProps.calId + ')">수정</button>' +
-				        	    '<button type="button" class="btn btn-danger" onclick="deleteEvent(' + event.extendedProps.calId + ')">삭제</button>'
-				        );
+				        $('#edit').attr('data-cal-id', event.extendedProps.calId);
+				        $('#del').attr('data-cal-id', event.extendedProps.calId);
 
-				        
 				     	// Get date range picker instance
 				        var picker = $('#travelDate').data('daterangepicker');
 				     	
@@ -473,10 +520,20 @@ label:hover::before, #singleDayTrip:hover+label::before {
 		    const startDate = eventData.calSdt.split(' ')[0];
 		    const endDate = eventData.calEdt.split(' ')[0];
 		    
+		    const duration = moment(endDate).diff(moment(startDate), 'days'); // 지속 시간 계산
+	        
+		    let backgroundColor;
+	        if (duration < 1) {
+	            backgroundColor = '#ff9f9f'; // 1일 미만
+	        } else {
+	            backgroundColor = '#fc8888'; // 1일 이상 2일 미만
+	        }
+		    
 		    const newEvent = {
 		        title: eventData.calTt,
 		        start: startDate,
 		        end: moment(endDate).add(1, 'days').format('YYYY-MM-DD'),
+	            backgroundColor: backgroundColor, // 색상 추가
 		        extendedProps: {
 		        	calId: eventData.calId,
 		            location: eventData.calPc,
@@ -543,6 +600,16 @@ label:hover::before, #singleDayTrip:hover+label::before {
 		    $('#coordinateX').val('');
 		    $('#coordinateY').val('');
 		}
+		
+		$('#edit').click(function(){
+			var calId = $(this).data('cal-id');
+			editEvent(calId);
+		})
+		
+		$('#del').click(function(){
+			var calId = $(this).data('cal-id');
+			deleteEvent(calId);
+		})
 		
 		function editEvent(calId) {
 		    var datevalue = $('#travelDate').val();
