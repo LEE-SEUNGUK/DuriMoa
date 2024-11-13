@@ -449,6 +449,12 @@ td {
 
 	$(document).ready(function() {
 	
+	 var savedSelection = sessionStorage.getItem("selectedValue");
+	    if (savedSelection) {
+	        $('#postSelect').val(savedSelection);
+	        loadPostsBySelection(savedSelection);
+	    }
+		
 	initializeMap();
 	
 	 $('#postSelect').change(function() {

@@ -282,6 +282,10 @@ tbody[role="presentation"]{
 	<script>
 		let calendar, map, marker, geocoder, selectedDate;
 		
+		window.onload = function() {
+		    sessionStorage.removeItem("selectedValue");
+		};
+		
 		$(document).ready(function(){
 	
 			initializeMap();

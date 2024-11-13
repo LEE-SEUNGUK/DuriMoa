@@ -266,9 +266,7 @@
 </div>
 <script>
 	window.onload = function() {
-	    if (window.location.pathname !== "/boardDetailView") {
-	        sessionStorage.removeItem("selectedValue");
-	    }
+	    sessionStorage.removeItem("selectedValue");
 	};
 
   	const initialCenter = new kakao.maps.LatLng(36.2432627785657, 127.84846467555381);

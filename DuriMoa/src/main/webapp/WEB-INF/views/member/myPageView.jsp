@@ -348,6 +348,10 @@
 </div>
 
 <script>
+window.onload = function() {
+    sessionStorage.removeItem("selectedValue");
+};
+
 $(document).ready(function() {
 	
 	

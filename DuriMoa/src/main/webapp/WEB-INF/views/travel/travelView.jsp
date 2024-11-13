@@ -275,7 +275,7 @@ td {
 	margin-bottom: -41px;
 }
 
-}
+
 #searchAddress {
 	opacity: 0.9;
 }
@@ -471,6 +471,9 @@ label:hover::before, #singleDayTrip:hover+label::before {
 	</div>
 
 	<script>
+	window.onload = function() {
+	    sessionStorage.removeItem("selectedValue");
+	};
 
 	$(document).ready(function() {
 	
