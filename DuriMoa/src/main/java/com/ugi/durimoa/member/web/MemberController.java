@@ -349,18 +349,18 @@ public class MemberController {
 
 		MemberVO mem = (MemberVO) session.getAttribute("login");
 
-		System.out.println(vo);
+		System.out.println(mem);
 
 		if ("Y".equals(mem.getCopYn())) {
 			vo.setCopId(mem.getCopId());
 			vo.setCopYn("Y");
-		}
-		;
-
+		};
+		vo.setKkoYn("N");
+		
 		memberService.updateMember(vo);
 
 		session.setAttribute("login", vo);
-
+		System.out.println(vo);
 		return vo;
 	}
 

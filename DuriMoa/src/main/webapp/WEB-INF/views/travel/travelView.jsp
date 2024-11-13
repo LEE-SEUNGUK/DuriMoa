@@ -234,7 +234,7 @@ td {
 
 .speech-bubb {
 	top: -130px; /* 버튼 기준 위쪽으로 위치 조정 */
-    left: -175px; /* 버튼 기준 왼쪽으로 위치 조정 */
+	left: -175px; /* 버튼 기준 왼쪽으로 위치 조정 */
 	width: 270px;
 	position: absolute;
 	background: #c4ddc0;
@@ -274,8 +274,8 @@ td {
 	margin-left: -20.5px;
 	margin-bottom: -41px;
 }
-}
 
+}
 #searchAddress {
 	opacity: 0.9;
 }
@@ -311,32 +311,8 @@ td {
 	margin-bottom: 2px;
 }
 
-#trvOp ~label:before {
-	/* display: inline-block; */
-	content: "✔";
-	display: inline-block;
-	vertical-align: middle;
-	text-align: center;
-	width: 18px;
-	height: 18px;
-	line-height: 18px;
-	border-radius: 5px;
-	border: 1px solid #ccc;
-	color: transparent;
-	transition: 0.2s;
-	font-size: 14px !important;
-	margin-right: 8px;
-	margin-bottom: 2px;
-}
 
 #singleDayTrip:checked+label::before {
-	background-color: #c4ddc0;
-	color: #000000;
-	outline: none;
-	border-color: transparent;
-}
-
-#trvOp:checked+label::before {
 	background-color: #c4ddc0;
 	color: #000000;
 	outline: none;
@@ -348,149 +324,155 @@ label:hover::before, #singleDayTrip:hover+label::before {
 	transition: all 0.3s;
 }
 
-label:hover::before, #trvOp:hover+label::before {
-	border-color: #0000006c;
-	transition: all 0.3s;
-}
 
-.dropdown-item:hover{
+.dropdown-item:hover {
 	background-color: #f8f9fa !important;
 }
 
-.dropdown-item:active{
+.dropdown-item:active {
 	background-color: #f8f9fa !important;
 }
+
+.trvDropdown {
+	font-size: 20px;
+	appearance: none;
+	-webkit-appearance: none;
+	background-size: 25px;
+	background-image: url('resources/assets/img/pencil.png');
+	background-repeat : no-repeat;
+	width: 30px;
+	height: 30px;
+	border-color: transparent !important;
+}
+
 </style>
 </head>
 <body>
 	<jsp:include page="/WEB-INF/inc/header.jsp"></jsp:include>
 	<div style="padding: 0 !important; width: 1920px; margin: 0 auto;">
 		<div style="width: 1420px; margin: 0 auto; position: relative;">
-		<div id="writeButton" class="writing-button">
-			<i class="fa-regular fa-pen-to-square" style="padding-left: 3px; padding-bottom: 3px;"></i>
-			<c:if test="${empty travelList}">
-			<div class="speech-bubb" id="speechBubble">
-				<h5 class="p-3">버튼을 클릭하여 여행 기록을 작성해보세요!</h5>
+			<div id="writeButton" class="writing-button">
+				<i class="fa-regular fa-pen-to-square" style="padding-left: 3px; padding-bottom: 3px;"></i>
+				<c:if test="${empty travelList}">
+					<div class="speech-bubb" id="speechBubble">
+						<h5 class="p-3">버튼을 클릭하여 여행 기록을 작성해보세요!</h5>
+					</div>
+				</c:if>
 			</div>
-			</c:if>
-		</div>
-		<div class="row">
-			<section class="mypage_side col-2 p-0" style="margin-top: 6%;">
-				<div class="mb-4">
-					<h2>우리의 추억</h2>
-					<p>여행기록을 추가하고 관리해보세요</p>
-				</div>
-			</section>
-			<section class="col-9" style="margin-top: 4%; margin-left: 100px" id="viewMode">
-				<table class="table" style="margin-top: 2% !important; margin: 0 auto; border-bottom: #ffffff;">
-					<tbody>
-						<c:forEach items="${travelList}" var="travel">
-							<tr>
-								<td>
-									<div class="d-flex">
-										<form action="">
-											<div style="height: 300px; width: 860px; border-radius: 20px; background-color: #f8f9fa;">
-												<div class="row d-flex w-100 h-100">
-													<div class="col-3" style="text-align: center;">
-														<img class="p-3" src="${travel.trvImg1 }" style="width: 240px; height: 300px; object-fit: cover; border-radius: 25px;" alt="">
-													</div>
-													<div class="col-9" style="width: 55%; height: 95%; padding: 0; margin-left: 80px; margin-top: 30px;">
-														<div class="d-flex flex-column ">
-															<h4 style="font-weight: bold; font-size: 30px; font-family: LeeSeoyun; position: relative;">
-																<span style="font-size: 28px;">[${travel.trvPlc }]</span>${travel.trvTt } <span class="dropdown" style="position: absolute; right: -20px; top: 0;">
-																	<button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 20px; appearance: none; -webkit-appearance: none;">&#8942;</button>
-																	<ul class="dropdown-menu compact-menu">
-																		<li><a class="dropdown-item edit-travel" href="#" data-trv-id="${travel.trvId}">수정</a></li>
-																		<li><a class="dropdown-item delete-travel" href="#" data-trv-id="${travel.trvId}">삭제</a></li>
-																	</ul>
-																</span>
-															</h4>
-
-															<div class="d-flex align-items-center" style="font-size: 18px;">
-																<img src="resources/assets/img/board_map.png" width="22px" alt="">
-																<p class="ms-2" style="color: #6a6a6a;">${travel.trvPc }</p>
-															</div>
-															<div class="d-flex align-items-center" style="font-size: 18px;">
-																<img src="resources/assets/img/date.png" width="23px" alt="">
-																<c:if test="${travel.trvSdt == travel.trvEdt}">
-																	<p class="ms-2" style="color: #6a6a6a;">${travel.trvSdt }</p>
-																</c:if>
-																<c:if test="${travel.trvSdt != travel.trvEdt}">
-																	<p class="ms-2" style="color: #6a6a6a;">${travel.trvSdt }</p>
-																	<p class="ms-1">~</p>
-																	<p class="ms-1" style="color: #6a6a6a;">${travel.trvEdt }</p>
-																</c:if>
-															</div>
+			<div class="row">
+				<section class="mypage_side col-2 p-0" style="margin-top: 6%;">
+					<div class="mb-4">
+						<h2>우리의 추억</h2>
+						<p>여행기록을 추가하고 관리해보세요</p>
+					</div>
+				</section>
+				<section class="col-9" style="margin-top: 4%; margin-left: 100px" id="viewMode">
+					<table class="table" style="margin-top: 2% !important; margin: 0 auto; border-bottom: #ffffff;">
+						<tbody>
+							<c:forEach items="${travelList}" var="travel">
+								<tr>
+									<td>
+										<div class="d-flex">
+											<form action="">
+												<div style="height: 300px; width: 860px; border-radius: 20px; background-color: #f8f9fa;">
+													<div class="row d-flex w-100 h-100">
+														<div class="col-3" style="text-align: center;">
+															<img class="p-3" src="${travel.trvImg1 }" style="width: 240px; height: 300px; object-fit: cover; border-radius: 25px;" alt="">
 														</div>
-														<div class="d-inline-block" style="margin-top: 35px; height: 105px; width: 500px; border-radius: 10px;">
-															<div class="content mt-4" style="width: 90%; font-size: 18px; margin: 0 auto; margin-left: 0px;">${travel.trvCt }</div>
+														<div class="col-9" style="width: 55%; height: 95%; padding: 0; margin-left: 80px; margin-top: 30px;">
+															<div class="d-flex flex-column ">
+																<h4 style="font-weight: bold; font-size: 30px; font-family: LeeSeoyun; position: relative;">
+																	<span style="font-size: 28px;">[${travel.trvPlc }]</span>${travel.trvTt }
+																	<div class="dropdown " style="position: absolute; right: -60px; top: 0;">
+																		<button class="btn trvDropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>
+																		<ul class="dropdown-menu compact-menu">
+																			<li><a class="dropdown-item edit-travel" href="#" data-trv-id="${travel.trvId}">수정</a></li>
+																			<li><a class="dropdown-item delete-travel" href="#" data-trv-id="${travel.trvId}">삭제</a></li>
+																		</ul>
+																	</div>
+																</h4>
+
+																<div class="d-flex align-items-center mt-3" style="font-size: 18px;">
+																	<img src="resources/assets/img/board_map.png" width="6%" alt="">
+																	<p class="ms-2" style="color: #6a6a6a;">${travel.trvPc }</p>
+																</div>
+																<div class="d-flex align-items-center mt-1" style="font-size: 18px;">
+																	<img src="resources/assets/img/date.png" width="6%" alt="">
+																	<c:if test="${travel.trvSdt == travel.trvEdt}">
+																		<p class="ms-2" style="color: #6a6a6a;">${travel.trvSdt }</p>
+																	</c:if>
+																	<c:if test="${travel.trvSdt != travel.trvEdt}">
+																		<p class="ms-2" style="color: #6a6a6a;">${travel.trvSdt }</p>
+																		<p class="ms-1">~</p>
+																		<p class="ms-1" style="color: #6a6a6a;">${travel.trvEdt }</p>
+																	</c:if>
+																</div>
+															</div>
+															<div class="d-inline-block" style="margin-top: 10px; height: 105px; width: 500px; border-radius: 10px;">
+																<div class="content mt-4" style="width: 90%; font-size: 18px; margin: 0 auto; margin-left: 0px;">${travel.trvCt }</div>
+															</div>
 														</div>
 													</div>
 												</div>
+											</form>
+										</div>
+									</td>
+								</tr>
+							</c:forEach>
+						</tbody>
+					</table>
+				</section>
+				<section id="writeMode" class="col-9 ms-5" style="display: none; margin-top: 5%">
+					<div class="row">
+						<form class="d-flex" id="travelAddForm" action="/travelAdd" method="post" enctype="multipart/form-data">
+							<section class="col-7 mt-3">
+								<div class="travel-form p-0" style="height: 600px">
+									<div class="pt-3" style="width: 90%; margin: 0 auto;">
+										<div class="mb-3">
+											<label for="travelTitle" class="form-label">제목</label> <input type="text" name="trvTt" class="form-control" id="travelTitle" placeholder="여행 제목을 입력하세요">
+										</div>
+										<div class="mb-3">
+											<label for="travelDestination" class="form-label">장소</label>
+											<div class="input-group">
+												<input type="text" name="trvPc" class="form-control" id="travelDestination" placeholder="여행지를 검색하세요" readonly>
+												<button class="btn btn-outline-secondary" type="button" id="searchAddress" style="margin-left: 1px">검색</button>
 											</div>
-										</form>
-									</div>
-								</td>
-							</tr>
-						</c:forEach>
-					</tbody>
-				</table>
-			</section>
-			<section id="writeMode" class="col-9 ms-5" style="display: none; margin-top: 5%">
-				<div class="row">
-					<form class="d-flex" id="travelAddForm" action="/travelAdd" method="post" enctype="multipart/form-data">
-						<section class="col-7 mt-3">
-							<div class="travel-form p-0" style="height: 600px">
-								<div class="pt-3" style="width: 90%; margin: 0 auto;">
-									<div class="mb-3">
-										<label for="travelTitle" class="form-label">제목</label> <input type="text" name="trvTt" class="form-control" id="travelTitle" placeholder="여행 제목을 입력하세요">
-									</div>
-									<div class="mb-3">
-										<label for="travelDestination" class="form-label">장소</label>
-										<div class="input-group">
-											<input type="text" name="trvPc" class="form-control" id="travelDestination" placeholder="여행지를 검색하세요" readonly>
-											<button class="btn btn-outline-secondary" type="button" id="searchAddress" style="margin-left: 1px">검색</button>
 										</div>
-									</div>
-									<input type="hidden" id="coordinateX" name="trvX"> <input type="hidden" id="coordinateY" name="trvY">
-									<div class="mb-3">
-										<label for="travelDate" class="form-label">날짜</label> <input type="text" name="trvDt" class="form-control" id="travelDate" placeholder="여행 날짜를 선택하세요">
-										<div class="form-check mt-2" style="padding-left: 0px">
-											<input class="form-check-input" type="checkbox" id="singleDayTrip" checked> <label class="form-check-label" for="singleDayTrip"> 당일 여행 </label>
+										<input type="hidden" id="coordinateX" name="trvX"> <input type="hidden" id="coordinateY" name="trvY">
+										<div class="mb-3">
+											<label for="travelDate" class="form-label">날짜</label> <input type="text" name="trvDt" class="form-control" id="travelDate" placeholder="여행 날짜를 선택하세요">
+											<div class="form-check mt-2" style="padding-left: 0px">
+												<input class="form-check-input" type="checkbox" id="singleDayTrip" checked> <label class="form-check-label" for="singleDayTrip"> 당일 여행 </label>
+											</div>
 										</div>
-									</div>
-									<div class="mb-3">
-										<label for="travelContent" class="form-label">내용</label>
-										<textarea class="form-control" name="trvCt" id="travelContent" rows="6" placeholder="내용을 입력하세요" style="resize: none;"></textarea>
-									</div>
-									<div class="mb-3 form-check d-flex justify-content-between" style="padding-left: 0px">
-										<input type="hidden" name="memId" value="${sessionScope.login.memId}">
-										<button type="submit" class="btn travelBtn">저장하기</button>
+										<div class="mb-3">
+											<label for="travelContent" class="form-label">내용</label>
+											<textarea class="form-control" name="trvCt" id="travelContent" rows="6" placeholder="내용을 입력하세요" style="resize: none;"></textarea>
+										</div>
+										<div class="mb-3 form-check d-flex justify-content-end" style="padding-left: 0px">
+											<input type="hidden" name="memId" value="${sessionScope.login.memId}">
+											<button type="submit" class="btn travelBtn">저장하기</button>
+										</div>
 									</div>
 								</div>
-							</div>
-						</section>
-						<section class="col-5 ms-4 mb-5 d-flex flex-column align-items-center">
-							<div class="mt-5" id="map"></div>
-							<div class="mt-3" id="photoDiv">
-								<label for="travelPhotos" class="form-label">사진(최대 3장)</label> <input type="file" id="trvImgUpload" name="trvImgs" class="form-control" multiple accept="image/*">
-								<div id="photoPreview" class="d-flex justify-content-start align-items-center mt-3"></div>
-							</div>
-						</section>
-					</form>
-				</div>
-			</section>
-		</div>
+							</section>
+							<section class="col-5 ms-4 mb-5 d-flex flex-column align-items-center">
+								<div class="mt-5" id="map"></div>
+								<div class="mt-3" id="photoDiv">
+									<label for="travelPhotos" class="form-label">사진(최대 3장)</label> <input type="file" id="trvImgUpload" name="trvImgs" class="form-control" multiple accept="image/*">
+									<div id="photoPreview" class="d-flex justify-content-start align-items-center mt-3"></div>
+								</div>
+							</section>
+						</form>
+					</div>
+				</section>
+			</div>
 		</div>
 	</div>
 
 	<script>
-$(document).ready(function() {
-	window.onload = function() {
-	    if (window.location.pathname !== "/boardDetailView") {
-	        sessionStorage.removeItem("selectedValue");
-	    }
-	};
+
+	$(document).ready(function() {
 	
     initializeMap();
     
@@ -991,7 +973,7 @@ function updateTravelList(travels) {
         tbody.append(
             '<tr>' +
                 '<td class="text-center">' +
-                    '<p class="my-5">검색 결과가 없습니다.</p>' +
+                    '<h4 class="my-5">검색 결과가 없습니다.</h4>' +
                 '</td>' +
             '</tr>'
         );
@@ -1023,20 +1005,20 @@ function updateTravelList(travels) {
     		                            '<div class="d-flex flex-column">' +
     		                            '<h4 style="font-weight: bold; font-size: 30px; font-family: LeeSeoyun; position: relative;">' +
     		                            '<span style="font-size: 28px;">[' + travel.trvPlc + ']</span>' + travel.trvTt +
-    		                            '<span class="dropdown" style="position: absolute; right: -20px; top: 0;">' +
-    		                            '<button class="btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 20px; appearance: none; -webkit-appearance: none;">⋮</button>' +
-    		                            '<ul class="dropdown-menu compact-menu">' +
-    		                            '<li><a class="dropdown-item edit-travel" href="#" data-trv-id="' + travel.trvId + '">수정</a></li>' +
-    		                            '<li><a class="dropdown-item delete-travel" href="#" data-trv-id="' + travel.trvId + '">삭제</a></li>' +
-    		                            '</ul>' +
-    		                            '</span>' +
-    		                            '</h4>' +
-    		                                '<div class="d-flex align-items-center" style="font-size: 18px;">' +
-    		                                    '<img src="resources/assets/img/board_map.png" width="22px" alt="">' +
+    		                            '<div class="dropdown" style="position: absolute; right: -60px; top: 0;">' +
+    		                                '<button class="btn trvDropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false"></button>' +
+    		                                '<ul class="dropdown-menu compact-menu">' +
+    		                                    '<li><a class="dropdown-item edit-travel" href="#" data-trv-id="' + travel.trvId + '">수정</a></li>' +
+    		                                    '<li><a class="dropdown-item delete-travel" href="#" data-trv-id="' + travel.trvId + '">삭제</a></li>' +
+    		                                '</ul>' +
+    		                            '</div>' +
+    		                        	'</h4>'	+
+    		                                '<div class="d-flex align-items-center mt-3" style="font-size: 18px;">' +
+    		                                    '<img src="resources/assets/img/board_map.png" width="6%" alt="">' +
     		                                    '<p class="ms-2" style="color: #6a6a6a;">' + travel.trvPc + '</p>' +
     		                                '</div>' +
-    		                                '<div class="d-flex align-items-center" style="font-size: 18px;">' +
-    		                                    '<img src="resources/assets/img/date.png" width="23px" alt="">' +
+    		                                '<div class="d-flex align-items-center mt-1" style="font-size: 18px;">' +
+    		                                    '<img src="resources/assets/img/date.png" width="6%" alt="">' +
     		                                    ((travel.trvSdt == travel.trvEdt) ? 
     		                                        '<p class="ms-2" style="color: #6a6a6a;">' + travel.trvSdt + '</p>' :
     		                                        '<p class="ms-2" style="color: #6a6a6a;">' + travel.trvSdt + '</p>' +
@@ -1044,7 +1026,7 @@ function updateTravelList(travels) {
     		                                        '<p class="ms-1" style="color: #6a6a6a;">' + travel.trvEdt + '</p>') +
     		                                '</div>' +
     		                            '</div>' +
-    		                            '<div class="d-inline-block" style="margin-top: 35px; height: 105px; width: 500px; border-radius: 10px;">' +
+    		                            '<div class="d-inline-block" style="margin-top: 10px; height: 105px; width: 500px; border-radius: 10px;">' +
     		                                '<div class="content mt-4" style="width: 90%; font-size: 18px; margin: 0 auto; margin-left: 0px;">' + travel.trvCt + '</div>' +
     		                            '</div>' +
     		                        '</div>' +

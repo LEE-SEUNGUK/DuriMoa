@@ -182,7 +182,7 @@
 	    B.count,
 	    B.brd_id,
 	    B.brd_tt,
-	    B.brdDt,
+	    TO_CHAR(B.brdDt, 'YYYY.MM.DD. HH24:MI') brdDt,
 	    DBMS_LOB.SUBSTR(B.brd_ct, 4000, 1) brd_ct,
 	    MAX(CASE WHEN I.brd_idx = '1' THEN I.brd_img END) AS brd_img1,
 	    MAX(CASE WHEN I.brd_idx = '2' THEN I.brd_img END) AS brd_img2,
@@ -213,7 +213,7 @@
 	
 	<!-- 단일 댓글 조회 -->
 	<select id="getReply" parameterType="String" resultType="ReplyVO">
-	SELECT a.rpy_id, a.brd_id, b.mem_nm, b.mem_img, a.rpy_ct, TO_CHAR(a.rpy_dt, 'MM/DD HH24:MI') rpyDt
+	SELECT a.rpy_id, a.brd_id, b.mem_nm, b.mem_img, a.rpy_ct, TO_CHAR(a.rpy_dt, 'YYYY.MM.DD. HH24:MI') rpyDt
 	FROM reply a, member b
 	WHERE a.mem_id = b.mem_id
 	AND a.rpy_id = #{rpyId}
@@ -221,7 +221,7 @@
 	
 	<!-- 전체 댓글 조회 -->
 	<select id="getReplyList" parameterType="int" resultType="ReplyVO">
-	SELECT a.rpy_id, b.mem_id, a.brd_id, b.mem_nm, b.mem_img, a.rpy_ct, TO_CHAR(a.rpy_dt, 'MM/DD HH24:MI') rpyDt
+	SELECT a.rpy_id, b.mem_id, a.brd_id, b.mem_nm, b.mem_img, a.rpy_ct, TO_CHAR(a.rpy_dt, 'YYYY.MM.DD. HH24:MI') rpyDt
 	FROM reply a, member b
 	WHERE a.mem_id = b.mem_id
 	AND a.brd_id = #{brdId}

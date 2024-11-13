@@ -136,7 +136,7 @@
 							                    <div class="d-flex align-items-center" id="a">
 							                        <div class="ps-2 d-inline-flex justify-content-between align-items-center w-75">
 							                            <label for="">커플 아이디</label> 
-							                            <input class="form-control couple-input" name="userId" type="text" placeholder="커플 유저의 아이디를 입력하세요">
+							                            <input id="cop_search" class="form-control couple-input" name="userId" type="text" placeholder="커플 유저의 아이디를 입력하세요">
 							                        </div>
 							                        <button type="button" class="ms-2 btn email_check" onclick="coupleCk()">검색</button>
 							                    </div>
@@ -349,11 +349,7 @@
 
 <script>
 $(document).ready(function() {
-	window.onload = function() {
-	    if (window.location.pathname !== "/boardDetailView") {
-	        sessionStorage.removeItem("selectedValue");
-	    }
-	};
+	
 	
 	$('#memPw_ck').on('blur', function() {
 	    let password = $('#memNpw').val();
@@ -394,6 +390,11 @@ $(document).ready(function() {
 		$('.speech-bubble').removeClass('show');
 	});
 
+	$('#cop_search').keypress(function(e){
+		if(e.keyCode === 13){
+			coupleCk();
+		}
+	})
 });
 
 function checkPassword() {

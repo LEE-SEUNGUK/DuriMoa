@@ -160,6 +160,14 @@ label{
 	border: none;
 	outline: none;
 }
+
+.rpyDel{
+	background-image: url('resources/assets/img/delete.png');
+	background-repeat: no-repeat;
+	background-size: 15px;
+	width: 15px;
+	height: 15px;
+}
 </style>
 </head>
 <body>
@@ -264,7 +272,7 @@ label{
 			                </td>
 			                <c:if test="${sessionScope.login.memId == reply.memId}">
 			                    <td class="col-1">
-			                        <a class="rpyDel" onclick="replyDel('${reply.rpyId}')">X</a>
+			                        <a type="button" class="rpyDel" onclick="replyDel('${reply.rpyId}')"></a>
 			                    </td>
 			                </c:if>
 			                <c:if test="${sessionScope.login.memId != reply.memId}">
@@ -307,7 +315,6 @@ window.onload = function() {
     // popstate 이벤트 리스너 추가 (뒤로가기/앞으로가기 버튼 클릭 시 발생)
     window.addEventListener('popstate', function() {
         // 뒤로가기 했을 때 이전 페이지(boardView)로 이동하면서 새로고침
-        console.log("히얏!");
         window.location.href = document.referrer;
     });
 };
@@ -435,7 +442,7 @@ function replyWrite(e){
 				str += "        " + res.rpyDt;
 				str += "    </td>";
 				str += "    <td class='col-1'>";
-				str += "        <a class='rpyDel' onclick='replyDel(" + res.rpyId + ")' style='cursor: pointer;'>X</a>";
+				str += "        <a type='button'class='rpyDel' onclick='replyDel(" + res.rpyId + ")' style='cursor: pointer;'></a>";
 				str += "    </td>";
 				str += "</tr>";
 				str += "<tr><td colspan='4'><hr class='rpyHr my-3' style='width: 88%; margin: 0 auto;'></td></tr>";				

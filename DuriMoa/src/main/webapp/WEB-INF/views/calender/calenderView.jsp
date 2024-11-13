@@ -199,6 +199,28 @@ label:hover::before, #singleDayTrip:hover+label::before {
 .fc-button-primary:focus{
 	box-shadow: none !important;
 }
+
+tbody[role="presentation"]{
+	cursor: pointer;
+}
+
+#save, #edit{
+	background-color: #c4ddc0 !important;
+	color: black;
+	border: none;
+	opacity: 0.9;
+}
+
+#del{
+	opacity: 0.9;
+}
+
+#save:hover, #edit:hover, #del:hover{
+	opacity: 1;
+	transition: 0.5s;
+}
+
+
 </style>
 </head>
 <body>
@@ -376,7 +398,7 @@ label:hover::before, #singleDayTrip:hover+label::before {
 		    });
 		 	
 		    $('#travelDate').data('daterangepicker').setStartDate(selectedDate);
-		})
+		});
 		
 		
 		document.addEventListener('DOMContentLoaded', function () {

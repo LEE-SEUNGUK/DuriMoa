@@ -252,6 +252,10 @@ td {
 	/* Reduce font size if needed */
 }
 
+.dropdown-item:active {
+	background-color: #f8f9fa !important;
+}
+
 #searchAddress {
 	opacity: 0.9;
 }
@@ -270,6 +274,22 @@ td {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+}
+
+.trvDropdown {
+	font-size: 20px;
+	appearance: none;
+	-webkit-appearance: none;
+	background-size: 25px;
+	background-image: url('resources/assets/img/pencil.png');
+	background-repeat : no-repeat;
+	width: 30px;
+	height: 30px;
+	border-color: transparent !important;
+}
+
+.trvPc{
+	color: #6a6a6a;
 }
 
 </style>
@@ -307,17 +327,17 @@ td {
 									<div style="height: 260px; border-radius: 20px; background-color: rgb(248, 248, 248); width: 100%; margin: auto 0" class="d-flex align-items-center">
 										<div class="row d-flex align-items-center" style="width: 100%;">
 											<div class="col-5" style="text-align: center;">
-												<img onclick="location.href='<c:url value='/getBoard?brdId=${board.brdId}'/>'" src="${board.brdImg1}" style="width: 180px; height: 225px; object-fit: cover; border-radius: 10px;" alt="">
+												<img src="${board.brdImg1}" style="width: 180px; height: 225px; object-fit: cover; border-radius: 10px; cursor: pointer;" onclick="location.href='<c:url value='/getBoard?brdId=${board.brdId}'/>'">
 											</div>
 											<div class="col-7" style="padding: 0;">
 												<div>
 													<div class="d-flex justify-content-between align-items-center">
-														<h4 class="brdTt" style="margin: 0px; font-weight: bold;">
+														<h4 class="brdTt" style="margin: 0px; font-weight: bold; cursor: pointer;" onclick="location.href='<c:url value='/getBoard?brdId=${board.brdId}'/>'">
 															<span>[${board.trvPlc}]</span> ${board.brdTt}
 														</h4>
 														<c:if test="${sessionScope.login.memId == board.memId}">
 															<div class="dropdown me-4 mb-2">
-																<button class="btn" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 20px; appearance: none; -webkit-appearance: none;">&#8942;</button>
+																<button class="btn trvDropdown" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 20px; appearance: none; -webkit-appearance: none;"></button>
 																<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 																	<li><a class="dropdown-item edit-board" href="#" data-brd-id="${board.brdId}">수정</a></li>
 																	<li><a class="dropdown-item delete-board" href="#" data-brd-id="${board.brdId}">삭제</a></li>
@@ -326,7 +346,7 @@ td {
 														</c:if>
 														<c:if test="${sessionScope.login.memId != board.memId}">
 															<div class="mb-2" style="font-size: 20px; padding: 6px 12px; height: 44px">
-																<button class="btn" style="visibility: hidden; border: none; background: transparent;">&#8942;</button>
+																<button class="btn" style="visibility: hidden; border: none; background: transparent;"></button>
 															</div>
 														</c:if>
 													</div>
@@ -427,12 +447,7 @@ td {
 	</div>
 	<script>
 
-$(document).ready(function() {
-	window.onload = function() {
-	    const selectedValue = sessionStorage.getItem("selectedValue") || "all";
-	    document.getElementById("postSelect").value = selectedValue;
-	    loadPostsBySelection(selectedValue);
-	};
+	$(document).ready(function() {
 	
 	initializeMap();
 	
@@ -1102,9 +1117,8 @@ function createBoardColumn(board) {
     if (sessionMemId === board.memId) {
         editDeleteButtons = 
             '<div class="dropdown me-4 mb-2">' +
-            '<button class="btn" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" ' +
+            '<button class="btn trvDropdown" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false" ' +
             'style="font-size: 20px; appearance: none; -webkit-appearance: none;">' +
-            '&#8942;' +
             '</button>' +
             '<ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">' +
             '<li><a class="dropdown-item edit-board" href="#" data-brd-id="' + board.brdId + '">수정</a></li>' +
@@ -1115,7 +1129,6 @@ function createBoardColumn(board) {
         editDeleteButtons = 
             '<div class="me-4 mb-2" style="font-size: 20px; padding: 6px 12px; height:44px">' +
             '<button class="btn" style="visibility: hidden; border: none; background: transparent;">' +
-            '&#8942;' +
             '</button>' +
             '</div>';
     }
@@ -1133,12 +1146,12 @@ function createBoardColumn(board) {
            '<div class="col-5" style="text-align: center;">' +
            '<img onclick="location.href=\'/getBoard?brdId=' + board.brdId + '\'" ' +
            'src="' + board.brdImg1 + '" ' +
-           'style="width: 180px; height: 225px; object-fit: cover; border-radius: 10px;" alt="">' +
+           'style="width: 180px; height: 225px; object-fit: cover; border-radius: 10px; cursor: pointer;" alt="">' +
            '</div>' +
            '<div class="col-7" style="padding: 0;">' +
            '<div>' +
            '<div class="d-flex justify-content-between align-items-center">' +
-           '<h4 class="brdTt" style="margin: 0px; font-weight: bold;">' +
+           '<h4 class="brdTt" style="margin: 0px; font-weight: bold;" onclick="location.href=\'/getBoard?brdId=' + board.brdId + '\'" >' +
            '<span>[' + board.trvPlc + ']</span> ' + board.brdTt +
            '</h4>' +
            editDeleteButtons +
