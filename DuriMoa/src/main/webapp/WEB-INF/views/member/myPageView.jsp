@@ -49,12 +49,7 @@
 							<div class="my-4 d-flex flex-column align-items-center">
 								<label class="mb-3" for="my_profile">프로필 이미지</label> 
 									<div>
-										<c:if test="${sessionScope.login.memImg == null}">
-											<img src="resources/assets/img/user.png" id="my_profile" alt="">
-										</c:if>
-										<c:if test="${sessionScope.login.memImg != null}">
-											<img src="${sessionScope.login.memImg}" id="my_profile" alt="">
-										</c:if>
+										<img src="${sessionScope.login.memImg}" onerror="this.src='resources/assets/img/user.png'" id="my_profile" alt="">
 									</div>
 								<input type="file" id="imageUpload" name="profileImage"
 									accept="image/*" style="display: none;">
@@ -93,7 +88,7 @@
 						<div class="w-75" style="margin: 0 auto; text-align: center;">
 							<hr class="bg-black">
 							<button type="button" class="mt-4 btn btn-danger"
-								onclick="fn_write()" id="update_user"
+								onclick="updateMember()" id="update_user"
 								style="background-color: #c4ddc0; height: 45px; color: black; border: none;">회원정보
 								수정</button>
 						</div>
@@ -124,12 +119,7 @@
 							                    <span>커플정보</span>를 등록해주세요
 							                </div>
 							                <div class="mt-4 d-flex justify-content-center">
-							                	<c:if test="${sessionScope.login.memImg == null}">
-							                    	<img src="resources/assets/img/user.png" id="couple_profile_my" alt="">
-							                    </c:if>
-							                    <c:if test="${sessionScope.login.memImg != null}">
-							                    	<img src="${sessionScope.login.memImg}" id="couple_profile_my" alt="">
-							                    </c:if>
+							                    <img src="${sessionScope.login.memImg}" onerror="this.src='resources/assets/img/user.png'" id="couple_profile_my" alt="">
 							                    <img class="ms-3" src="resources/assets/img/couple_add.png" alt="" id="couple_profile_insert" style="object-fit: cover; padding: 45px;">
 							                </div>
 							                <div class="mt-5" style="width: 92%; margin-left: 6%;" id="couple_div">
@@ -170,18 +160,8 @@
 							                    <span>${sessionScope.req.reqNm}</span>님이 수락 대기중입니다
 							                </div>
 							                <div class="mt-4 mb-5 d-flex justify-content-center">
-							                	<c:if test="${sessionScope.login.memImg == null}">
-							                    	<img src="resources/assets/img/user.png" id="couple_profile_my" alt="">
-							                    </c:if>
-							                    <c:if test="${sessionScope.login.memImg != null}">
-							                    	<img src="${sessionScope.login.memImg}" id="couple_profile_my" alt="">
-							                    </c:if>
-							                    <c:if test="${sessionScope.req.reqImg == null}">
-							                    	<img class="ms-3" src="resources/assets/img/user.png" alt="" id="couple_profile_insert" style="object-fit: cover;">
-							                	</c:if>
-							                	<c:if test="${sessionScope.req.reqImg != null}">
-							                    	<img class="ms-3" src="${sessionScope.req.reqImg}" alt="" id="couple_profile_insert" style="object-fit: cover;">
-							                	</c:if>
+						                    	<img src="resources/assets/img/user.png" onerror="this.src='resources/assets/img/user.png'" id="couple_profile_my" alt="">
+						                    	<img class="ms-3" src="${sessionScope.req.reqImg}" onerror="this.src='resources/assets/img/user.png'" alt="" id="couple_profile_insert" style="object-fit: cover;">
 							                </div>
 							                <div class="w-100" style="margin: 0 auto; text-align: center;">
 							                    <hr class="bg-black">
@@ -203,18 +183,8 @@
 							                    <span>${sessionScope.res.reqNm}</span>님이 커플 요청을 보냈습니다
 							                </div>
 							                <div class="mt-4 mb-5  d-flex justify-content-center">
-							                	<c:if test="${sessionScope.login.memImg == null}">
-							                    	<img src="resources/assets/img/user.png" id="couple_profile_my" alt="">
-							                    </c:if>
-							                    <c:if test="${sessionScope.login.memImg != null}">
-							                    	<img src="${sessionScope.login.memImg}" id="couple_profile_my" alt="">
-							                    </c:if>
-							                    <c:if test="${sessionScope.res.reqImg == null}">
-							                    	<img class="ms-3" src="resources/assets/img/user.png" alt="" id="couple_profile_insert" style="object-fit: cover;">
-							                    </c:if>
-							                    <c:if test="${sessionScope.res.reqImg != null}">
-							                    	<img class="ms-3" src="${sessionScope.res.reqImg}" alt="" id="couple_profile_insert" style="object-fit: cover;">
-							                    </c:if>
+							                    <img src="${sessionScope.login.memImg}" onerror="this.src='resources/assets/img/user.png'" id="couple_profile_my" alt="">
+							                    <img class="ms-3" src="${sessionScope.res.reqImg}" onerror="this.src='resources/assets/img/user.png'" alt="" id="couple_profile_insert" style="object-fit: cover;">
 							                </div>
 							                <div class="w-100" style="margin: 0 auto; text-align: center;">
 							                    <hr class="bg-black">
@@ -249,18 +219,8 @@
 							                </h3>
 							            </div>
 							            <div class="mt-4 d-flex justify-content-center">
-							            	<c:if test="${sessionScope.login.memImg == null}">
-							                	<img src="resources/assets/img/user.png" id="couple_profile_my" alt=""> 
-							                </c:if>
-							                <c:if test="${sessionScope.login.memImg != null}">
-							                	<img src="${sessionScope.login.memImg}" id="couple_profile_my" alt=""> 
-							                </c:if>
-							                <c:if test="${sessionScope.couple.memImg == null}">
-							                	<img class="ms-3" src="resources/assets/img/user.png" alt="" id="couple_profile" style="object-fit: cover;">
-							            	</c:if>
-							            	<c:if test="${sessionScope.couple.memImg != null}">
-							                	<img class="ms-3" src="${sessionScope.couple.memImg}" alt="" id="couple_profile" style="object-fit: cover;">
-							            	</c:if>
+							                <img src="${sessionScope.login.memImg}" onerror="this.src='resources/assets/img/user.png'" id="couple_profile_my" alt=""> 
+							                <img class="ms-3" src="${sessionScope.couple.memImg}" onerror="this.src='resources/assets/img/user.png'" alt="" id="couple_profile" style="object-fit: cover;">
 							            </div>
 							            <div class="mt-5" style="width: 92%; margin-left: 6%;" id="couple_div">
 							                <div class="ps-2 d-flex justify-content-between align-items-center mt-4 w-75">
@@ -354,12 +314,9 @@ window.onload = function() {
 
 $(document).ready(function() {
 	
-	
 	$('#memPw_ck').on('blur', function() {
 	    let password = $('#memNpw').val();
 	    let confirmPassword = $(this).val();
-	    console.log(password);
-	    console.log(confirmPassword);
 	    
 	    if (password !== confirmPassword) {
 	        $('#npw_mismatch').show();
@@ -371,8 +328,7 @@ $(document).ready(function() {
 	
 	var now = new Date();
 	// '-'를 '/'로 변경
-	var copDt = new Date("${sessionScope.couple.copDt}"
-			.replace(/-/g, '/'));
+	var copDt = new Date("${sessionScope.couple.copDt}".replace(/-/g, '/'));
 	var timeDiff = now.getTime() - copDt.getTime();
 	var day = Math.floor(timeDiff / (1000 * 60 * 60 * 24) + 1);
 	// '0' 부분만 변경
@@ -402,7 +358,7 @@ $(document).ready(function() {
 
 function checkPassword() {
 	var exitPw = document.getElementById("exitPw").value;
-    var sessionPw = "${sessionScope.login.memPw}"; // 세션에 저장된 비밀번호
+    var sessionPw = "${sessionScope.login.memPw}";
 
     // 비밀번호 일치 여부 확인
     if (exitPw !== sessionPw) {
@@ -413,10 +369,10 @@ function checkPassword() {
     // 비밀번호가 맞으면 확인창 띄움
     var confirmExit = confirm("정말 탈퇴하시겠습니까?");
     if (!confirmExit) {
-        return false; // '취소'를 누르면 form 제출을 막음
+        return false;
     }
 
-    return true; // '확인'을 누르면 form 제출을 허용
+    return true;
 }
 
 function coupleAdd() {
@@ -427,18 +383,15 @@ function coupleAdd() {
 
 	var memId = $('.couple-input[name="userId"]').val();
 
-	// JSON으로 변환하여 AJAX 요청
 	$.ajax({
         type: 'POST',
         url: '/coupleAdd?memId=' + encodeURIComponent(memId),
         contentType: 'application/json',
         data: JSON.stringify(coupleData),
         success: function(res) {
-            console.log("응답: ", res);
             if(res == "success"){
             	alert("이미 커플인 회원입니다.");
             }
-            // Check if response has data
             if (Object.keys(res).length === 0) {
                 alert("상대방이 수락을 받을 수 없는 상태입니다");
             }
@@ -459,12 +412,11 @@ function fn_copUpdate() {
 	$.ajax({
 		type : 'POST',
 		url : '/coupleUpdate',
-		contentType : 'application/json', // JSON 형식으로 데이터 전송
-		data : JSON.stringify(coupleData), // JSON 문자열로 변환
+		contentType : 'application/json',
+		data : JSON.stringify(coupleData),
 		success : function(res) {
 			console.log("응답:", res);
 			var now = new Date();
-			// '-'를 '/'로 변경
 			var copDt = new Date((res.copDt).replace(/-/g, '/'));
 			console.log(copDt);
 			var timeDiff = now.getTime() - copDt.getTime();
@@ -479,17 +431,11 @@ function fn_copUpdate() {
 	})
 }
 
-function fn_write() {
+function updateMember() {
 	let formData = new FormData();
 	formData.append('memId', '${sessionScope.login.memId}');
 	var couple = "${sessionScope.couple}";
-    if (couple !== 'null' && couple !== '') {
-        // couple 세션 변수가 존재할 때
-        console.log("couple 세션이 존재합니다.");
-    } else {
-        // couple 세션 변수가 존재하지 않을 때
-        console.log("couple 세션이 존재하지 않습니다.");
-    }
+
 	if(couple !== 'null' && couple !== '') {
 		formData.append('copId', '${sessionScope.couple.copId}')
 		formData.append('copYn', "Y")
@@ -531,11 +477,9 @@ function fn_write() {
 			$('#memNm').val(res.memNm);
 			if (couple !== 'null' && couple !== '') {
 		        // couple 세션 변수가 존재할 때
-		        console.log("couple 세션이 존재합니다.");
 		    } else {
 		        // couple 세션 변수가 존재하지 않을 때
 		        $('#headNm').text(res.memNm);
-		        console.log("couple 세션이 존재하지 않습니다.");
 		    }
 			$('#headImg').attr('src', res.memImg);
 			$('#couple_profile_my').attr('src', res.memImg);
