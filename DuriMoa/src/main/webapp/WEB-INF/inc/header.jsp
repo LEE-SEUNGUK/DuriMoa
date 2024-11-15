@@ -96,12 +96,7 @@
 						</c:if>
 						<c:if test="${sessionScope.login != null}">
 							<a class="nav_page d-flex flex-column align-items-center" href="${pageContext.request.contextPath}/myPageView" id="mypage"> 
-								<c:if test="${sessionScope.login.memImg == null}">
-									<img src="resources/assets/img/user.png" id="headImg" style="width: 41px; height: 41px; object-fit: cover; border-radius: 20%;">
-								</c:if>
-								<c:if test="${sessionScope.login.memImg != null}">
-									<img src="${pageContext.request.contextPath}${sessionScope.login.memImg}" id="headImg" style="width: 41px; height: 41px; object-fit: cover; border-radius: 20%;">
-								</c:if>
+								<img src="${pageContext.request.contextPath}${sessionScope.login.memImg}" onerror="this.src='resources/assets/img/user.png'" id="headImg" style="width: 41px; height: 41px; object-fit: cover; border-radius: 20%;">
 								<p class="nav_text" style="padding-top: 3px !important">마이페이지</p>
 							</a>
 						</c:if>
@@ -205,8 +200,6 @@
 		    input.setAttribute('autocomplete', 'off');
 		});
 		
-		
-		// 기존의 jQuery 코드들
 		$('#profileImage, #camera, #my_profile').click(function() {
 			$('#imageUpload').click();
 		});
@@ -216,8 +209,8 @@
 			if (file) {
 				const reader = new FileReader();
 				reader.onload = function(e) {
-					$('#profileImage').attr('src', e.target.result); // 선택된 이미지로 변경
-					$('#my_profile').attr('src', e.target.result); // 선택된 이미지로 변경
+					$('#profileImage').attr('src', e.target.result);
+					$('#my_profile').attr('src', e.target.result);
 				};
 				reader.readAsDataURL(file);
 			}
@@ -233,7 +226,6 @@
 		        $('#pw_mismatch').hide();
 		    }
 		});
-
 
 		$('#signUpForm').submit(function(e) {
 			e.preventDefault();
@@ -302,7 +294,6 @@
 	});
 	
 	function kakaoLogin() {
-
 	    $.ajax({
 	        url: '/login/getKakaoAuthUrl',
 	        type: 'get',
@@ -312,7 +303,6 @@
 	            location.href = res;
 	        }
 	    });
-
 	  }
 	
 	document.addEventListener("DOMContentLoaded", function () {
@@ -355,13 +345,7 @@
 			}
 		});
 	}
-	
-	// 개발중입니다
-	function fn_alert(){
-		alert("준비중입니다");
-	}
 
-	// 추가된 checkId 함수
 	function checkId() {
 		let id = $('#memNid').val(); // id값이 "memNid"인 입력란의 값을 저장
 
@@ -369,7 +353,7 @@
 		if (id == "") {
 			$('#good').css("display", "none");
 			$('#bad').css("display", "none");
-			return; // 이후 코드 실행하지 않도록 종료
+			return;
 		}
 
 		$.ajax({
