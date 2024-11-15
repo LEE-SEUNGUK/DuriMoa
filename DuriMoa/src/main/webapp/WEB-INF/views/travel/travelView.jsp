@@ -275,7 +275,6 @@ td {
 	margin-bottom: -41px;
 }
 
-
 #searchAddress {
 	opacity: 0.9;
 }
@@ -286,10 +285,6 @@ td {
 }
 
 #singleDayTrip {
-	display: none;
-}
-
-#trvOp {
 	display: none;
 }
 
@@ -311,7 +306,6 @@ td {
 	margin-bottom: 2px;
 }
 
-
 #singleDayTrip:checked+label::before {
 	background-color: #c4ddc0;
 	color: #000000;
@@ -323,7 +317,6 @@ label:hover::before, #singleDayTrip:hover+label::before {
 	border-color: #0000006c;
 	transition: all 0.3s;
 }
-
 
 .dropdown-item:hover {
 	background-color: #f8f9fa !important;
@@ -339,12 +332,11 @@ label:hover::before, #singleDayTrip:hover+label::before {
 	-webkit-appearance: none;
 	background-size: 25px;
 	background-image: url('resources/assets/img/pencil.png');
-	background-repeat : no-repeat;
+	background-repeat: no-repeat;
 	width: 30px;
 	height: 30px;
 	border-color: transparent !important;
 }
-
 </style>
 </head>
 <body>
@@ -484,7 +476,7 @@ label:hover::before, #singleDayTrip:hover+label::before {
     })
     
     $('#travelDate').daterangepicker({
-    	singleDatePicker: true, // Start with single date picker
+    	singleDatePicker: true,
         autoApply: true,
         showDropdowns: true,
         locale: {
@@ -517,17 +509,15 @@ label:hover::before, #singleDayTrip:hover+label::before {
         picker.showCalendars();
     });
 
-    
     // 여행 정보 검색
      $('.search_btn').click(function(e) {
-        e.preventDefault(); // Prevent form submission
+        e.preventDefault();
         const keyWord = $('#marker_search').val();
         performSearch(keyWord);
     });
 
     $('#writeButton').click(function() {
         if (isEditMode) {
-            // If we're in edit mode, clicking the X should clear the form
             clearForm();
         }
         toggleMode();
@@ -571,9 +561,9 @@ label:hover::before, #singleDayTrip:hover+label::before {
         }
 
         photoPreview.empty();
-        clickOrder = []; // Reset click order
+        clickOrder = []; // 인덱스 초기화
 
-        // Add clear button
+        // 초기화 버튼
         if ($('#clearPhotosBtn').length === 0) {
             var clearBtn = $('<button>')
                 .attr('id', 'clearPhotosBtn')
@@ -593,7 +583,6 @@ label:hover::before, #singleDayTrip:hover+label::before {
             $('#photoDiv label').after(clearBtn);
         }
 
-        // Create preview containers with click handlers
         for (var i = 0; i < files.length; i++) {
             var file = files[i];
             var reader = new FileReader();
@@ -603,7 +592,7 @@ label:hover::before, #singleDayTrip:hover+label::before {
                     var imgWrap = $('<div class="img-wrap" data-index="' + index + '"></div>');
                     var img = $('<img>').attr('src', e.target.result).addClass('img-thumbnail');
                     
-                    // Add index display
+                    // 클릭시 인덱스 새기기
                     var indexLabel = $('<div>')
                         .addClass('index-label')
                         .css({
@@ -620,28 +609,23 @@ label:hover::before, #singleDayTrip:hover+label::before {
                     imgWrap.append(img, indexLabel);
                     photoPreview.append(imgWrap);
 
-                    // If only one image, automatically set it as first
+                    // 이미지가 1개이면 자동선택
                     if (files.length === 1) {
                         clickOrder = [0];
                         indexLabel.text('1번째');
                     } else {
-                        // For multiple images, make them clickable
                         indexLabel.text('클릭하세요');
                         
-                        // Add click handler only for multiple images
                         imgWrap.on('click', function() {
                             var currentIndex = $(this).data('index');
                             
-                            // Remove from clickOrder if already exists
                             var existingIndex = clickOrder.indexOf(currentIndex);
                             if (existingIndex !== -1) {
                                 clickOrder.splice(existingIndex, 1);
                             }
                             
-                            // Add to clickOrder
                             clickOrder.push(currentIndex);
                             
-                            // Update all index labels
                             updateIndexLabels();
                         });
                     }
@@ -651,7 +635,6 @@ label:hover::before, #singleDayTrip:hover+label::before {
             reader.readAsDataURL(file);
         }
 
-        // If only one image is uploaded, no need for further interaction
         if (files.length === 1) {
             console.log('Single image automatically set as first');
         }
@@ -680,11 +663,9 @@ label:hover::before, #singleDayTrip:hover+label::before {
         	return;
         }
         
-     	// New image validation logic
         var hasNewImages = $('#trvImgUpload').val() !== '';
         var existingImagesCount = $('#photoPreview .img-wrap[data-existing="true"]').length;
         
-        // Only check for new images if there are no existing images
         if (!isEditMode && !hasNewImages) {
             alert("사진은 최소 1장 이상 선택해야 합니다.");
             return;
@@ -704,21 +685,17 @@ label:hover::before, #singleDayTrip:hover+label::before {
             formData.set('trvSdt', dates[0]);
             formData.set('trvEdt', dates[1]);
         } else {
-            // Single date
             formData.set('trvSdt', dateValue);
             formData.set('trvEdt', dateValue);
         }
         
-        // If we're in edit mode and no new files were selected, preserve existing images
         if (isEditMode) {
             if (!files || files.length === 0) {
                 formData.append('preserveImages', 'true');
-                formData.delete('trvImgs'); // Remove any empty file input data
+                formData.delete('trvImgs'); 
             } else {
-                // Remove existing files
                 formData.delete('trvImgs');
                 
-                // Handle new files
                 if (files.length === 1) {
                     formData.append('trvImgs', files[0]);
                 } else if (clickOrder.length > 0) {
@@ -732,7 +709,6 @@ label:hover::before, #singleDayTrip:hover+label::before {
                 }
             }
         } else {
-            // Handle new travel creation
             if (files && files.length > 0) {
                 formData.delete('trvImgs');
                 if (files.length === 1) {
@@ -774,7 +750,6 @@ $(document).on('click', '.remove-img', function() {
     var isExisting = imgWrap.attr('data-existing') === 'true';
     
     if (isExisting) {
-        // If it's an existing image, add a hidden input to mark it for deletion
         var trvId = currentTrvId;
         var imgIndex = imgWrap.attr('data-index');
         $('<input>').attr({
@@ -786,20 +761,16 @@ $(document).on('click', '.remove-img', function() {
     
     imgWrap.remove();
     
-    // Clear file input if all new images are removed
     if ($('#photoPreview .img-wrap:not([data-existing="true"])').length === 0) {
         $('#trvImgUpload').val('');
         $('#trvImgUpload').removeData('orderedFiles');
     }
 });
 
-
-//Global variables
 var map, marker, geocoder;
 var isEditMode = false;
 var currentTrvId = null;
 let clickOrder  = [];
-
 
 function updateIndexLabels() {
     $('.img-wrap').each(function() {
@@ -823,7 +794,6 @@ function clearForm() {
     $('#map').hide();
     $('#photoDiv').hide();
     
-    // Remove the clear button and unwrap the label
     if ($('#clearPhotosBtn').length > 0) {
         $('#clearPhotosBtn').remove();
     }
@@ -837,7 +807,6 @@ function clearForm() {
     $('#travelAddForm').attr('action', '/travelAdd');
 }
 
-// Initialize the map
 function initializeMap() {
     var mapContainer = document.getElementById('map');
     var mapOption = {
@@ -861,11 +830,10 @@ function initializeMap() {
     });
 }
 
-// Toggle between view and write modes
 function toggleMode() {
 	$('#viewMode').toggle();
     $('#writeMode').toggle();
-    $('#speechBubble').hide(); // Hide speech bubble when toggling modes
+    $('#speechBubble').hide();
 
     const writeButton = $('#writeButton');
     const buttonIcon = writeButton.find('i');
@@ -888,15 +856,13 @@ function toggleMode() {
                 'data-bs-target': '#boardWrite'
             });
        
-        
-        // Show speech bubble again only if there are no travel records
         if ($('.table tbody tr').length === 0) {
             $('#speechBubble').show();
         }
     }
 }
 
-// Edit travel function
+// 여행 수정
 function editTravel(trvId) {
     $.ajax({
         url: '/getTravel',
@@ -906,7 +872,6 @@ function editTravel(trvId) {
             isEditMode = true;
             currentTrvId = trvId;
             
-            // Add hidden input for trvId if it doesn't exist
             if ($('input[name="trvId"]').length === 0) {
                 $('<input>')
                     .attr('type', 'hidden')
@@ -927,6 +892,7 @@ function editTravel(trvId) {
     });
 }
 
+//여행 삭제
 function deleteTravel(trvId) {
     $.ajax({
         url: '/travelDel',
@@ -935,7 +901,7 @@ function deleteTravel(trvId) {
         success: function(response) {
             console.log('Success:', response);
             alert('여행 기록이 성공적으로 삭제되었습니다!');
-            location.reload(); // Reload the page to reflect the changes
+            location.reload();
         },
         error: function(xhr, status, error) {
             console.error('Error:', error);
@@ -944,10 +910,10 @@ function deleteTravel(trvId) {
     });
 }
 
-// 여행 정보 검색
+//여행 정보 검색
 function performSearch(keyWord) {
     $.ajax({
-        url: '/getTravelSearch',  // You'll need to create this endpoint
+        url: '/getTravelSearch',
         type: 'GET',
         data: { 
         	keyWord: keyWord
@@ -1039,7 +1005,6 @@ function updateTravelList(travels) {
     		'</tr>');
     });
     
-    // Reattach event handlers
     $('.edit-travel').click(function(e) {
         e.preventDefault();
         const trvId = $(this).data('trv-id');
@@ -1055,7 +1020,6 @@ function updateTravelList(travels) {
     });
 }
     
-// Populate form with travel data
 function populateForm(data) {
     $('#travelTitle').val(data.trvTt);
     $('#travelDestination').val(data.trvPc);
@@ -1071,9 +1035,7 @@ function populateForm(data) {
     }
     
     $('#travelContent').val(data.trvCt);
-    $('#trvOp').prop('checked', data.trvOp === 'Y');
 
-    // Display the map based on the address
     if (data.trvPc) {
         geocoder.addressSearch(data.trvPc, function(results, status) {
             if (status === kakao.maps.services.Status.OK) {
@@ -1093,23 +1055,19 @@ function populateForm(data) {
     
     if (data.trvSdt && data.trvEdt) {
         if (data.trvSdt === data.trvEdt) {
-            // Single day trip
             $('#singleDayTrip').prop('checked', true);
             $('#travelDate').data('daterangepicker').singleDatePicker = true;
             $('#travelDate').val(data.trvSdt);
         } else {
-            // Multi-day trip
             $('#singleDayTrip').prop('checked', false);
             $('#travelDate').data('daterangepicker').singleDatePicker = false;
             $('#travelDate').val(data.trvSdt + ' ~ ' + data.trvEdt);
         }
     }
 
-    // Clear existing photos and preview
     var photoPreview = $('#photoPreview');
     photoPreview.empty();
 
-    // Add clear button if images exist
      if (data.trvImg1 || data.trvImg2 || data.trvImg3) {
         if ($('#clearPhotosBtn').length === 0) {
             var clearBtn = $('<button>')
@@ -1124,7 +1082,6 @@ function populateForm(data) {
                 $(this).remove();
             });
             
-            // Add button after the label in a div wrapper
             var labelDiv = $('<div>').addClass('d-flex align-items-center gap-2');
             $('#photoDiv label').wrap(labelDiv);
             $('#photoDiv label').after(clearBtn);
@@ -1172,7 +1129,6 @@ function addImagePreview(imgSrc, container, index, isExisting) {
     
     var img = $('<img>').attr('src', imgSrc).addClass('img-thumbnail');
     
-    // Add remove button for existing images
     var removeBtn = $('<button type="button" class="remove-img">&times;</button>')
         .css({
             'position': 'absolute',
@@ -1192,7 +1148,6 @@ function addImagePreview(imgSrc, container, index, isExisting) {
     container.append(imgWrap);
 }
 
-// Execute Daum Postcode function
 function execDaumPostcode() {
     new daum.Postcode({
         oncomplete: function(data) {
