@@ -578,7 +578,6 @@ function coupleCk() {
 					$('#couple_search').append(str);
 				}
 				
-
 				$(document).on(
 						'click',
 						'#couple_result',

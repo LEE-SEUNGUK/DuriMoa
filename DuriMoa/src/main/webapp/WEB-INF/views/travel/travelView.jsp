@@ -887,9 +887,7 @@ function toggleMode() {
                 'data-bs-toggle': 'modal',
                 'data-bs-target': '#boardWrite'
             });
-        
-        // Clear form when closing
-        clearForm();
+       
         
         // Show speech bubble again only if there are no travel records
         if ($('.table tbody tr').length === 0) {

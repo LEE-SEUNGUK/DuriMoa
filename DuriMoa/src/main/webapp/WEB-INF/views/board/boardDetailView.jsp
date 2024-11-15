@@ -8,11 +8,11 @@
 <style>
 #map {
 	width: 100%;
-	height: 300px;
+	height: 320px;
 }
 
 .carousel-item img {
-    width: 649px;
+    width: 100%;
     height: 780px;
     object-fit: cover;
 }
@@ -23,12 +23,11 @@
 }
 
 .carousel-control-prev{
-	margin-left: 49px;
+	margin-left: 29px;
 }
 
-
-.carousel-control-next {
-    margin-right: 49px;
+.carousel-control-next{
+	margin-right: 29px;
 }
 
 .carousel-indicators {
@@ -54,7 +53,7 @@
 	cursor: pointer;
 }
 
-.rpyHr{
+.rpyHr{	
 	color: #2424246c;
 }
 
@@ -182,41 +181,31 @@ label{
         <div class="row" style="margin: 0 auto;">
         	<header>
         		<div class="d-flex align-items-center" style="gap: 1rem;">
-        		    <img alt="" src="${writer.memImg}" width="50px" height="50px" style="border-radius: 50%;">
+        		    <img alt="" src="${writer.memImg }" onerror="this.src='resources/assets/img/user.png'" width="50px" height="50px" style="border-radius: 50%;">
        				<div style="display: flex; flex-direction: column;">
 					    <span>${writer.memNm}</span>
 					    <span>${board.brdDt}</span>
 					</div>
         		</div>
         	</header>
-            <section class="col-6 p-0">
+            <section class="col-5 p-0 ms-3">
                  <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
-                    <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="0" class="active"></button>
-                        <c:if test="${not empty board.brdImg2}">
-                            <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="1"></button>
-                        </c:if>
-                        <c:if test="${not empty board.brdImg3}">
-                            <button type="button" data-bs-target="#imageCarousel" data-bs-slide-to="2"></button>
-                        </c:if>
-                    </div>
-                    
+                    	
                     <div class="mt-5 carousel-inner">
                         <div class="carousel-item active">
-                            <img class="p-5" src="${board.brdImg1}" alt="Image 1">
+                            <img  src="${board.brdImg1}" alt="Image 1">
                         </div>
                         <c:if test="${not empty board.brdImg2}">
                             <div class="carousel-item">
-                                <img class="p-5" src="${board.brdImg2}" alt="Image 2">
+                                <img  src="${board.brdImg2}" alt="Image 2">
                             </div>
                         </c:if>
                         <c:if test="${not empty board.brdImg3}">
                             <div class="carousel-item">
-                                <img class="p-5" src="${board.brdImg3}" alt="Image 3">
+                                <img  src="${board.brdImg3}" alt="Image 3">
                             </div>
                         </c:if>
                     </div>
-                    
                     <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
                         <span class="carousel-control-prev-icon"></span>
                         <span class="visually-hidden">Previous</span>
@@ -227,7 +216,7 @@ label{
                     </button>
                 </div>
             </section>
-            <section class="col-6 p-0 ps-3">
+            <section class="col-6 p-0" style="margin-left: 85px">
                 <div class="d-flex justify-content-center align-items-center mt-5">
                     <img src="resources/assets/img/board_map.png" width="30px" alt="">
                     <h4 class="m-0 ms-3">${board.trvPc}</h4>
@@ -235,10 +224,10 @@ label{
                 <div class="mt-3" style="text-align: center;">
                     <div id="map"></div>
                 </div>
-                <textarea class="mt-5 p-3" id="brdContent" style="background-color: #f8f9fa; border: 1px #f8f9fa; width: 100%;
+                <textarea class="p-3" id="brdContent" style="margin-top:75px; background-color: #f8f9fa; border: 1px #f8f9fa; width: 100%;
 				border-radius: 15px;   height: 340px; font-size: 18px; font-family: 'Pretendard-Regular'; resize: none;" readonly="readonly">${board.brdCt}</textarea>
             </section>
-            <section>
+            <section class="mt-5">
             	<div style="margin: 0 auto; width:5%;">
             		 <label for="checkbox">
 				        <input type="checkbox" id="checkbox" hidden>
@@ -261,7 +250,7 @@ label{
 			        <c:forEach items="${replyList}" var="reply">
 			            <tr id="${reply.rpyId}">
 			                <td class="col-2" style="text-align: center;"> 
-			                    <img src="${reply.memImg}" width="50px" height="50px" style="border-radius: 50%;" alt="">
+			                    <img src="${reply.memImg}" onerror="this.src='resources/assets/img/user.png'" width="50px" height="50px" style="border-radius: 50%;" alt="">
 			                    <p>${reply.memNm}</p>
 			                </td>
 			                <td class="col-7">
@@ -293,7 +282,7 @@ label{
             <tbody>
                 <tr>
                     <td class="col-2" style="text-align: center;"> 
-                        <img src="${sessionScope.login.memImg}" width="50px" height="50px"
+                        <img src="${sessionScope.login.memImg}" onerror="this.src='resources/assets/img/user.png'" width="50px" height="50px"
                             style="border-radius: 50%;" alt="">
                         <p>${sessionScope.login.memNm}</p>
                     </td>
@@ -319,14 +308,9 @@ window.onload = function() {
     });
 };
 
-
 $(document).ready(function(){
 	const $carousel = $('#imageCarousel');
     const $slides = $carousel.find('.carousel-item');
-    
-    const initialCk = ${ck};
-    $('#checkbox').prop('checked', initialCk === 1);
-    $('#checkbox').on('change', toggleLike);
     
     // Add 'multi-images' class if there are multiple images
     if ($slides.length > 1) {
@@ -335,7 +319,6 @@ $(document).ready(function(){
         // Initialize Bootstrap carousel with auto-sliding
         $carousel.carousel({
             interval: 3000,  // Slide every 3 seconds
-            ride: 'carousel'
         });
     } else {
         // Disable carousel functionality for single image
@@ -343,13 +326,16 @@ $(document).ready(function(){
             interval: false,
             ride: false
         });
-        
         // Optional: Remove all carousel related classes/attributes for single image
         $carousel
             .removeClass('carousel slide')
             .removeAttr('data-bs-ride');
     }
 	
+    const initialCk = ${ck};
+    $('#checkbox').prop('checked', initialCk === 1);
+    $('#checkbox').on('change', toggleLike);
+    
 	initializeMap();
 	
 	var trvX = ${board.trvX}; // JavaScript 변수에 board.trvX 값 할당
@@ -432,7 +418,7 @@ function replyWrite(e){
 				let str = "";			
 				str += "<tr id='" + res.rpyId + "'>";
 				str += "    <td class='col-2' style='text-align: center;'>"; 
-				str += "        <img src='" + res.memImg + "' width='50px' height='50px' style='border-radius: 50%;' alt=''>";
+				str += "        <img src='" + res.memImg + "' onerror='this.src=\"resources/assets/img/user.png\"' width='50px' height='50px' style='border-radius: 50%;' alt=''>";
 				str += "        <p>" + res.memNm + "</p>";
 				str += "    </td>";
 				str += "    <td class='col-7'>";

@@ -81,8 +81,6 @@ public class BoardController {
 		model.addAttribute("travelList", travelList);
 		model.addAttribute("boardList", boardList);
 
-		System.out.println(boardList.toString());
-
 		return "/board/boardView";
 	}
 
@@ -92,8 +90,6 @@ public class BoardController {
 
 		ArrayList<BoardInfoVO> boardList = boardService.getBoardSearch(vo);
 
-		System.out.println(boardList);
-
 		return boardList;
 	}
 
@@ -101,11 +97,7 @@ public class BoardController {
 	@RequestMapping("/getMyBoardSearch")
 	public ArrayList<BoardInfoVO> getMyBoardSearch(@ModelAttribute SearchVO vo) throws Exception {
 
-		System.out.println(vo);
-
 		ArrayList<BoardInfoVO> boardList = boardService.getMyBoardSearch(vo);
-
-		System.out.println(boardList);
 
 		return boardList;
 	}
@@ -114,11 +106,7 @@ public class BoardController {
 	@RequestMapping("/getLikeBoardSearch")
 	public ArrayList<BoardInfoVO> getLikeBoardSearch(@ModelAttribute SearchVO vo) throws Exception {
 
-		System.out.println(vo);
-
 		ArrayList<BoardInfoVO> boardList = boardService.getLikeBoardSearch(vo);
-
-		System.out.println(boardList);
 
 		return boardList;
 	}
@@ -129,8 +117,6 @@ public class BoardController {
 
 		ArrayList<BoardInfoVO> boardList = boardService.myBoard(memId);
 
-		System.out.println(boardList);
-
 		return boardList;
 	}
 
@@ -140,8 +126,6 @@ public class BoardController {
 
 		ArrayList<BoardInfoVO> boardList = boardService.likeBoard(memId);
 
-		System.out.println(boardList);
-
 		return boardList;
 	}
 
@@ -150,7 +134,6 @@ public class BoardController {
 	public ArrayList<BoardInfoVO> showBoard(HttpSession session) throws Exception {
 		MemberVO login = (MemberVO) session.getAttribute("login");
 
-		System.out.println(login.getMemId());
 		ArrayList<BoardInfoVO> boardList = boardService.getBoardList(login.getMemId());
 
 		return boardList;
@@ -160,7 +143,6 @@ public class BoardController {
 	@ResponseBody
 	public String travelAdd(@ModelAttribute BoardVO vo, @RequestParam("brdImgs") List<MultipartFile> files)
 			throws Exception {
-		System.out.println(vo);
 		try {
 
 			// Save TravelVO
@@ -177,8 +159,6 @@ public class BoardController {
 
 						File dest = new File(filePath);
 						file.transferTo(dest);
-
-						System.out.println("File saved at: " + filePath);
 
 						BimageVO imageVO = new BimageVO();
 						imageVO.setBrdId(vo.getBrdId());
@@ -249,7 +229,6 @@ public class BoardController {
 	    // 파이썬 서버에 POST 요청
 	    ResponseEntity<String> response = restTemplate.postForEntity(pythonServerUrl, requestEntity, String.class);
 	    String responseBody = response.getBody();
-	    System.out.println("Response from Python server: " + responseBody);
 	    
 	    return responseBody;
 	}
@@ -259,9 +238,6 @@ public class BoardController {
 	public String boardUpdate(@ModelAttribute BoardVO vo,
 			@RequestParam(value = "brdImgs", required = false) List<MultipartFile> files,
 			@RequestParam(value = "preserveImages", required = false) String preserveImages) {
-
-		System.out.println(vo);
-		System.out.println(files);
 
 		try {
 
@@ -330,7 +306,6 @@ public class BoardController {
 					bimageService.imagesAdd(images);
 				}
 			} else {
-				System.out.println("기존 파일 유지");
 			}
 
 			return "success";
@@ -343,17 +318,12 @@ public class BoardController {
 	@ResponseBody
 	@RequestMapping("/getBoardEdit")
 	public BoardInfoVO boardEditView(Model model, int brdId) throws Exception {
-		System.out.println("수정 컨트롤러");
-		System.out.println(brdId);
 		BoardInfoVO vo = boardService.getBoard(brdId);
 
 		ArrayList<ReplyVO> replyList = boardService.getReplyList(brdId);
 
 		model.addAttribute("board", vo);
 		model.addAttribute("replyList", replyList);
-
-		System.out.println(vo.toString());
-		System.out.println(replyList);
 
 		return vo;
 	}

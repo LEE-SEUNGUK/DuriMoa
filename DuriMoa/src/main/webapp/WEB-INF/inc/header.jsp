@@ -176,7 +176,7 @@
 									<div class="mb-1 w-100 d-flex justify-content-start">
 										<label for="memId">아이디</label>
 									</div>
-									<input class="form-control memId" type="text" name="memId" oninput="checkId()" id="memNid" placeholder="아이디를 입력해주세요" style="background-image: none;"> <span class="mt-1" id="good" style="margin-right: 42%; display: none; color: #6cae62;">사용 가능한 아이디 입니다.</span> <span class="mt-1" id="bad" style="margin-right: 36%; display: none; color: #dc3545;">이미 사용중인 이메일 입니다.</span>
+									<input class="form-control memId" type="text" name="memId" oninput="checkId()" id="memNid" placeholder="아이디를 입력해주세요" style="background-image: none;"> <span class="mt-1" id="good" style="margin-right: 42%; display: none; color: #6cae62;">사용 가능한 아이디 입니다.</span> <span class="mt-1" id="bad" style="margin-right: 36%; display: none; color: #dc3545;">이미 사용중인 아이디 입니다.</span>
 									<div class="mt-3 mb-1 w-100 d-flex justify-content-start">
 										<label for="memPw">비밀번호</label>
 									</div>

@@ -422,16 +422,16 @@ td {
 		<div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" id="boardModal">
 			<div class="modal-content">
 				<div class="modal-header">
-					<input class="form-control w-75" id="searchKeyword" type="text" placeholder="검색어를 입력하세요." style="margin: 0 auto;">
+					<input class="form-control w-75" id="searchKeyword" type="text" placeholder="여행기록을 검색하여 게시글을 작성해보세요" style="margin: 0 auto;">
 				</div>
 				<div class="modal-body">
 					<table class="w-100">
 						<tbody id="travelList">
 							<c:forEach items="${travelList}" var="travel">
 								<tr class="travel-item" data-title="${travel.trvTt}" data-id="${travel.trvId}" data-place="${travel.trvPc}" data-x="${travel.trvX}" data-y="${travel.trvY}">
-									<td class="d-flex">
+									<td class="d-flex p-2">
 										<div class="col-5">
-											<img class="p-2" alt="" src="${travel.trvImg1}" width='240px' height='300px' style="object-fit: cover;">
+											<img class="p-2" alt="" src="${travel.trvImg1}" width='240px' height='300px' style="object-fit: cover; border-radius: 15px">
 										</div>
 										<div class="col-7 d-flex flex-column justify-content-center">
 											<h5>제목: ${travel.trvTt}</h5>
@@ -442,19 +442,30 @@ td {
 							</c:forEach>
 						</tbody>
 					</table>
+					<h4 class="my-5" id="noResultsMessage" style="margin: 0 auto; text-align: center; display: none;">검색 결과가 없습니다</h4>
 				</div>
 			</div>
 		</div>
 	</div>
 	<script>
-
+	let clickOrder = []; // 전역 변수로 선언
+	
 	$(document).ready(function() {
 	
-	 var savedSelection = sessionStorage.getItem("selectedValue");
-	    if (savedSelection) {
-	        $('#postSelect').val(savedSelection);
-	        loadPostsBySelection(savedSelection);
-	    }
+	$('#boardListContainer').hide();	
+	
+	// 저장된 선택 값 확인
+    var savedSelection = sessionStorage.getItem("selectedValue");
+	console.log(savedSelection);
+    if (savedSelection) {
+        // 저장된 선택 값이 있으면 해당 값으로 select box 설정
+        $('#postSelect').val(savedSelection);
+        // 해당 선택에 맞는 게시물 로드
+        loadPostsBySelection(savedSelection);
+    } else {
+        // 저장된 선택 값이 없으면 전체 게시물 표시
+        $('#boardListContainer').show();
+    }
 	
 	initializeMap();
 	
@@ -520,8 +531,10 @@ td {
 	 
 	// 검색창에서 엔터키를 눌렀을 때만 검색 실행 모달
 	    $('#searchKeyword').on('keypress', function(e) {
-	        if (e.keyCode === 13) {  // Enter 키 감지
+	    	if (e.keyCode === 13) {  // Enter 키 감지
 	            const keyword = $(this).val().toLowerCase(); // 입력한 검색어를 소문자로 변환
+	            let hasResults = false; // 결과가 있는지 여부를 추적하는 변수
+
 	            // 각 항목을 순회하면서 제목 또는 장소가 검색어를 포함하는지 확인
 	            $('.travel-item').each(function() {
 	                const title = $(this).data('title').toLowerCase();
@@ -529,10 +542,18 @@ td {
 	                // 검색어가 제목이나 장소에 포함되어 있으면 표시, 아니면 숨기기
 	                if (title.includes(keyword) || place.includes(keyword)) {
 	                    $(this).show(); // 일치하는 항목 표시
+	                    hasResults = true; // 결과가 있음을 표시
 	                } else {
 	                    $(this).hide(); // 일치하지 않는 항목 숨기기
 	                }
 	            });
+
+	            // 결과가 없을 경우 메시지 표시
+	            if (!hasResults) {
+	                $('#noResultsMessage').show(); // 결과가 없음을 알리는 메시지 표시
+	            } else {
+	                $('#noResultsMessage').hide(); // 결과가 있을 경우 메시지 숨기기
+	            }
 	        }
 	    });
 
@@ -553,6 +574,8 @@ td {
 		// Hide the board list and show the form
         $('#boardListContainer').hide();
         $('#boardAddForm').show();
+        $('#postSelect').parent().hide(); // Hide select box container
+
         
         // Change write button to close button
         $('#writeButton').removeAttr('data-bs-toggle data-bs-target')
@@ -594,6 +617,7 @@ td {
             $('#boardAddForm form')[0].reset();
             $('#photoPreview').empty();
             $('#map').hide();
+            $('#postSelect').parent().show(); // Show select box container
             
             // Reset button to write mode
             $(this)
@@ -635,6 +659,9 @@ td {
     $('#trvImgUpload').on('change', function(event) {
     var files = event.target.files;
     var photoPreview = $('#photoPreview');
+    
+ // Reset clickOrder array
+    clickOrder = [];
     
     if (files.length > 3) {
         alert('최대 3장의 사진만 업로드할 수 있습니다.');
@@ -705,8 +732,11 @@ td {
                         if (existingIndex !== -1) {
                             clickOrder.splice(existingIndex, 1);
                         }
-                        clickOrder.push(currentIndex);
-                        updateIndexLabels();
+                        // Add to order if not already at max
+                        if (clickOrder.length < 3) {
+                            clickOrder.push(currentIndex);
+                            updateIndexLabels();
+                        }
                     });
                 }
             };
@@ -812,6 +842,7 @@ td {
                 $('#boardAddForm form')[0].reset();
                 $('#photoPreview').empty();
                 $('#map').hide();
+                $('#postSelect').parent().show();
                 
                 // Reset write button
                 $('#writeButton')
@@ -854,7 +885,7 @@ function loadAllPosts() {
 			    }
 			    $('#boardListContainer table tbody').html(html);
 			}
-			
+			$('#boardListContainer').show(); // 데이터 로드 후 보이기
 		},
 		error: function(e){
 			console.log(e);
@@ -887,7 +918,7 @@ function loadMyPosts() {
                     '<h4>작성한 게시글이 없습니다.</h4></td></tr>'
                 );
             }
-			
+			$('#boardListContainer').show(); // 데이터 로드 후 보이기
 		},
 		error: function(e){
 			console.log(e);
@@ -920,7 +951,7 @@ function loadLikedPosts() {
                     '<h4>좋아요한 게시글이 없습니다.</h4></td></tr>'
                 );
             }
-			
+			$('#boardListContainer').show(); // 데이터 로드 후 보이기
 		},
 		error: function(e){
 			console.log(e);
@@ -1243,6 +1274,7 @@ function loadPostsBySelection(selectedValue) {
     switch (selectedValue) {
         case 'all':
             loadAllPosts();
+            
             break;
         case 'myPosts':
             loadMyPosts();

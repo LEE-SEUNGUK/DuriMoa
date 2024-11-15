@@ -21,7 +21,6 @@ public class BoardService {
 	IBoardDAO dao;
 
 	public void boardAdd(BoardVO vo) throws Exception {
-		System.out.println("게시판 추가");
 
 		int result = dao.boardAdd(vo);
 
@@ -32,7 +31,6 @@ public class BoardService {
 
 	// 게시글 전체 조회
 	public ArrayList<BoardInfoVO> getBoardList(String memId) throws Exception {
-		System.out.println("게시글 조회 서비스");
 
 		ArrayList<BoardInfoVO> result = dao.getBoardList(memId);
 
@@ -44,7 +42,6 @@ public class BoardService {
 	
 	// 내 게시글 조회
 	public ArrayList<BoardInfoVO> myBoard(String memId) throws Exception{
-		System.out.println("내 게시글 조회 서비스");
 		
 		ArrayList<BoardInfoVO> result = dao.myBoard(memId);
 
@@ -56,7 +53,6 @@ public class BoardService {
 	
 	// 좋아요 게시글 조회
 	public ArrayList<BoardInfoVO> likeBoard(String memId) throws Exception{
-		System.out.println("좋아요 게시글 조회");
 		
 		ArrayList<BoardInfoVO> result = dao.likeBoard(memId);
 		
@@ -67,14 +63,12 @@ public class BoardService {
 	};
 	
 	public void boardUpdate(BoardVO vo) {
-		System.out.println("여행 정보 수정");
 		
 		dao.boardUpdate(vo);
 	};
 	
 	// 게시글 검색
 	public ArrayList<BoardInfoVO> getBoardSearch(SearchVO vo) throws Exception{
-		System.out.println("게시글 검색");
 		
 		ArrayList<BoardInfoVO> result = dao.getBoardSearch(vo);
 

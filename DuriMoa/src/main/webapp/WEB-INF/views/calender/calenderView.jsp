@@ -173,7 +173,7 @@ label:hover::before, #singleDayTrip:hover+label::before {
 }
 
 .fc-event{
-	padding-left: 20px;
+	padding-left: 10px;
 	border: none;
 	outline: none;
 	box-shadow: none;
