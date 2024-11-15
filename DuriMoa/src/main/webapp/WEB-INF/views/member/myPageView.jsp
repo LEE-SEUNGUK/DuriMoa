@@ -385,7 +385,6 @@ $(document).ready(function() {
 
 		$('#' + target).show();
 
-		
 	});
 	
 	$('#couple_info').hover(function() {

@@ -11,7 +11,8 @@
 #firstMain {
 	position: relative;
 	overflow: hidden;
-	background: url('resources/assets/img/main_slide/silde1.jpg') no-repeat left center;
+	background: url('resources/assets/img/main_slide/silde1.jpg') no-repeat
+		left center;
 	background-size: cover;
 }
 
@@ -26,7 +27,7 @@
 	z-index: 0;
 }
 
-#firstMain > * {
+#firstMain>* {
 	position: relative;
 	z-index: 1;
 }
@@ -67,7 +68,7 @@
 	right: 54%;
 }
 
-.travelTitle{
+.travelTitle {
 	font-family: 'LeeSeoyun';
 	font-size: 35px;
 }
@@ -80,10 +81,6 @@
 
 .carousel-control-prev, .carousel-control-next {
 	width: 5%;
-}
-
-.carousel-indicators {
-	bottom: 0;
 }
 
 .travelModal {
@@ -147,33 +144,33 @@
 }
 
 #resetMapBtn {
-    bottom: 20px; 
-    right: 20px; 
-    z-index: 999;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    background: url("resources/assets/img/center.png") no-repeat;
-    transition: all 0.3s ease;
-    background-position : center;
-    background-size: 37px;
-    background-color: white;
-    width: 50px;
-    height: 50px;
+	bottom: 20px;
+	right: 20px;
+	z-index: 999;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	background: url("resources/assets/img/center.png") no-repeat;
+	transition: all 0.3s ease;
+	background-position: center;
+	background-size: 37px;
+	background-color: white;
+	width: 50px;
+	height: 50px;
 }
 
 #resetMapBtn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+	transform: translateY(-2px);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-#map{
+#map {
 	position: relative;
 }
 
-#resetMapBtn{
+#resetMapBtn {
 	position: absolute;
 }
 
-#modalContent:focus{
+#modalContent:focus {
 	border: none;
 	outline: none;
 }
@@ -181,90 +178,79 @@
 </head>
 
 <body>
-<jsp:include page="/WEB-INF/inc/header.jsp"></jsp:include>
-<c:if test="${empty sessionScope.login}">
-	<main id="firstMain" class="d-flex align-items-center bg-dark text-white" style="width: 1920px; height:868px; margin: 0 auto;">
-		<div class="d-flex w-100">
-			<section class="w-50" style="text-align: center;">
-				<div class="position-relative">
-					<img src="resources/assets/img/map.png" width="40%" alt=""> 
-					<img id="ad_marker1" src="resources/assets/img/marker.png" alt=""> 
-					<img id="ad_marker2" src="resources/assets/img/marker.png" alt="">
-					<img id="ad_marker3" src="resources/assets/img/marker.png" alt="">
-				</div>
-			</section>
-			<section class="d-flex flex-column align-items-center" style="width: 30%;">
-				<h3 style="line-height: 2; margin-top: 90px;">
-					<span style="font-size: 45px;">두리모아</span>는 둘이 모아를 귀엽게 표현한 단어로<br>커플이 서로의 여행 기록을 공유하고<br>마음에 드는 여행지를 탐색 할 수 있는 플랫폼입니다.
-				</h3>
-				<button id="main_login" class="btn w-25" style="margin-top: 200px;" data-bs-toggle="modal" data-bs-target="#loginModal">시작하기</button>
-			</section>
-		</div>
-	</main>
-</c:if>
-<c:if test="${not empty sessionScope.login}">
-	<main style="height:867px; width: 1920px; margin: 0 auto;">
-		<div id="map" style="width: 850px; height: 100%; margin: 0 auto;">
-			<button id="resetMapBtn" class="btn">
-		    </button>
-	    </div>
-	</main>
-</c:if>
-<!-- 	여행 정보 모달 -->
-<div class="modal fade" id="markerModal" tabindex="-1" aria-labelledby="markerModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-dialog-centered travelModal">
-		<div class="modal-content" style="height: 780px">
-			<div class="modal-body">
-				<div class="row h-100" style="width: 100%; margin: 0;">
-					<div class="col-md-6 p-0 h-100">
-						<!-- Carousel -->
-						<div id="travelCarousel" class="carousel slide h-100" data-bs-ride="carousel">
-							<div class="carousel-indicators">
-								<button type="button" data-bs-target="#travelCarousel" data-bs-slide-to="0" class="active"></button>
-								<button type="button" data-bs-target="#travelCarousel" data-bs-slide-to="1"></button>
-								<button type="button" data-bs-target="#travelCarousel" data-bs-slide-to="2"></button>
-							</div>
-							<div class="carousel-inner h-100">
-								<div class="carousel-item active">
-									<img src="" id="trvImg1" class="d-block w-100" alt="Travel Image 1">
-								</div>
-								<div class="carousel-item">
-									<img src="" id="trvImg2" class="d-block w-100" alt="Travel Image 2">
-								</div>
-								<div class="carousel-item">
-									<img src="" id="trvImg3" class="d-block w-100" alt="Travel Image 3">
-								</div>
-							</div>
-
-							<!-- Navigation Arrows -->
-							<button class="carousel-control-prev" type="button" data-bs-target="#travelCarousel" data-bs-slide="prev">
-								<span class="carousel-control-prev-icon" aria-hidden="true"></span> <span class="visually-hidden">Previous</span>
-							</button>
-							<button class="carousel-control-next" type="button" data-bs-target="#travelCarousel" data-bs-slide="next">
-								<span class="carousel-control-next-icon" aria-hidden="true"></span> <span class="visually-hidden">Next</span>
-							</button>
-						</div>
+	<jsp:include page="/WEB-INF/inc/header.jsp"></jsp:include>
+	<c:if test="${empty sessionScope.login}">
+		<main id="firstMain" class="d-flex align-items-center bg-dark text-white" style="width: 1920px; height: 868px; margin: 0 auto;">
+			<div class="d-flex w-100">
+				<section class="w-50" style="text-align: center;">
+					<div class="position-relative">
+						<img src="resources/assets/img/map.png" width="40%" alt=""> <img id="ad_marker1" src="resources/assets/img/marker.png" alt=""> <img id="ad_marker2" src="resources/assets/img/marker.png" alt=""> <img id="ad_marker3" src="resources/assets/img/marker.png" alt="">
 					</div>
-					<div class="col-md-6 p-0">
-						<h3 class="travelTitle" id="modalTitle" style="text-align: center; margin-top: 12%;"></h3>
-						<div class="d-flex align-items-center mt-5 ms-4">
-							<img src="resources/assets/img/board_map.png" width="30px" alt="">
-							<p class="ms-4" id="modalPlace" style="font-size: 20px;"></p>
+				</section>
+				<section class="d-flex flex-column align-items-center" style="width: 30%;">
+					<h3 style="line-height: 2; margin-top: 90px;">
+						<span style="font-size: 45px;">두리모아</span>는 둘이 모아를 귀엽게 표현한 단어로<br>커플이 서로의 여행 기록을 공유하고<br>마음에 드는 여행지를 탐색 할 수 있는 플랫폼입니다.
+					</h3>
+					<button id="main_login" class="btn w-25" style="margin-top: 200px;" data-bs-toggle="modal" data-bs-target="#loginModal">시작하기</button>
+				</section>
+			</div>
+		</main>
+	</c:if>
+	<c:if test="${not empty sessionScope.login}">
+		<main style="height: 867px; width: 1920px; margin: 0 auto;">
+			<div id="map" style="width: 850px; height: 100%; margin: 0 auto;">
+				<button id="resetMapBtn" class="btn"></button>
+			</div>
+		</main>
+	</c:if>
+	<!-- 	여행 정보 모달 -->
+	<div class="modal fade" id="markerModal" tabindex="-1" aria-labelledby="markerModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-dialog-centered travelModal">
+			<div class="modal-content" style="height: 780px">
+				<div class="modal-body">
+					<div class="row h-100" style="width: 100%; margin: 0;">
+						<div class="col-md-6 p-0 h-100">
+							<!-- 이미지 슬라이드 -->
+							<div id="travelCarousel" class="carousel slide h-100" data-bs-ride="carousel">
+								<div class="carousel-inner h-100">
+									<div class="carousel-item active">
+										<img src="" id="trvImg1" class="d-block w-100">
+									</div>
+									<div class="carousel-item">
+										<img src="" id="trvImg2" class="d-block w-100">
+									</div>
+									<div class="carousel-item">
+										<img src="" id="trvImg3" class="d-block w-100">
+									</div>
+								</div>
+
+								<!-- Navigation Arrows -->
+								<button class="carousel-control-prev" type="button" data-bs-target="#travelCarousel" data-bs-slide="prev">
+									<span class="carousel-control-prev-icon" aria-hidden="true"></span> <span class="visually-hidden">Previous</span>
+								</button>
+								<button class="carousel-control-next" type="button" data-bs-target="#travelCarousel" data-bs-slide="next">
+									<span class="carousel-control-next-icon" aria-hidden="true"></span> <span class="visually-hidden">Next</span>
+								</button>
+							</div>
 						</div>
-						<div class="d-flex align-items-center mt-3 ms-4">
-							<img src="resources/assets/img/date.png" width="30px" alt="">
-							<p class="ms-4" id="modalDates" style="font-size: 20px;"></p>
+						<div class="col-md-6 p-0">
+							<h3 class="travelTitle" id="modalTitle" style="text-align: center; margin-top: 12%;"></h3>
+							<div class="d-flex align-items-center mt-5 ms-4">
+								<img src="resources/assets/img/board_map.png" width="30px" alt="">
+								<p class="ms-4" id="modalPlace" style="font-size: 20px;"></p>
+							</div>
+							<div class="d-flex align-items-center mt-3 ms-4">
+								<img src="resources/assets/img/date.png" width="30px" alt="">
+								<p class="ms-4" id="modalDates" style="font-size: 20px;"></p>
+							</div>
+							<textarea class="travelContet ms-4 p-3" id="modalContent" style="font-size: 18px; height: 40%; background-color: #f8f9fa; font-family: 'Pretendard-Regular'; border-radius: 15px; margin-top: 20%; width: 92%; resize: none; border: none;" readonly="readonly"></textarea>
 						</div>
-						<textarea class="travelContet ms-4 p-3" id="modalContent" style="font-size: 18px; height: 40%; 
-						background-color: #f8f9fa; font-family: 'Pretendard-Regular';
-						border-radius: 15px; margin-top: 20%; width: 92%; resize: none; border: none;" readonly="readonly"></textarea>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-</div>
-<script>
+	<script>
 	window.onload = function() {
 	    sessionStorage.removeItem("selectedValue");
 	};
@@ -272,24 +258,20 @@
   	const initialCenter = new kakao.maps.LatLng(36.2432627785657, 127.84846467555381);
     const initialLevel = 12;
     
- 	// Add click event listener to reset button
-    document.getElementById('resetMapBtn').addEventListener('click', function() {
-        // Animate the map movement to the initial position
+    $("#resetMapBtn").click(function(){
         map.setLevel(initialLevel, {animate: true});
         map.panTo(initialCenter);
         
-        // Show all markers if they were filtered
         markers.forEach(marker => {
             marker.setMap(map);
         });
         
-        // Clear and re-add all markers to clusterer
         clusterer.clear();
         clusterer.addMarkers(markers);
         
-        // Clear search input if it exists
-        if (document.getElementById('marker_search')) {
-            document.getElementById('marker_search').value = '';
+        // 검색창 초기화
+        if ($('#marker_search')) {
+        	$('#marker_search').val = '';
         }
     });
 
@@ -305,17 +287,15 @@
 	        trvEdt: '${marker.trvEdt}',
 	        trvCt: `${marker.trvCt}`,
 	        latlng: new kakao.maps.LatLng(
-	        		parseFloat('${marker.trvY}'), // 위도 (Y)
-	                parseFloat('${marker.trvX}')  // 경도 (X)
+	        		parseFloat('${marker.trvY}'),
+	                parseFloat('${marker.trvX}')
 	        )
 	    },
 	    </c:forEach>
 	];
 	
-	// Initialize modal
-       const $markerModal = $('#markerModal');
-       const markerModal = new bootstrap.Modal($markerModal[0]);
-
+    const $markerModal = $('#markerModal');
+    const markerModal = new bootstrap.Modal($markerModal[0]);
 
 	var mapContainer = document.getElementById('map'), mapOptions = {
 		center : new kakao.maps.LatLng(36.2432627785657, 127.84846467555381),
@@ -324,49 +304,45 @@
 
 	var map = new kakao.maps.Map(mapContainer, mapOptions);
 	
-	// Initialize MarkerClusterer
-       var clusterer = new kakao.maps.MarkerClusterer({
-           map: map,
-           averageCenter: true,
-           minLevel: 6,
-           styles: [{
-               width: '91px',
-               height: '69px',
-               background: 'url("resources/assets/img/cluster.png") no-repeat',
-               backgroundSize: 'contain',
-               textAlign: 'center',
-               fontWeight: 'bold',
-               lineHeight: '52px',
-               color: '#d94844'
-           }]
-       });
+    var clusterer = new kakao.maps.MarkerClusterer({
+        map: map,
+        averageCenter: true,
+        minLevel: 6,
+        styles: [{
+            width: '91px',
+            height: '69px',
+            background: 'url("resources/assets/img/cluster.png") no-repeat',
+            backgroundSize: 'contain',
+            textAlign: 'center',
+            fontWeight: 'bold',
+            lineHeight: '52px',
+            color: '#d94844'
+        }]
+    });
 	
-       // Array to store all markers
-       var markers = [];
+    var markers = [];
 	
 	for (var i = 0; i < positions.length; i ++) {
 		console.log(positions[i].trvCt);
 	    
-	    var imageSrc = 'resources/assets/img/marker.png', // 마커이미지의 주소입니다    
-           imageSize = new kakao.maps.Size(70, 53), // 마커이미지의 크기입니다
-           imageOption = { offset: new kakao.maps.Point(34, 50) }; // 마커이미지의 옵션입니다. 마커의 좌표와 일치시킬 이미지 안에서의 좌표를 설정합니다.
+	    var imageSrc = 'resources/assets/img/marker.png', // 마커이미지 주소
+           imageSize = new kakao.maps.Size(70, 53), // 마커이미지 크기
+           imageOption = { offset: new kakao.maps.Point(34, 50) }; // 마커이미지 옵션
 
-        // 마커의 이미지정보를 가지고 있는 마커이미지를 생성합니다
+        // 마커이미지를 생성
         var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption)
            
    
-	    // 마커를 생성합니다
+	    // 마커 생성
 	    var marker = new kakao.maps.Marker({
 	        map: map, // 마커를 표시할 지도
 	        position: positions[i].latlng, // 마커를 표시할 위치
   		        image : markerImage // 마커 이미지 
 	    });
            
-    
-           markers.push(marker);
+        markers.push(marker);
 
-           
-     // 각 마커에 대한 커스텀 오버레이 생성
+     	// 각 마커에 대한 커스텀 오버레이 생성
         var customOverlay = new kakao.maps.CustomOverlay({
             content: '<div class="wrap">' + 
             '    <div class="info d-flex align-items-center justify-content-center">' + 
@@ -395,7 +371,6 @@
 
         (function(marker, position) {
             kakao.maps.event.addListener(marker, 'click', function() {
-            	// Set basic modal content
                 $('#modalTitle').text(position.title);
                 $('#modalPlace').text(position.place);
 
@@ -409,21 +384,19 @@
                 $('#modalDates').text(modalDates);
                 $('#modalContent').text(position.trvCt);
 
-                // Get the carousel inner container
                 const carouselInner = document.querySelector('.carousel-inner');
                 
-                // Clear existing slides
                 carouselInner.innerHTML = '';
 
-                // Add first slide (thumbnail)
+                // 썸네일 추가
                 const firstSlide = document.createElement('div');
                 firstSlide.className = 'carousel-item active';
                 firstSlide.innerHTML = '<img src="' + position.Thumnail + '" class="d-block w-100" alt="Travel Image 1">';
                 carouselInner.appendChild(firstSlide);
 
-                let slideCount = 1; // Track the number of slides
+                let slideCount = 1; // 슬라이드 개수 설정
 
-                // Add second slide if exists
+                // 두번째 이미지
                 if (position.trvImg2) {
                     const secondSlide = document.createElement('div');
                     secondSlide.className = 'carousel-item';
@@ -432,7 +405,7 @@
                     slideCount++;
                 }
 
-                // Add third slide if exists
+                // 세번째 이미지
                 if (position.trvImg3) {
                     const thirdSlide = document.createElement('div');
                     thirdSlide.className = 'carousel-item';
@@ -441,21 +414,18 @@
                     slideCount++;
                 }
 
-                // Show or hide carousel controls based on the number of slides
+                // 개수에 따른 슬라이드 설정
                 const prevControl = document.querySelector('.carousel-control-prev');
                 const nextControl = document.querySelector('.carousel-control-next');
 
                 if (slideCount > 1) {
-                    // Show controls if there are multiple slides
                     prevControl.style.display = 'block';
                     nextControl.style.display = 'block';
                 } else {
-                    // Hide controls if there is only one slide
                     prevControl.style.display = 'none';
                     nextControl.style.display = 'none';
                 }
 
-                // Show modal
                 $('#markerModal').modal('show');
             });
         })(marker, positions[i]); // 클로저 사용하여 각 마커의 정보를 전달
@@ -463,22 +433,17 @@
 	
 	clusterer.addMarkers(markers);
 	
-	// ADD THE NEW SEARCH CODE HERE
-    // Add event listener for search input
-    const searchInput = document.getElementById('marker_search');
+    const searchInput = $('#marker_search');
     searchInput.addEventListener('input', filterMarkers);
 
     function filterMarkers() {
         const searchTerm = searchInput.value.toLowerCase().trim();
         
-     	// Clear existing clusters
         clusterer.clear();
-        // Hide all markers initially
         markers.forEach(marker => {
             marker.setMap(null);
         });
         
-        // If search term is empty, restore all markers with clustering
         if (searchTerm === '') {
             markers.forEach(marker => {
                 marker.setMap(map);
@@ -487,7 +452,6 @@
             return;
         }
         
-        // Filter markers based on search term
         const filteredMarkers = positions.reduce((acc, position, index) => {
             const titleMatch = position.title.toLowerCase().includes(searchTerm);
             const placeMatch = position.place.toLowerCase().includes(searchTerm);
@@ -500,13 +464,11 @@
             return acc;
         }, []);
         
-        // Add filtered markers to clusterer
         if (filteredMarkers.length > 0) {
             clusterer.addMarkers(filteredMarkers);
         }
     }
 
-    // Add submit prevention to the search form
     const searchForm = document.querySelector('form[role="search"]');
 	if (searchForm) {
 	    searchForm.addEventListener('submit', (e) => {
